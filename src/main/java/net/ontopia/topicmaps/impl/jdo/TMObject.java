@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -109,7 +110,16 @@ public abstract class TMObject extends JDOObject implements TMObjectIF {
 
 	public void remove() {
 		if (isReadOnly()) throw new ReadOnlyException();
-		// getTransaction.deletePersistent(this);
+		beforeRemove();
+		getPersistenceManager().deletePersistent(this);
+	}
+
+	// implementation for TMObject: remove item identifiers on object remove
+	protected void beforeRemove() {
+		PersistenceManager pm = getPersistenceManager();
+		for (IdentityLocator idLocator : itemIdentifiers) {
+			pm.deletePersistent(idLocator);
+		}
 	}
 	
 	/* JDO specific */
