@@ -20,14 +20,13 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 
-@PersistenceCapable(table = "TM_IDENTIFIERS", identityType = IdentityType.APPLICATION)
+@PersistenceCapable(table = "TM_IDENTIFIERS")
 @Inheritance(strategy = InheritanceStrategy.COMPLETE_TABLE)
 public class IdentityLocator extends JDOLocator {
 	private static final long serialVersionUID = 1L;
