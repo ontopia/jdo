@@ -74,17 +74,22 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		references.clear();
 		
 		PersistenceManager persistenceManager = null;
+		Transaction tx = null;
 		try {
 			persistenceManager = persistenceManagerFactory.getPersistenceManager();
-			Transaction tx = persistenceManager.currentTransaction();
+			tx = persistenceManager.currentTransaction();
 			tx.begin();
 			Extent<TopicMap> extent = persistenceManager.getExtent(TopicMap.class, false);
 			for (TopicMap tm : extent) {
 				references.add(new JDOTopicMapReference(this, makeId(tm), tm.getTitle(), tm.getLongId()));
 			}
 			extent.closeAll();
-			tx.rollback();
+		} catch (JDOException jdoe) {
+			throw new OntopiaRuntimeException("Could not refresh source: " + jdoe.getMessage(), jdoe);
 		} finally {
+			if (tx != null) {
+				tx.rollback();
+			}
 			if (persistenceManager != null) {
 				persistenceManager.close();
 			}
@@ -119,7 +124,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 	}
 
 	public void close() {
-
+		persistenceManagerFactory.close();
 	}
 
 	public TopicMapReferenceIF createTopicMap(String name, String baseAddressURI) {
