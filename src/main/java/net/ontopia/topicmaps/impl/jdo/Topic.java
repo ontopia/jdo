@@ -39,6 +39,7 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 
 @PersistenceCapable(table = "TM_TOPIC")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -163,5 +164,11 @@ public class Topic extends TMObject implements TopicIF {
 
 	public ReifiableIF getReified() {
 		return reified;
+	}
+
+	@Override
+	protected void beforeRemove() {
+		DeletionUtils.removeDependencies(this);
+		super.beforeRemove();
 	}
 }

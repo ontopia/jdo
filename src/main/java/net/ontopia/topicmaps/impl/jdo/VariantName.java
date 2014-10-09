@@ -149,4 +149,13 @@ public class VariantName extends TMObject implements VariantNameIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.reifier = (Topic) reifier;
 	}
+
+	@Override
+	protected void beforeRemove() {
+		// unregister at name
+		topicname.getVariants().remove(this);
+		
+		// let super cleanup
+		super.beforeRemove();
+	}
 }

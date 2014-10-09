@@ -28,6 +28,7 @@ import net.ontopia.topicmaps.core.DuplicateReificationException;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
+import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
@@ -51,5 +52,11 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.reifier = (Topic) reifier;
+	}
+
+	@Override
+	protected void beforeRemove() {
+		DeletionUtils.removeDependencies(this);		
+		super.beforeRemove();
 	}
 }

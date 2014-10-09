@@ -78,4 +78,15 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;
 	}
+
+	@Override
+	protected void beforeRemove() {
+		
+		// remove variants
+		for (VariantName variant : new HashSet<VariantName>(variants)) {
+			variant.remove();
+		}
+		
+		super.beforeRemove();
+	}
 }

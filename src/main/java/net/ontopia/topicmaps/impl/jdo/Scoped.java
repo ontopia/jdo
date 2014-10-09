@@ -60,4 +60,14 @@ public abstract class Scoped extends Typed implements ScopedIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		scope.remove((Topic) theme);
 	}
+
+	@Override
+	protected void beforeRemove() {
+		
+		// disconnect scoping topics
+		scope.clear();
+		
+		// let super cleanuo
+		super.beforeRemove();
+	}
 }

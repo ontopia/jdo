@@ -73,4 +73,20 @@ public class AssociationRole extends Typed implements AssociationRoleIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.player = (Topic) player;
 	}
+
+	@Override
+	protected void beforeRemove() {
+
+		// unregister at the association
+		association.getRoles().remove(this);
+		
+		// consistency check: 0-role associations are not allowed
+		// todo: on commit?
+		if (association.getRoles().isEmpty()) {
+			association.remove();
+		}
+		
+		// let super cleanup
+		super.beforeRemove();
+	}
 }
