@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.util.Properties;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
+import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,15 +38,20 @@ public class JDOTopicMapSourceTest {
 	public static final String INCORRECT_PROPERTIES1 = "classpath:net/ontopia/topicmaps/impl/jdo/h2.broken1.props";
 	public static final String INCORRECT_PROPERTIES2 = "classpath:net/ontopia/topicmaps/impl/jdo/h2.broken2.props";
 	
+	private JDOTopicMapSource source;
+	
 	@Before
+	@After
 	public void setUp() {
+		if (source != null) source.close();
+		
 		File db = new File("target/ontopia.h2.db");
 		if (db.exists()) db.delete();
 	}
 	
 	@Test
 	public void testOpenFromClasspath() throws IOException {
-		JDOTopicMapSource source = new JDOTopicMapSource(PROPERTIES);
+		source = new JDOTopicMapSource(PROPERTIES);
 		source.refresh();
 		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
 	}
@@ -53,21 +60,21 @@ public class JDOTopicMapSourceTest {
 	public void testOpenFromProperties() throws IOException {
 		Properties properties = new Properties();
 		properties.load(StreamUtils.getInputStream(PROPERTIES));
-		JDOTopicMapSource source = new JDOTopicMapSource(properties);
+		source = new JDOTopicMapSource(properties);
 		source.refresh();
 		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
 	}
 	
-	@Test
+	@Test(expected = OntopiaRuntimeException.class)
 	public void testOpenIncorrectProperties1() throws IOException {
-		JDOTopicMapSource source = new JDOTopicMapSource(INCORRECT_PROPERTIES1);
+		source = new JDOTopicMapSource(INCORRECT_PROPERTIES1);
 		source.refresh();
-		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
+		Assert.fail("Missing tables not detected");
 	}
 	
 	@Test
 	public void testCreateTopicMap() throws IOException {
-		JDOTopicMapSource source = new JDOTopicMapSource(PROPERTIES);
+		source = new JDOTopicMapSource(PROPERTIES);
 		source.setId("ontopia-test-jdo");
 		source.setSupportsCreate(true);
 		source.refresh();
