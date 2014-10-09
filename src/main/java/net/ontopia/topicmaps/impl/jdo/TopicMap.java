@@ -29,6 +29,7 @@ import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
+import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TMObjectIF;
@@ -46,9 +47,8 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Persistent(name = "title", column = "title", defaultFetchGroup = "true")
 	private String title;
 
-	//@Persistent(name = "base", column = "base", defaultFetchGroup = "true")
-	@NotPersistent
-	private LocatorIF base;
+	@Persistent(name = "base", column = "base", defaultFetchGroup = "true")
+	private String base;
 
 	@Persistent(mappedBy = "topicmap")
 	private Collection<Association> associations;
@@ -78,12 +78,12 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public LocatorIF getBaseAddress() {
-		return base;
+		return URILocator.create(base);
 	}
 
 	public void setBaseAddress(LocatorIF base) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		this.base = base;
+		this.base = base.getAddress();
 	}
 
 	public TopicMapStoreIF getStore() {
