@@ -79,6 +79,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		if (persistenceManager.currentTransaction().isActive()) {
 			persistenceManager.currentTransaction().rollback();
 		}
+		persistenceManager.close();
 	}
 
 	public LocatorIF getBaseAddress() {
