@@ -135,8 +135,6 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		
 		createPersistenceManagerFactory();
 		
-		PersistenceManager pm = null;
-		Transaction tx = null;
 		JDOTopicMapStore store = null;
 		try {
 			store = new JDOTopicMapStore(persistenceManagerFactory);
