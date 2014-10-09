@@ -80,7 +80,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 			tx.begin();
 			Extent<TopicMap> extent = persistenceManager.getExtent(TopicMap.class, false);
 			for (TopicMap tm : extent) {
-				references.add(new JDOTopicMapReference(makeId(tm), tm.getTitle(), tm.getLongId()));
+				references.add(new JDOTopicMapReference(this, makeId(tm), tm.getTitle(), tm.getLongId()));
 			}
 			extent.closeAll();
 			tx.rollback();
@@ -143,8 +143,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 			store.getPersistenceManager().makePersistent(tm);
 			store.commit();
 
-			JDOTopicMapReference newReference = new JDOTopicMapReference(makeId(tm), name, tm.getLongId());
-			newReference.setSource(this);
+			JDOTopicMapReference newReference = new JDOTopicMapReference(this, makeId(tm), name, tm.getLongId());
 			references.add(newReference);
 			return newReference;
 			

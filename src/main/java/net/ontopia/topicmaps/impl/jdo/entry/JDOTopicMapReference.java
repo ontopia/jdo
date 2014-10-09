@@ -29,9 +29,10 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 	
 	private final long identity;
 
-	public JDOTopicMapReference(String id, String title, long identity) {
+	public JDOTopicMapReference(JDOTopicMapSource source, String id, String title, long identity) {
 		super(id, title);
 		this.identity = identity;
+		setSource(source);
 	}
 
 	@Override
