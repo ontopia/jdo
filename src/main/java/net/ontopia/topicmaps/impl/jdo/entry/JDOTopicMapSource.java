@@ -124,7 +124,9 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 	}
 
 	public void close() {
-		persistenceManagerFactory.close();
+		if (persistenceManagerFactory != null) {
+			persistenceManagerFactory.close();
+		}
 	}
 
 	public TopicMapReferenceIF createTopicMap(String name, String baseAddressURI) {
