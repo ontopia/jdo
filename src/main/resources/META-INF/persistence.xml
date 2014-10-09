@@ -8,6 +8,7 @@
 		<class>net.ontopia.topicmaps.impl.jdo.AssociationRole</class>
 		<class>net.ontopia.topicmaps.impl.jdo.TopicName</class>
 		<class>net.ontopia.topicmaps.impl.jdo.VariantName</class>
+		<class>net.ontopia.topicmaps.impl.jdo.IdentityLocator</class>
 		<exclude-unlisted-classes/>
 	</persistence-unit>
 </persistence>
