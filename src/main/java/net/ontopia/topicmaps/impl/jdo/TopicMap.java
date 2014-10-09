@@ -41,7 +41,7 @@ import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
-@Index(name = "TM_TOPIC_MAP_IX_BASE_ID", members = {/*"base",*/ "id"}) // todo:base
+@Index(name = "TM_TOPIC_MAP_IX_BASE_ID", members = {"base", "id"})
 public class TopicMap extends Reifiable implements TopicMapIF {
 	
 	@Persistent(name = "title", column = "title", defaultFetchGroup = "true")
