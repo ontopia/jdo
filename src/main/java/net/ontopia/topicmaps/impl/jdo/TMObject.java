@@ -39,7 +39,7 @@ import net.ontopia.topicmaps.core.TopicMapIF;
 public abstract class TMObject extends JDOObject implements TMObjectIF {
 	
 	@PrimaryKey
-	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.INCREMENT)
+	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
 	protected long id;
 
 	@Persistent(name = "topicmap", column = "topicmap")
