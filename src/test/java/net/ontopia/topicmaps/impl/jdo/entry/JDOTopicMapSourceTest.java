@@ -36,7 +36,6 @@ public class JDOTopicMapSourceTest {
 	
 	public static final String PROPERTIES = "classpath:net/ontopia/topicmaps/impl/jdo/h2.props";
 	public static final String INCORRECT_PROPERTIES1 = "classpath:net/ontopia/topicmaps/impl/jdo/h2.broken1.props";
-	public static final String INCORRECT_PROPERTIES2 = "classpath:net/ontopia/topicmaps/impl/jdo/h2.broken2.props";
 	
 	private JDOTopicMapSource source;
 	
