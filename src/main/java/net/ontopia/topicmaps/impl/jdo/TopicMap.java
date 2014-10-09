@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -48,6 +49,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	private String title;
 
 	@Persistent(name = "base", column = "base", defaultFetchGroup = "true")
+	@Column(jdbcType = "LONGVARCHAR")
 	private String base;
 
 	@Persistent(mappedBy = "topicmap")
