@@ -21,10 +21,10 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
+import java.util.HashSet;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -45,8 +45,8 @@ public abstract class TMObject extends JDOObject implements TMObjectIF {
 	@Persistent(name = "topicmap", column = "topicmap")
 	protected TopicMap topicmap;
 	
-	@NotPersistent // todo
-	protected Collection<LocatorIF> itemIdentifiers;
+	@Persistent(mappedBy = "object")
+	protected Collection<IdentityLocator> itemIdentifiers;
 
 	TMObject() {
 	}
@@ -71,17 +71,40 @@ public abstract class TMObject extends JDOObject implements TMObjectIF {
 	}
 
 	public Collection<LocatorIF> getItemIdentifiers() {
-		return itemIdentifiers;
+		return new HashSet<LocatorIF>(itemIdentifiers);
 	}
 
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
-		itemIdentifiers.add(item_identifier);
+		
+		if (item_identifier instanceof IdentityLocator) {
+			IdentityLocator idLocator = (IdentityLocator) item_identifier;
+			if (idLocator.isItemIdentifier()) {
+				itemIdentifiers.add(idLocator);
+				return;
+			}
+		}
+		
+		itemIdentifiers.add(new IdentityLocator(item_identifier, this, IdentityLocator.ITEM_IDENTIFIER));
 	}
 
 	public void removeItemIdentifier(LocatorIF item_identifier) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		itemIdentifiers.remove(item_identifier);
+		
+		if (item_identifier instanceof IdentityLocator) {
+			itemIdentifiers.remove((IdentityLocator) item_identifier);
+		} else {
+			IdentityLocator toRemove = null;
+			for (IdentityLocator idLocator : itemIdentifiers) {
+				if (idLocator.getAddress().equals(item_identifier.getAddress())) {
+					toRemove = idLocator;
+					break;
+				}
+			}
+			if (toRemove != null) {
+				itemIdentifiers.remove(toRemove);
+			}
+		}
 	}
 
 	public void remove() {
