@@ -22,12 +22,10 @@ package net.ontopia.topicmaps.impl.jdo.entry;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
+import net.ontopia.topicmaps.core.TopicMapStoreIF;
+import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.StreamUtils;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,10 +74,27 @@ public class JDOTopicMapSourceTest {
 		
 		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
 		
-		TopicMapReferenceIF ref = source.createTopicMap("foo", "foo:bar");
+		JDOTopicMapReference ref = (JDOTopicMapReference) source.createTopicMap("foo", "foo:bar");
 		
 		Assert.assertEquals("Title changed after save", "foo", ref.getTitle());
 		Assert.assertEquals("Unexpected id", "ontopia-test-jdo-1", ref.getId());
 		Assert.assertEquals("Incorrect number of references after create", 1, source.getReferences().size());
+		
+		TopicMapStoreIF store = ref.createStore(true);
+		TopicMap tm = (TopicMap) store.getTopicMap();
+		Assert.assertEquals("Unexpected base", "foo:bar", tm.getBaseAddress().getAddress());
+		store.close();
+		
+		// refresh
+		source.refresh();
+		
+		Assert.assertEquals("Incorrect number of references after refresh", 1, source.getReferences().size());
+		ref = (JDOTopicMapReference) source.getReferences().iterator().next();
+		Assert.assertEquals("Title changed after refresh", "foo", ref.getTitle());
+		Assert.assertEquals("Id changed after refresh", "ontopia-test-jdo-1", ref.getId());
+		
+		store = ref.createStore(true);
+		tm = (TopicMap) store.getTopicMap();
+		Assert.assertEquals("Changed base after refresh", "foo:bar", tm.getBaseAddress().getAddress());
 	}
 }
