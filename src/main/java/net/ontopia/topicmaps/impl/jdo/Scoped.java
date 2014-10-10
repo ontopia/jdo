@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
@@ -41,7 +42,7 @@ public abstract class Scoped extends Typed implements ScopedIF {
 	@Join(column = "scoped")
 	@Element(column = "scope")
 	@Index(name = "TM_SCOPE_IX", members = {"scoped", "scope"})
-	private Collection<Topic> scope;
+	private Set<Topic> scope = new HashSet<Topic>();
 
 	Scoped(Topic type) {
 		super(type);
