@@ -104,11 +104,14 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		return address;
 	}
 
+	@Override
 	public int hashCode() {
 		return address.hashCode();
 	}
 
+	@Override
 	public boolean equals(Object object) {
+		if (!(object instanceof LocatorIF)) return false;
 		try {
 			LocatorIF locator = (LocatorIF) object;
 			return address.equals(locator.getAddress());
