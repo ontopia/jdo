@@ -55,7 +55,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Join(column = "topic")
 	@Element(column = "type")
 	@Index(name = "TM_TOPIC_TYPE_IX", members = {"topic", "type"})
-	private Collection<Topic> types;
+	private Set<Topic> types = new HashSet<Topic>(1);
 
 	@Persistent(mappedBy = "topic")
 	private Set<TopicName> topicNames = new HashSet<TopicName>();
