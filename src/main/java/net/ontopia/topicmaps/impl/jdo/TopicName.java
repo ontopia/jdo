@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
@@ -49,7 +50,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	private Collection<VariantName> variants;
 
 	@Persistent(name = "value", column = "value")
-	//@Column(jdbcType=)
+	@Column(jdbcType = "LONGVARCHAR")
 	private String value;
 
 	public TopicName(Topic topic, Topic type, String value) {
