@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,12 +85,12 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
-		subjectLocators.add((SubjectLocator) lif);
+		subjectLocators.add(new SubjectLocator(lif, this));
 	}
 
 	public void removeSubjectLocator(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		subjectLocators.remove((SubjectLocator) lif);
+		removeLocator(subjectLocators, lif);
 	}
 
 	public Collection<LocatorIF> getSubjectIdentifiers() {
@@ -172,5 +173,53 @@ public class Topic extends TMObject implements TopicIF {
 	protected void beforeRemove() {
 		DeletionUtils.removeDependencies(this);
 		super.beforeRemove();
+	}
+
+	// builder methods
+	public TopicNameIF makeTopicName(TopicIF bntype, String value) {
+		if (bntype == null) throw new NullPointerException("Name type cannot be null");
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		TopicName name = new TopicName(this, (Topic) bntype, value);
+		getPersistenceManager().makePersistent(name);
+		topicNames.add(name);
+		return name;
+	}
+
+	public OccurrenceIF makeOccurrence(TopicIF occurs_type, Reader value, long length, LocatorIF datatype) {
+		Occurrence occurrence = new Occurrence(this,
+				JDOTopicMapBuilder.checkAndCast(occurs_type, "Occurrence type", Topic.class));
+		occurrence.setReader(value, length, datatype);
+		getPersistenceManager().makePersistent(occurrence);
+		occurrences.add(occurrence);
+		return occurrence;
+	}
+
+	private OccurrenceIF makeOccurrence(TopicIF occurs_type) {
+		Occurrence occurrence = new Occurrence(this, JDOTopicMapBuilder.checkAndCast(occurs_type, "Occurrence type", Topic.class));
+		getPersistenceManager().makePersistent(occurrence);
+		occurrences.add(occurrence);
+		return occurrence;
+	}
+	
+	public OccurrenceIF makeOccurrence(TopicIF occurs_type, LocatorIF locator) {
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		OccurrenceIF occurrence = makeOccurrence(occurs_type);
+		occurrence.setLocator(locator);
+		return occurrence;
+	}
+
+	public OccurrenceIF makeOccurrence(TopicIF occurs_type, String value) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		OccurrenceIF occurrence = makeOccurrence(occurs_type);
+		occurrence.setValue(value);
+		return occurrence;
+	}
+
+	public OccurrenceIF makeOccurrence(TopicIF occurs_type, String value, LocatorIF datatype) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		OccurrenceIF occurrence = makeOccurrence(occurs_type);
+		occurrence.setValue(value, datatype);
+		return occurrence;
 	}
 }
