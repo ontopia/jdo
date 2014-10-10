@@ -33,6 +33,7 @@ import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.AssociationIF;
+import net.ontopia.topicmaps.core.CrossTopicMapException;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TMObjectIF;
 import net.ontopia.topicmaps.core.TopicIF;
@@ -142,5 +143,36 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Override
 	public TopicMapIF getTopicMap() {
 		return this;
+	}
+	
+	// builder methods
+
+	public TopicIF makeTopic() {
+		Topic topic = new Topic(this);
+		getPersistenceManager().makePersistent(topic);
+		topics.add(topic);
+		return topic;
+	}
+
+	public TopicIF makeTopic(TopicIF topic_type) {
+		if (topic_type == null) throw new NullPointerException("Topic type cannot be null");
+		CrossTopicMapException.check(topic_type, this);
+		TopicIF topic = makeTopic();
+		topic.addType(topic_type);
+		return topic;
+	}
+
+	public TopicIF makeTopic(Collection<TopicIF> topic_types) {
+		if (topic_types == null) throw new NullPointerException("Topic types cannot be null");
+		TopicIF topic = makeTopic();
+		for (TopicIF type : topic_types) {
+			CrossTopicMapException.check(type, this);
+			topic.addType(type);
+		}
+		return topic;
+	}
+
+	public AssociationIF makeAssociation(TopicIF assoc_type) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 }

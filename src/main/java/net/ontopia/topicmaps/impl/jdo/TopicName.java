@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,8 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import net.ontopia.infoset.core.LocatorIF;
+import net.ontopia.topicmaps.core.CrossTopicMapException;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
@@ -91,5 +94,47 @@ public class TopicName extends Scoped implements TopicNameIF {
 		}
 		
 		super.beforeRemove();
+	}
+
+	public VariantName makeVariantName(Collection<TopicIF> scope) {
+		if (scope == null) throw new NullPointerException("Scope cannot be null");
+		VariantName variant = new VariantName(this);
+		for (TopicIF scopeTopic : scope) {
+			CrossTopicMapException.check(scopeTopic, getTopicMap());
+			variant.addTheme(scopeTopic);
+		}
+		getPersistenceManager().makePersistent(variant);
+		variants.add(variant);
+		return variant;
+	}
+	
+	public VariantNameIF makeVariantName(String value, Collection<TopicIF> scope) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		VariantName variant = makeVariantName(scope);
+		variant.setValue(value);
+		return variant;
+	}
+
+	public VariantNameIF makeVariantName(LocatorIF locator, Collection<TopicIF> scope) {
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		VariantName variant = makeVariantName(scope);
+		variant.setLocator(locator);
+		return variant;
+	}
+
+	public VariantNameIF makeVariantName(String value, LocatorIF datatype, Collection<TopicIF> scope) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		VariantName variant = makeVariantName(scope);
+		variant.setValue(value, datatype);
+		return variant;
+	}
+
+	public VariantNameIF makeVariantName(Reader value, long length, LocatorIF datatype, Collection<TopicIF> scope) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		VariantName variant = makeVariantName(scope);
+		variant.setReader(value, length, datatype);
+		return variant;
 	}
 }
