@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -48,7 +49,7 @@ public abstract class TMObject implements TMObjectIF {
 	protected TopicMap topicmap;
 	
 	@Persistent(mappedBy = "object")
-	protected Collection<IdentityLocator> itemIdentifiers;
+	protected Set<IdentityLocator> itemIdentifiers = new HashSet<IdentityLocator>();
 
 	TMObject() {
 	}
@@ -78,35 +79,12 @@ public abstract class TMObject implements TMObjectIF {
 
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
-		
-		if (item_identifier instanceof IdentityLocator) {
-			IdentityLocator idLocator = (IdentityLocator) item_identifier;
-			if (idLocator.isItemIdentifier()) {
-				itemIdentifiers.add(idLocator);
-				return;
-			}
-		}
-		
+		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
 		itemIdentifiers.add(new IdentityLocator(item_identifier, this, IdentityLocator.ITEM_IDENTIFIER));
 	}
 
 	public void removeItemIdentifier(LocatorIF item_identifier) {
-		if (isReadOnly()) throw new ReadOnlyException();
-		
-		if (item_identifier instanceof IdentityLocator) {
-			itemIdentifiers.remove((IdentityLocator) item_identifier);
-		} else {
-			IdentityLocator toRemove = null;
-			for (IdentityLocator idLocator : itemIdentifiers) {
-				if (idLocator.getAddress().equals(item_identifier.getAddress())) {
-					toRemove = idLocator;
-					break;
-				}
-			}
-			if (toRemove != null) {
-				itemIdentifiers.remove(toRemove);
-			}
-		}
+		removeLocator(itemIdentifiers, item_identifier);
 	}
 
 	public void remove() {
@@ -136,5 +114,25 @@ public abstract class TMObject implements TMObjectIF {
 
 	protected PersistenceManager getPersistenceManager() {
 		return JDOHelper.getPersistenceManager(this);
+	}
+	
+	/**
+	 * INTERNAL: Finds and removes a persisted locator in a set of locators.
+	 * @param set
+	 * @param remove 
+	 */
+	protected void removeLocator(Set<? extends JDOLocator> set, LocatorIF remove) {
+		if (isReadOnly()) throw new ReadOnlyException();
+		if (remove == null) throw new NullPointerException("Locator cannot be null");
+		JDOLocator toRemove = null;
+		for (JDOLocator locator : set) {
+			if (locator.equals(remove)) {
+				toRemove = locator;
+				break;
+			}
+		}
+		if (toRemove != null) {
+			set.remove(toRemove);
+		}
 	}
 }
