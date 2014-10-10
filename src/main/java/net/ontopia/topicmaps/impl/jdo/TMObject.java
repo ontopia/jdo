@@ -32,10 +32,17 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 import net.ontopia.infoset.core.LocatorIF;
+import net.ontopia.topicmaps.core.AssociationIF;
+import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ConstraintViolationException;
+import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TMObjectIF;
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
+import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.VariantNameIF;
+import net.ontopia.topicmaps.impl.utils.ObjectStrings;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
@@ -102,6 +109,19 @@ public abstract class TMObject implements TMObjectIF {
 		for (IdentityLocator idLocator : itemIdentifiers) {
 			pm.deletePersistent(idLocator);
 		}
+	}
+
+	@Override
+	public String toString() {
+		String name = "jdo." + getClass().getSimpleName();
+		if (this instanceof TopicIF) return ObjectStrings.toString(name, (TopicIF) this);
+		if (this instanceof AssociationIF) return ObjectStrings.toString(name, (AssociationIF) this);
+		if (this instanceof AssociationRoleIF) return ObjectStrings.toString(name, (AssociationRoleIF) this);
+		if (this instanceof OccurrenceIF) return ObjectStrings.toString(name, (OccurrenceIF) this);
+		if (this instanceof TopicNameIF) return ObjectStrings.toString(name, (TopicNameIF) this);
+		if (this instanceof VariantNameIF) return ObjectStrings.toString(name, (VariantNameIF) this);
+		if (this instanceof TopicMapIF) return ObjectStrings.toString(name, (TopicMapIF) this);
+		return super.toString();
 	}
 	
 	/* ---
