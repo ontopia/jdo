@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -37,7 +38,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 public class Association extends Scoped implements AssociationIF {
 	
 	@Persistent(mappedBy = "association")
-	private Collection<AssociationRole> roles;
+	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
 
 	Association(Topic type) {
 		super(type);
