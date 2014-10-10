@@ -52,9 +52,10 @@ public class TopicName extends Scoped implements TopicNameIF {
 	//@Column(jdbcType=)
 	private String value;
 
-	public TopicName(Topic topic, Topic type) {
+	public TopicName(Topic topic, Topic type, String value) {
 		super(type);
 		this.topic = topic;
+		this.value = value;
 	}
 
 	@Override
