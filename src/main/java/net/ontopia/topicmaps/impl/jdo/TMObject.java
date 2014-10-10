@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
@@ -37,7 +38,7 @@ import net.ontopia.topicmaps.core.TopicMapIF;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
-public abstract class TMObject extends JDOObject implements TMObjectIF {
+public abstract class TMObject implements TMObjectIF {
 	
 	@PrimaryKey
 	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
@@ -122,8 +123,15 @@ public abstract class TMObject extends JDOObject implements TMObjectIF {
 		}
 	}
 	
-	/* JDO specific */
+	/* ---
+		JDO utilities
+	--- */
+	
 	public long getLongId() {
 		return id;
+	}
+
+	protected PersistenceManager getPersistenceManager() {
+		return JDOHelper.getPersistenceManager(this);
 	}
 }
