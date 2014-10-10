@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
@@ -53,10 +54,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	private String base;
 
 	@Persistent(mappedBy = "topicmap")
-	private Collection<Association> associations;
+	private Set<Association> associations = new HashSet<Association>();
 
 	@Persistent(mappedBy = "topicmap")
-	private Collection<Topic> topics;
+	private Set<Topic> topics = new HashSet<Topic>();
 	
 	@NotPersistent
 	private JDOTopicMapStore store;
