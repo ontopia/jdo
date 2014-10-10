@@ -113,6 +113,9 @@ public abstract class TMObject implements TMObjectIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();
 		getPersistenceManager().deletePersistent(this);
+		
+		// disconnect from topicmap, ontopia uses this as check
+		topicmap = null;
 	}
 
 	// implementation for TMObject: remove item identifiers on object remove
