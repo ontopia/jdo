@@ -80,6 +80,10 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		return address;
 	}
 
+	TMObject getObject() {
+		return object;
+	}
+
 	public LocatorIF resolveAbsolute(String address) {
 		// FIXME: should use static method instead of creating URILocator instance
 		try {
