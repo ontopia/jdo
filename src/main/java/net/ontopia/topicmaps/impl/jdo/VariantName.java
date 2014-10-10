@@ -23,6 +23,7 @@ package net.ontopia.topicmaps.impl.jdo;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
@@ -65,7 +66,7 @@ public class VariantName extends TMObject implements VariantNameIF {
 	@Persistent(table = "TM_SCOPES")
 	@Join(column = "scoped")
 	@Element(column = "scope")
-	private Collection<Topic> scope;
+	private Set<Topic> scope = new HashSet<Topic>();
 
 	public VariantName(TopicName name) {
 		super((TopicMap) name.getTopicMap());
