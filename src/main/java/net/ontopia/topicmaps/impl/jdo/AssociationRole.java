@@ -20,7 +20,6 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
-import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
