@@ -37,6 +37,7 @@ public abstract class Typed extends Reifiable implements TypedIF {
 
 	Typed(Topic type) {
 		super((TopicMap) type.getTopicMap());
+		this.type = type;
 	}
 
 	public TopicIF getType() {
