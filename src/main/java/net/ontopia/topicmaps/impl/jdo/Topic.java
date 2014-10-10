@@ -22,12 +22,12 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
@@ -45,10 +45,10 @@ import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_IX_ID_TOPICMAP", members = {"id", "topicmap"})
 public class Topic extends TMObject implements TopicIF {
-	@NotPersistent // todo
-	private Collection<LocatorIF> subjectLocators;
-	@NotPersistent // todo
-	private Collection<LocatorIF> subjectIdentifiers;
+	@Persistent(mappedBy = "object")
+	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();
+	@Persistent(mappedBy = "object")
+	private Set<IdentityLocator> subjectIdentifiers = new HashSet<IdentityLocator>();
 
 	@Persistent(table = "TM_TOPIC_TYPES")
 	@Join(column = "topic")
@@ -57,13 +57,13 @@ public class Topic extends TMObject implements TopicIF {
 	private Collection<Topic> types;
 
 	@Persistent(mappedBy = "topic")
-	private Collection<TopicName> topicNames;
+	private Set<TopicName> topicNames = new HashSet<TopicName>();
 
 	@Persistent(mappedBy = "topic")
-	private Collection<Occurrence> occurrences;
+	private Set<Occurrence> occurrences = new HashSet<Occurrence>();
 	
 	@Persistent(mappedBy = "player")
-	private Collection<AssociationRole> roles;
+	private Set<AssociationRole> roles = new HashSet<AssociationRole>();
 	
 	@Persistent(mappedBy = "reifier")
 	private ReifiableIF reified = null;
@@ -78,31 +78,33 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	public Collection<LocatorIF> getSubjectLocators() {
-		return subjectLocators;
+		return new HashSet<LocatorIF>(subjectLocators);
 	}
 
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
-		subjectLocators.add(lif);
+		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
+		subjectLocators.add((SubjectLocator) lif);
 	}
 
 	public void removeSubjectLocator(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		subjectLocators.remove(lif);
+		subjectLocators.remove((SubjectLocator) lif);
 	}
 
 	public Collection<LocatorIF> getSubjectIdentifiers() {
-		return subjectIdentifiers;
+		return new HashSet<LocatorIF>(subjectIdentifiers);
 	}
 
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
-		subjectIdentifiers.add(lif);
+		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
+		subjectIdentifiers.add(new IdentityLocator(lif, this, IdentityLocator.SUBJECT_IDENTIFIER));
 	}
 
 	public void removeSubjectIdentifier(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		subjectIdentifiers.remove(lif);
+		removeLocator(subjectIdentifiers, lif);
 	}
 
 	public Collection<TopicIF> getTypes() {
