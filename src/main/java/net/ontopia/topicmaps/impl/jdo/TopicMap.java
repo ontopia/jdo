@@ -121,7 +121,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public TMObjectIF getObjectById(String object_id) {
-		// todo: npe?
+		if (object_id == null) throw new NullPointerException("Object id cannot be null");
 		return getPersistenceManager().getObjectById(TMObject.class, object_id);
 	}
 
