@@ -68,23 +68,28 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		return "O";
 	}
 
+	@Override
 	public TopicIF getTopic() {
 		return topic;
 	}
 
+	@Override
 	public LocatorIF getDataType() {
 		return dataType;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}
 
+	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;
 	}
 
+	@Override
 	public LocatorIF getLocator() {
 		if (dataType.getAddress().equals("")) { // todo
 			return URILocator.create(getValue());
@@ -92,25 +97,30 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		return null;
 	}
 
+	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		setValue(locator.getAddress(), null); // todo: datatype uri
 	}
 
+	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		setValue(value);
 		this.dataType = datatype;
 	}
 
+	@Override
 	public Reader getReader() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public long getLength() {
 		return length;
 	}

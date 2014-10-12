@@ -48,10 +48,12 @@ public abstract class Scoped extends Typed implements ScopedIF {
 		super(type);
 	}
 
+	@Override
 	public Collection<TopicIF> getScope() {
 		return new HashSet<TopicIF>(scope);
 	}
 
+	@Override
 	public void addTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		Topic themeTopic = (Topic) theme;
@@ -60,6 +62,7 @@ public abstract class Scoped extends Typed implements ScopedIF {
 		}
 	}
 
+	@Override
 	public void removeTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		scope.remove((Topic) theme);

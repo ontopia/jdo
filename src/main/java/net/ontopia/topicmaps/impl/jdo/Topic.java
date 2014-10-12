@@ -80,10 +80,12 @@ public class Topic extends TMObject implements TopicIF {
 		return "T";
 	}
 
+	@Override
 	public Collection<LocatorIF> getSubjectLocators() {
 		return new HashSet<LocatorIF>(subjectLocators);
 	}
 
+	@Override
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
@@ -99,15 +101,18 @@ public class Topic extends TMObject implements TopicIF {
 		}
 	}
 
+	@Override
 	public void removeSubjectLocator(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		removeLocator(subjectLocators, lif);
 	}
 
+	@Override
 	public Collection<LocatorIF> getSubjectIdentifiers() {
 		return new HashSet<LocatorIF>(subjectIdentifiers);
 	}
 
+	@Override
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
@@ -123,68 +128,83 @@ public class Topic extends TMObject implements TopicIF {
 		}
 	}
 
+	@Override
 	public void removeSubjectIdentifier(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		removeLocator(subjectIdentifiers, lif);
 	}
 
+	@Override
 	public Collection<TopicIF> getTypes() {
 		return new HashSet<TopicIF>(types);
 	}
 
+	@Override
 	public void addType(TopicIF tif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo: class check
 		types.add((Topic) tif);
 	}
 
+	@Override
 	public void removeType(TopicIF tif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo: class check
 		types.remove((Topic) tif);
 	}
 
+	@Override
 	public Collection<TopicNameIF> getTopicNames() {
 		return new HashSet<TopicNameIF>(topicNames);
 	}
 
+	@Override
 	public Collection<TopicNameIF> getTopicNamesByType(TopicIF tif) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<OccurrenceIF> getOccurrences() {
 		return new HashSet<OccurrenceIF>(occurrences);
 	}
 
+	@Override
 	public Collection<OccurrenceIF> getOccurrencesByType(TopicIF tif) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationRoleIF> getRoles() {
 		return new HashSet<AssociationRoleIF>(roles);
 	}
 
+	@Override
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF tif) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF tif, TopicIF tif1) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationIF> getAssociations() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationIF> getAssociationsByType(TopicIF tif) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public void merge(TopicIF tif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo
 	}
 
+	@Override
 	public ReifiableIF getReified() {
 		return reified;
 	}

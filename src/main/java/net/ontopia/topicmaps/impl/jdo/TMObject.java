@@ -69,23 +69,28 @@ public abstract class TMObject implements TMObjectIF {
 	
 	protected abstract String getClassIndicator();
 	
+	@Override
 	public String getObjectId() {
 		return getClassIndicator() + id;
 	}
 
 	// todo: actually implement on setters
+	@Override
 	public boolean isReadOnly() {
 		return getTopicMap().getStore().isReadOnly();
 	}
 
+	@Override
 	public TopicMapIF getTopicMap() {
 		return topicmap;
 	}
 
+	@Override
 	public Collection<LocatorIF> getItemIdentifiers() {
 		return new HashSet<LocatorIF>(itemIdentifiers);
 	}
 
+	@Override
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
@@ -101,10 +106,12 @@ public abstract class TMObject implements TMObjectIF {
 		}
 	}
 
+	@Override
 	public void removeItemIdentifier(LocatorIF item_identifier) {
 		removeLocator(itemIdentifiers, item_identifier);
 	}
 
+	@Override
 	public void remove() {
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();

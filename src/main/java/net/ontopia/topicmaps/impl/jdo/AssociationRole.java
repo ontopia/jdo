@@ -60,14 +60,17 @@ public class AssociationRole extends Typed implements AssociationRoleIF {
 		return "R";
 	}
 
+	@Override
 	public AssociationIF getAssociation() {
 		return association;
 	}
 
+	@Override
 	public TopicIF getPlayer() {
 		return player;
 	}
 
+	@Override
 	public void setPlayer(TopicIF player) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.player = (Topic) player;

@@ -40,10 +40,12 @@ public abstract class Typed extends Reifiable implements TypedIF {
 		this.type = type;
 	}
 
+	@Override
 	public TopicIF getType() {
 		return type;
 	}
 
+	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo: class check

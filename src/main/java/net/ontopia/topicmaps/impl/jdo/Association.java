@@ -49,14 +49,17 @@ public class Association extends Scoped implements AssociationIF {
 		return "A";
 	}
 
+	@Override
 	public Collection<TopicIF> getRoleTypes() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF roletype) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public Collection<AssociationRoleIF> getRoles() {
 		return new HashSet<AssociationRoleIF>(roles);
 	}

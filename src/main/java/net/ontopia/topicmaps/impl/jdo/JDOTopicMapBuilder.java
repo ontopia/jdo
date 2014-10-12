@@ -44,26 +44,32 @@ public class JDOTopicMapBuilder implements TopicMapBuilderIF {
 		this.topicmap = topicmap;
 	}
 	
+	@Override
 	public TopicMapIF getTopicMap() {
 		return topicmap;
 	}
 
+	@Override
 	public TopicIF makeTopic() {
 		return topicmap.makeTopic();
 	}
 
+	@Override
 	public TopicIF makeTopic(TopicIF topic_type) {
 		return topicmap.makeTopic(topic_type);
 	}
 
+	@Override
 	public TopicIF makeTopic(Collection<TopicIF> topic_types) {
 		return topicmap.makeTopic(topic_types);
 	}
 
+	@Override
 	public TopicNameIF makeTopicName(TopicIF topic, String value) {
 		return makeTopicName(topic, getDefaultNameType(), value);
 	}
 	
+	@Override
 	public TopicNameIF makeTopicName(TopicIF topic, TopicIF bntype, String value) {
 		return checkAndCast(topic, "Topic", Topic.class).makeTopicName(bntype, value);
 	}
@@ -77,65 +83,80 @@ public class JDOTopicMapBuilder implements TopicMapBuilderIF {
 		return defaultNameType;
 	}
 
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, String value, Collection<TopicIF> scope) {
 		return checkAndCast(name, "Name", TopicName.class).makeVariantName(value, scope);
 	}
 
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, LocatorIF locator, Collection<TopicIF> scope) {
 		return checkAndCast(name, "Name", TopicName.class).makeVariantName(locator, scope);
 	}
 
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, String value, LocatorIF datatype, Collection<TopicIF> scope) {
 		return checkAndCast(name, "Name", TopicName.class).makeVariantName(value, datatype, scope);
 	}
 
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, Reader value, long length, LocatorIF datatype, Collection<TopicIF> scope) {
 		return checkAndCast(name, "Name", TopicName.class).makeVariantName(value, length, datatype, scope);
 	}
 
 	@Deprecated
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, String value) {
 		throw new OntopiaRuntimeException("JDOTopicMapBuilder.makeVariantName(TopicNameIF, String) is not implemented");
 	}
 	@Deprecated
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, LocatorIF locator) {
 		throw new OntopiaRuntimeException("JDOTopicMapBuilder.makeVariantName(TopicNameIF, LocatorIF) is not implemented");
 	}
 	@Deprecated
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, String value, LocatorIF datatype) {
 		throw new OntopiaRuntimeException("JDOTopicMapBuilder.makeVariantName(TopicNameIF, String, LocatorIF) is not implemented");
 	}
 	@Deprecated
+	@Override
 	public VariantNameIF makeVariantName(TopicNameIF name, Reader value, long length, LocatorIF datatype) {
 		throw new OntopiaRuntimeException("JDOTopicMapBuilder.makeVariantName(TopicNameIF, Reader, long, LocatorIF) is not implemented");
 	}
 
+	@Override
 	public OccurrenceIF makeOccurrence(TopicIF topic, TopicIF occurs_type, String value) {
 		return checkAndCast(topic, "Topic", Topic.class).makeOccurrence(occurs_type, value);
 	}
 
+	@Override
 	public OccurrenceIF makeOccurrence(TopicIF topic, TopicIF occurs_type, String value, LocatorIF datatype) {
 		return checkAndCast(topic, "Topic", Topic.class).makeOccurrence(occurs_type, value, datatype);
 	}
 
+	@Override
 	public OccurrenceIF makeOccurrence(TopicIF topic, TopicIF occurs_type, Reader value, long length, LocatorIF datatype) {
 		return checkAndCast(topic, "Topic", Topic.class).makeOccurrence(occurs_type, value, length, datatype);
 	}
 
+	@Override
 	public OccurrenceIF makeOccurrence(TopicIF topic, TopicIF occurs_type, LocatorIF locator) {
 		return checkAndCast(topic, "Topic", Topic.class).makeOccurrence(occurs_type, locator);
 	}
 
+	@Override
 	public AssociationIF makeAssociation(TopicIF assoc_type) {
 		return topicmap.makeAssociation(assoc_type);
 	}
 
+	@Override
 	public AssociationIF makeAssociation(TopicIF assoc_type, TopicIF role_type, TopicIF player) {
 		AssociationIF association = makeAssociation(assoc_type);
 		makeAssociationRole(association, role_type, player);
 		return association;
 	}
 
+	@Override
 	public AssociationRoleIF makeAssociationRole(AssociationIF assoc, TopicIF role_type, TopicIF player) {
 		return checkAndCast(assoc, "Association", Association.class).makeAssociationRole(role_type, player);
 	}

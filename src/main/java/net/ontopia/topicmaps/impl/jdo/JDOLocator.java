@@ -72,10 +72,12 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		this.topicmap = (TopicMap) object.getTopicMap();
 	}
 
+	@Override
 	public String getNotation() {
 		return "URI";
 	}
 
+	@Override
 	public String getAddress() {
 		return address;
 	}
@@ -84,6 +86,7 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		return object;
 	}
 
+	@Override
 	public LocatorIF resolveAbsolute(String address) {
 		// FIXME: should use static method instead of creating URILocator instance
 		try {
@@ -97,6 +100,7 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		return this;
 	}
 
+	@Override
 	public String getExternalForm() {
 		// FIXME: should use static method instead of creating URILocator instance
 		try {
@@ -126,10 +130,12 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 		}
 	}
 
+	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeUTF(address);
 	}
 
+	@Override
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		address = in.readUTF();
 	}

@@ -137,6 +137,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		this.base = base.getAddress();
 	}
 
+	@Override
 	public TopicMapStoreIF getStore() {
 		return store;
 	}
@@ -145,6 +146,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		this.store = store;
 	}
 
+	@Override
 	public synchronized TopicMapBuilderIF getBuilder() {
 		if (builder == null) {
 			builder = new JDOTopicMapBuilder(this);
@@ -152,23 +154,28 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		return builder;
 	}
 
+	@Override
 	public Object getIndex(String name) {
 		return null; // todo
 	}
 
+	@Override
 	public Collection<TopicIF> getTopics() {
 		return new HashSet<TopicIF>(topics);
 	}
 
+	@Override
 	public Collection<AssociationIF> getAssociations() {
 		return new HashSet<AssociationIF>(associations);
 	}
 
+	@Override
 	public TMObjectIF getObjectById(String object_id) {
 		if (object_id == null) throw new NullPointerException("Object id cannot be null");
 		return getPersistenceManager().getObjectById(TMObject.class, object_id);
 	}
 
+	@Override
 	public TMObjectIF getObjectByItemIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		IdentityLocator itemIdentifier = singularResultQuery(TopicMapQuery.OBJECT_BY_ITEM_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
@@ -176,6 +183,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		return itemIdentifier.getObject();
 	}
 
+	@Override
 	public TopicIF getTopicBySubjectLocator(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		SubjectLocator subjectLocator = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_LOCATOR, SubjectLocator.class, locator.getAddress(), this);
@@ -185,6 +193,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		return (TopicIF) object;
 	}
 
+	@Override
 	public TopicIF getTopicBySubjectIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		IdentityLocator subjectIdentifier = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
@@ -206,6 +215,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		return identifier.getObject();
 	}
 
+	@Override
 	public void clear() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}

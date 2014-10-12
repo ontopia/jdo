@@ -68,18 +68,22 @@ public class TopicName extends Scoped implements TopicNameIF {
 		return "N";
 	}
 
+	@Override
 	public Collection<VariantNameIF> getVariants() {
 		return new HashSet<VariantNameIF>(variants);
 	}
 
+	@Override
 	public TopicIF getTopic() {
 		return topic;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}
 
+	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;

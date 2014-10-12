@@ -45,10 +45,12 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 		super(topicmap);
 	}
 
+	@Override
 	public TopicIF getReifier() {
 		return reifier;
 	}
 
+	@Override
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.reifier = (Topic) reifier;

@@ -78,27 +78,33 @@ public class VariantName extends TMObject implements VariantNameIF {
 		return "V";
 	}
 
+	@Override
 	public TopicNameIF getTopicName() {
 		return topicname;
 	}
 
+	@Override
 	public LocatorIF getDataType() {
 		return datatype;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}
 
+	@Override
 	public Reader getReader() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;
 	}
 
+	@Override
 	public LocatorIF getLocator() {
 		if (datatype.getAddress().equals("")) {
 			return URILocator.create(value);
@@ -106,47 +112,57 @@ public class VariantName extends TMObject implements VariantNameIF {
 		return null;
 	}
 
+	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		setValue(locator.getAddress(), URILocator.create("uri")); // todo
 	}
 
+	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;
 		this.datatype = datatype;
 	}
 
+	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
 	public long getLength() {
 		return length;
 	}
 
+	@Override
 	public TopicIF getTopic() {
 		return topicname.getTopic();
 	}
 
+	@Override
 	public Collection<TopicIF> getScope() {
 		return new HashSet<TopicIF>(scope);
 	}
 
+	@Override
 	public void addTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		scope.add((Topic) theme);
 	}
 
+	@Override
 	public void removeTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		scope.remove((Topic) theme);
 	}
 
+	@Override
 	public TopicIF getReifier() {
 		return reifier;
 	}
 
+	@Override
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.reifier = (Topic) reifier;
