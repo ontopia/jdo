@@ -63,6 +63,9 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@NotPersistent
 	private JDOTopicMapStore store;
 	
+	/* -- not persistent -- */
+	private transient JDOTopicMapBuilder builder = null;
+	
 	public TopicMap() {
 		super();
 	}
@@ -98,8 +101,11 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		this.store = store;
 	}
 
-	public TopicMapBuilderIF getBuilder() {
-		return null; // todo
+	public synchronized TopicMapBuilderIF getBuilder() {
+		if (builder == null) {
+			builder = new JDOTopicMapBuilder(this);
+		}
+		return builder;
 	}
 
 	public Object getIndex(String name) {
