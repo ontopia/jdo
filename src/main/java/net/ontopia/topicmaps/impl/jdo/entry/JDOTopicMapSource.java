@@ -60,6 +60,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		this.properties = properties;
 	}
 
+	@Override
 	public Collection<TopicMapReferenceIF> getReferences() {
 		if (references == null) {
 			refresh();
@@ -68,6 +69,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		return new HashSet<TopicMapReferenceIF>(references);
 	}
 
+	@Override
 	public synchronized void refresh() {
 		createPersistenceManagerFactory();
 		
@@ -123,12 +125,14 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		}
 	}
 
+	@Override
 	public void close() {
 		if (persistenceManagerFactory != null) {
 			persistenceManagerFactory.close();
 		}
 	}
 
+	@Override
 	public TopicMapReferenceIF createTopicMap(String name, String baseAddressURI) {
 
 		if (!supportsCreate) {
@@ -166,18 +170,22 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 
 	/* --- getter/setter for sources xml --- */
 	
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	@Override
 	public String getTitle() {
 		return title;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -202,10 +210,12 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		return supportsCreate;
 	}
 
+	@Override
 	public boolean supportsCreate() {
 		return getSupportsCreate();
 	}
 
+	@Override
 	public boolean supportsDelete() {
 		return getSupportsDelete();
 	}

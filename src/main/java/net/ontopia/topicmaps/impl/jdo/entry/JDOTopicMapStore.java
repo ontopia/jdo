@@ -58,23 +58,28 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		topicmap.setStore(this);
 	}
 	
+	@Override
 	public int getImplementation() {
 		return JDO_IMPLEMENTATION;
 	}
 
+	@Override
 	public boolean isTransactional() {
 		return true;
 	}
 
+	@Override
 	public boolean isOpen() {
 		return persistenceManager.currentTransaction().isActive();
 	}
 
+	@Override
 	public void open() {
 		if (isOpen()) throw new OntopiaRuntimeException("Cannot open store: already open");
 		persistenceManager.currentTransaction().begin();
 	}
 
+	@Override
 	public void close() {
 		if (persistenceManager.currentTransaction().isActive()) {
 			persistenceManager.currentTransaction().rollback();
@@ -82,46 +87,56 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		persistenceManager.close();
 	}
 
+	@Override
 	public LocatorIF getBaseAddress() {
 		return null; // todo
 	}
 
+	@Override
 	public void setBaseAddress(LocatorIF base_address) {
 		// todo
 	}
 
+	@Override
 	public TopicMapIF getTopicMap() {
 		return topicmap;
 	}
 
+	@Override
 	public void commit() {
 		if (persistenceManager.currentTransaction().isActive()) {
 			persistenceManager.currentTransaction().commit();
 		}
 	}
 
+	@Override
 	public void abort() {
 		if (persistenceManager.currentTransaction().isActive()) {
 			persistenceManager.currentTransaction().rollback();
 		}
 	}
 
+	@Override
 	public void delete(boolean force) throws NotRemovableException {
 		// todo
 	}
 
+	@Override
 	public boolean isReadOnly() {
 		return readOnly;
 	}
 
+	@Override
 	public String getProperty(String propertyName) {
 		return null; // todo: needed?
 	}
 
+	@Override
 	public TopicMapReferenceIF getReference() {
 		return reference;
 	}
 
+	@Override
 	public void setReference(TopicMapReferenceIF reference) {
 		// todo: secure?
 		this.reference = (JDOTopicMapReference) reference;
