@@ -21,8 +21,11 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
@@ -41,6 +44,7 @@ import net.ontopia.topicmaps.core.TopicMapBuilderIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
+import net.ontopia.utils.OntopiaRuntimeException;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -65,6 +69,43 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	
 	/* -- not persistent -- */
 	private transient JDOTopicMapBuilder builder = null;
+	
+	private static enum TopicMapQuery { 
+		TOPIC_BY_SUBJECT_IDENTIFIER(IdentityLocator.class, 
+			"address == locator && topicmap == tm && type == " + IdentityLocator.SUBJECT_IDENTIFIER,
+			"String locator, TopicMap tm"),
+		TOPIC_BY_SUBJECT_LOCATOR(SubjectLocator.class, 
+			"address == locator && topicmap == tm",
+			"String locator, TopicMap tm"),
+		OBJECT_BY_ITEM_IDENTIFIER(IdentityLocator.class,
+			"address == locator && topicmap == tm && type == " + IdentityLocator.ITEM_IDENTIFIER,
+			"String locator, TopicMap tm");
+		
+		private final String filter;
+		private final String parameters;
+		private final Class<?> klass;
+		private static final EnumMap<TopicMapQuery, Query> queryCache = 
+				new EnumMap<TopicMapQuery, Query>(TopicMapQuery.class);
+
+		private TopicMapQuery(Class<?> klass, String filter, String parameters) {
+			this.klass = klass;
+			this.filter = filter;
+			this.parameters = parameters;
+		}
+		
+		Query get(PersistenceManager pm) {
+			Query q = queryCache.get(this);
+			if (q == null) {
+				q = pm.newQuery(klass, filter);
+				q.declareParameters(parameters);
+				q.compile();
+				queryCache.put(this, q);
+				return q;
+			} else {
+				return pm.newQuery(q);
+			}
+		}
+	}
 	
 	public TopicMap() {
 		super();
@@ -126,15 +167,28 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public TMObjectIF getObjectByItemIdentifier(LocatorIF locator) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		IdentityLocator itemIdentifier = singularResultQuery(TopicMapQuery.OBJECT_BY_ITEM_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
+		if (itemIdentifier == null) return null;
+		return itemIdentifier.getObject();
 	}
 
 	public TopicIF getTopicBySubjectLocator(LocatorIF locator) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		SubjectLocator subjectLocator = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_LOCATOR, SubjectLocator.class, locator.getAddress(), this);
+		if (subjectLocator == null) return null;
+		TMObject object = subjectLocator.getObject();
+		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject locator " + locator + " was added to the non-topic " + object);
+		return (TopicIF) object;
 	}
 
 	public TopicIF getTopicBySubjectIdentifier(LocatorIF locator) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		IdentityLocator subjectIdentifier = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
+		if (subjectIdentifier == null) return null;
+		TMObject object = subjectIdentifier.getObject();
+		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject identifier " + locator + " was added to the non-topic " + object);
+		return (TopicIF) object;
 	}
 
 	public void clear() {
@@ -184,5 +238,24 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		getPersistenceManager().makePersistent(association);
 		associations.add(association);
 		return association;
+	}
+		
+	@SuppressWarnings("unchecked")
+	private <T> T singularResultQuery(TopicMapQuery query, Class<T> expected, Object... variables) {
+		Query q = query.get(getPersistenceManager());
+		try {
+			Collection<?> result = (Collection) q.executeWithArray(variables);
+			if ((result == null) || (result.isEmpty())) return null;
+
+			Object o = result.iterator().next();
+			if (o == null) return null;
+			if (o.getClass().isAssignableFrom(expected)) {
+				return (T) o;
+			}
+
+			return null;
+		} finally {
+			q.closeAll();
+		}
 	}
 }
