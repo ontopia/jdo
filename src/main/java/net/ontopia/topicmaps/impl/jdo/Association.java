@@ -81,7 +81,7 @@ public class Association extends Scoped implements AssociationIF {
 	public AssociationRole makeAssociationRole(TopicIF role_type, TopicIF player) {
 		AssociationRole role = new AssociationRole(this, 
 				JDOTopicMapBuilder.checkAndCast(role_type, "Role type", Topic.class), 
-				JDOTopicMapBuilder.checkAndCast(role_type, "Player", Topic.class));
+				JDOTopicMapBuilder.checkAndCast(player, "Player", Topic.class));
 		getPersistenceManager().makePersistent(role);
 		roles.add(role);
 		return role;
