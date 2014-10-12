@@ -79,6 +79,9 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 			"String locator, TopicMap tm"),
 		OBJECT_BY_ITEM_IDENTIFIER(IdentityLocator.class,
 			"address == locator && topicmap == tm && type == " + IdentityLocator.ITEM_IDENTIFIER,
+			"String locator, TopicMap tm"),
+		OBJECT_BY_IDENTIFIER(JDOLocator.class,
+			"address == locator && topicmap == tm",
 			"String locator, TopicMap tm");
 		
 		private final String filter;
@@ -189,6 +192,18 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		TMObject object = subjectIdentifier.getObject();
 		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject identifier " + locator + " was added to the non-topic " + object);
 		return (TopicIF) object;
+	}
+
+	/**
+	 * INTERNAL: Find the object use specified locator as item/subject identifier. For ConstraintViolationException
+	 * purposes.
+	 * @param locator
+	 * @return 
+	 */
+	TMObject getObjectByIdentifier(LocatorIF locator) {
+		IdentityLocator identifier = singularResultQuery(TopicMapQuery.OBJECT_BY_IDENTIFIER, IdentityLocator.class, locator.getAddress());
+		if (identifier == null) return null;
+		return identifier.getObject();
 	}
 
 	public void clear() {
