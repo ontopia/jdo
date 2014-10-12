@@ -153,6 +153,7 @@ public abstract class TMObject implements TMObjectIF {
 		}
 		if (toRemove != null) {
 			set.remove(toRemove);
+			getPersistenceManager().deletePersistent(toRemove);
 		}
 	}
 }
