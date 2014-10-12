@@ -80,7 +80,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		OBJECT_BY_ITEM_IDENTIFIER(IdentityLocator.class,
 			"address == locator && topicmap == tm && type == " + IdentityLocator.ITEM_IDENTIFIER,
 			"String locator, TopicMap tm"),
-		OBJECT_BY_IDENTIFIER(JDOLocator.class,
+		OBJECT_BY_IDENTIFIER(IdentityLocator.class,
 			"address == locator && topicmap == tm",
 			"String locator, TopicMap tm");
 		
@@ -201,7 +201,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	 * @return 
 	 */
 	TMObject getObjectByIdentifier(LocatorIF locator) {
-		IdentityLocator identifier = singularResultQuery(TopicMapQuery.OBJECT_BY_IDENTIFIER, IdentityLocator.class, locator.getAddress());
+		IdentityLocator identifier = singularResultQuery(TopicMapQuery.OBJECT_BY_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
 		if (identifier == null) return null;
 		return identifier.getObject();
 	}
