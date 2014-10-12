@@ -63,10 +63,11 @@ public class VariantName extends TMObject implements VariantNameIF {
 	@Column(name = "reifier")
 	private Topic reifier;
 	
-	@Persistent(table = "TM_SCOPES")
+	@Persistent(table = "TM_SCOPES_VN")
 	@Join(column = "scoped")
 	@Element(column = "scope")
 	private Set<Topic> scope = new HashSet<Topic>();
+	// probleem hier: conflicteerd met Scoped
 
 	public VariantName(TopicName name) {
 		super((TopicMap) name.getTopicMap());
