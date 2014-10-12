@@ -24,6 +24,8 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import javax.jdo.JDODataStoreException;
+import javax.jdo.JDOException;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
@@ -85,7 +87,16 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
-		subjectLocators.add(new SubjectLocator(lif, this));
+		try {
+			SubjectLocator subjectLocator = new SubjectLocator(lif, this);
+			if (!subjectLocators.contains(subjectLocator)) {
+				getPersistenceManager().makePersistent(subjectLocator);
+				subjectLocators.add(subjectLocator);
+			}
+		} catch (JDOException re) {
+			throw new ConstraintViolationException("Subject locator " + lif + " is already identifying another topic: " 
+					+ topicmap.getTopicBySubjectLocator(lif));
+		}
 	}
 
 	public void removeSubjectLocator(LocatorIF lif) {
@@ -100,7 +111,16 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
-		subjectIdentifiers.add(new IdentityLocator(lif, this, IdentityLocator.SUBJECT_IDENTIFIER));
+		try {
+			IdentityLocator subjectIdentity = new IdentityLocator(lif, this, IdentityLocator.SUBJECT_IDENTIFIER);
+			if (!subjectIdentifiers.contains(subjectIdentity)) {
+				getPersistenceManager().makePersistent(subjectIdentity);
+				subjectIdentifiers.add(subjectIdentity);
+			}
+		} catch (JDOException re) {
+			throw new ConstraintViolationException("Subject identifier " + lif + " is already identifying another object: " 
+					+ topicmap.getObjectByIdentifier(lif));
+		}
 	}
 
 	public void removeSubjectIdentifier(LocatorIF lif) {
@@ -222,4 +242,12 @@ public class Topic extends TMObject implements TopicIF {
 		occurrence.setValue(value, datatype);
 		return occurrence;
 	}
+	
+	// temp for test
+
+	public Set<IdentityLocator> _getSubjectIdentifiers() {
+		return subjectIdentifiers;
+	}
+	
+	
 }

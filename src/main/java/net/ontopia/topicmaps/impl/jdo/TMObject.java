@@ -23,6 +23,8 @@ package net.ontopia.topicmaps.impl.jdo;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import javax.jdo.JDODataStoreException;
+import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -87,7 +89,16 @@ public abstract class TMObject implements TMObjectIF {
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
-		itemIdentifiers.add(new IdentityLocator(item_identifier, this, IdentityLocator.ITEM_IDENTIFIER));
+		try {
+			IdentityLocator itemIdentifier = new IdentityLocator(item_identifier, this, IdentityLocator.ITEM_IDENTIFIER);
+			if (!itemIdentifiers.contains(itemIdentifier)) {
+				getPersistenceManager().makePersistent(itemIdentifier);
+				itemIdentifiers.add(itemIdentifier);
+			}
+		} catch (JDOException re) {
+			throw new ConstraintViolationException("Item identifier " + item_identifier + " is already identifying another object: " 
+					+ topicmap.getObjectByIdentifier(item_identifier));
+		}
 	}
 
 	public void removeItemIdentifier(LocatorIF item_identifier) {
