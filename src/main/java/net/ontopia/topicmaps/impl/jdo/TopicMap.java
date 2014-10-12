@@ -179,6 +179,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public AssociationIF makeAssociation(TopicIF assoc_type) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		Association association = new Association(
+				JDOTopicMapBuilder.checkAndCast(assoc_type, "Type", Topic.class));
+		getPersistenceManager().makePersistent(association);
+		associations.add(association);
+		return association;
 	}
 }
