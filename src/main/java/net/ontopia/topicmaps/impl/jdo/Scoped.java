@@ -54,7 +54,10 @@ public abstract class Scoped extends Typed implements ScopedIF {
 
 	public void addTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		scope.add((Topic) theme);
+		Topic themeTopic = (Topic) theme;
+		if (!scope.contains(themeTopic)) {
+			scope.add(themeTopic);
+		}
 	}
 
 	public void removeTheme(TopicIF theme) {
