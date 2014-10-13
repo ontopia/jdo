@@ -128,12 +128,12 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 				throw new OntopiaRuntimeException("Error encountered during loading of JDO persistence manager factory: " + jdoe.getMessage(), jdoe);
 			}
 			
-//			try {
-//				// load default queries
-//				queries.load(Queries.DEFAULT_QUERIES);
-//			} catch (IOException ioe) {
-//				throw new OntopiaRuntimeException(ioe);
-//			}
+			try {
+				// load default queries
+				queries.load(Queries.DEFAULT_QUERIES);
+			} catch (IOException ioe) {
+				throw new OntopiaRuntimeException(ioe);
+			}
 		}
 	}
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries name="default" defaultPackage="net.ontopia.topicmaps.impl.jdo">
+	
+	<query name="TopicMap.getTopicBySubjectIdentifier">
+		<class>IdentityLocator</class>
+		<parameters>TopicMap tm, String locator</parameters>
+		<filter><![CDATA[
+			address == locator && topicmap == tm && type == IdentityLocator.SUBJECT_IDENTIFIER
+		]]></filter>
+		<range-min>0</range-min>
+		<range-max>1</range-max>
+	</query>
+	
+</queries>
