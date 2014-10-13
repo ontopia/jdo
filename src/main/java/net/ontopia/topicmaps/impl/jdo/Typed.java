@@ -20,10 +20,10 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TypedIF;
@@ -32,7 +32,7 @@ import net.ontopia.topicmaps.core.TypedIF;
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Typed extends Reifiable implements TypedIF {
 	
-	@Column(name = "type")
+	@Persistent(name = "type", column = "type")
 	private Topic type;
 
 	Typed(Topic type) {
