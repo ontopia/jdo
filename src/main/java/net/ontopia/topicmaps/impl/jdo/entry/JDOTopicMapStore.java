@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo.entry;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.NotRemovableException;
 import net.ontopia.topicmaps.core.TopicMapIF;
@@ -35,6 +36,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	
 	private final boolean readOnly;
 	protected final PersistenceManager persistenceManager;
+	private final Transaction transaction;
 	private final TopicMap topicmap;
 
 	private JDOTopicMapReference reference;
@@ -42,6 +44,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	JDOTopicMapStore(long id, boolean readonly, PersistenceManagerFactory factory) {
 		this.readOnly = readonly;
 		persistenceManager = factory.getPersistenceManager();
+		transaction = persistenceManager.currentTransaction();
 		
 		topicmap = persistenceManager.getObjectById(TopicMap.class, id);
 		if (topicmap == null) {
@@ -54,6 +57,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	JDOTopicMapStore(PersistenceManagerFactory factory) {
 		this.readOnly = false;
 		this.persistenceManager = factory.getPersistenceManager();
+		transaction = persistenceManager.currentTransaction();
 		topicmap = new TopicMap();
 		topicmap.setStore(this);
 	}
@@ -70,19 +74,19 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public boolean isOpen() {
-		return persistenceManager.currentTransaction().isActive();
+		return transaction.isActive();
 	}
 
 	@Override
 	public void open() {
 		if (isOpen()) throw new OntopiaRuntimeException("Cannot open store: already open");
-		persistenceManager.currentTransaction().begin();
+		transaction.begin();
 	}
 
 	@Override
 	public void close() {
-		if (persistenceManager.currentTransaction().isActive()) {
-			persistenceManager.currentTransaction().rollback();
+		if (transaction.isActive()) {
+			transaction.rollback();
 		}
 		persistenceManager.close();
 	}
@@ -104,15 +108,15 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public void commit() {
-		if (persistenceManager.currentTransaction().isActive()) {
-			persistenceManager.currentTransaction().commit();
+		if (transaction.isActive()) {
+			transaction.commit();
 		}
 	}
 
 	@Override
 	public void abort() {
-		if (persistenceManager.currentTransaction().isActive()) {
-			persistenceManager.currentTransaction().rollback();
+		if (transaction.isActive()) {
+			transaction.rollback();
 		}
 	}
 
