@@ -22,9 +22,13 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import junit.framework.Assert;
 import net.ontopia.infoset.impl.basic.URILocator;
+import net.ontopia.topicmaps.core.AssociationIF;
+import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ConstraintViolationException;
+import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicMapBuilderIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
@@ -35,7 +39,9 @@ import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSourceTest;
 import net.ontopia.topicmaps.utils.PSI;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,37 +50,45 @@ public class JDOTopicMapBuilderTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapBuilderTest.class);
 	
+	private static TopicMapReferenceIF reference;
+	private static JDOTopicMapSource source;
 	private TopicMapStoreIF store;
-	private TopicMapReferenceIF reference;
-	private JDOTopicMapSource source;
 	private TopicMapIF topicmap;
 	private TopicMapBuilderIF builder;
 	
-	@Before
-	public void setUp() throws IOException {
+	@BeforeClass
+	public static void init() throws IOException {
+		File db = new File("target/ontopia.h2.db");
+		if (db.exists()) db.delete();
+		
 		source = new JDOTopicMapSource(JDOTopicMapSourceTest.PROPERTIES);
 		source.setSupportsCreate(true);
 		reference = source.createTopicMap("foo", "foo:bar");
+	}
+	
+	@Before
+	public void setUp() throws IOException {
 		store = reference.createStore(false);
+		store.open();  // check ontopia.rdbms if open is called in constructor / createStore / getTopicmap
 		topicmap = store.getTopicMap();
 		builder = topicmap.getBuilder();
 	}
 	
 	@After
 	public void tearDown() {
+		store.abort();
 		store.close();
+	}
+	
+	@AfterClass
+	public static void destroy() {
 		reference.close();
 		source.close();
-		
-		File db = new File("target/ontopia.h2.db");
-		if (db.exists()) db.delete();
 	}
 	
 	@Test
 	public void testCreateTopic() {
 		TopicIF topic = builder.makeTopic();
-		store.commit();
-		
 		Assert.assertNotNull(topic);
 		Assert.assertEquals(topicmap, topic.getTopicMap());
 		Assert.assertEquals(1, topicmap.getTopics().size());
@@ -85,13 +99,7 @@ public class JDOTopicMapBuilderTest {
 		TopicIF topic = builder.makeTopic();
 		TopicNameIF name = builder.makeTopicName(topic, "Foo");
 		TopicNameIF name2 = builder.makeTopicName(topic, "Foo");
-		
-		store.commit();
-		
 		TopicNameIF name3 = builder.makeTopicName(topic, "Foo");
-		
-		store.commit();
-		
 		Assert.assertNotNull(name);
 		Assert.assertEquals(topicmap, name.getTopicMap());
 		Assert.assertEquals(3, topic.getTopicNames().size());
@@ -160,7 +168,141 @@ public class JDOTopicMapBuilderTest {
 		TopicNameIF name = builder.makeTopicName(builder.makeTopic(), "foo");
 		name.addTheme(builder.makeTopic());
 		name.addTheme(builder.makeTopic());
-		store.commit();
+	}
+	
+	@Test
+	public void testMakeAssociation() {
+		TopicIF at = builder.makeTopic();
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		AssociationIF association = builder.makeAssociation(at, rt, t);
+		
+		Assert.assertEquals(1, topicmap.getAssociations().size());
+		Assert.assertEquals(association, topicmap.getAssociations().iterator().next());
+		
+		TopicIF t2 = builder.makeTopic();
+		TopicIF rt2 = builder.makeTopic();
+		AssociationRoleIF ar2 = builder.makeAssociationRole(association, rt2, t2);
+		
+		Assert.assertEquals(1, topicmap.getAssociations().size());
+		Assert.assertEquals(2, association.getRoles().size());
+		Assert.assertEquals(rt2, ar2.getType());
+		Assert.assertEquals(t2, ar2.getPlayer());
+	}
+	
+	@Test
+	public void testAssociationQuery_getRoleTypes() {
+		TopicIF at = builder.makeTopic();
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		AssociationIF association = builder.makeAssociation(at, rt, t);
+		
+		Collection<TopicIF> roleTypes = association.getRoleTypes();
+		
+		Assert.assertEquals(1, roleTypes.size());
+		Assert.assertEquals(rt, roleTypes.iterator().next());
+	}
+	
+	@Test
+	public void testAssociationQuery_getRolesByType() {
+		TopicIF at = builder.makeTopic();
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		AssociationIF association = builder.makeAssociation(at, rt, t);
+		builder.makeAssociationRole(association, builder.makeTopic(), builder.makeTopic());
+		
+		Collection<AssociationRoleIF> roles = association.getRolesByType(rt);
+		
+		Assert.assertEquals(1, roles.size());
+		Assert.assertEquals(rt, roles.iterator().next().getType());
+		Assert.assertEquals(t, roles.iterator().next().getPlayer());
+	}
+	
+	@Test
+	public void testTopicQuery_NamesByType() {
+		TopicIF nt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		TopicNameIF tn = builder.makeTopicName(t, nt, "foo");
+		
+		Assert.assertEquals(1, t.getTopicNames().size());
+		
+		Collection<TopicNameIF> tnbt = t.getTopicNamesByType(nt);
+		
+		Assert.assertEquals(1, tnbt.size());
+		Assert.assertEquals(tn, tnbt.iterator().next());
+	}
+	
+	@Test
+	public void testTopicQuery_OccurrencesByType() {
+		TopicIF ot = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		OccurrenceIF o = builder.makeOccurrence(t, ot, "foo");
+		
+		Assert.assertEquals(1, t.getOccurrences().size());
+		
+		Collection<OccurrenceIF> obt = t.getOccurrencesByType(ot);
+		
+		Assert.assertEquals(1, obt.size());
+		Assert.assertEquals(o, obt.iterator().next());
+	}
+	
+	@Test
+	public void testTopicQuery_RolesByType() {
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		AssociationRoleIF r = builder.makeAssociationRole(builder.makeAssociation(builder.makeTopic()), rt, t);
+		
+		Assert.assertEquals(1, t.getRoles().size());
+		
+		Collection<AssociationRoleIF> rbt = t.getRolesByType(rt);
+		
+		Assert.assertEquals(1, rbt.size());
+		Assert.assertEquals(r, rbt.iterator().next());
+	}
+	
+	@Test
+	public void testTopicQuery_RolesByType2() {
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		TopicIF at = builder.makeTopic();
+		AssociationRoleIF r = builder.makeAssociationRole(builder.makeAssociation(at), rt, t);
+		
+		Assert.assertEquals(1, t.getRoles().size());
+		
+		Collection<AssociationRoleIF> rbt = t.getRolesByType(rt, at);
+		
+		Assert.assertEquals(1, rbt.size());
+		Assert.assertEquals(r, rbt.iterator().next());
+	}
+	
+	@Test
+	public void testTopicQuery_Associations() {
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		TopicIF at = builder.makeTopic();
+		AssociationIF a = builder.makeAssociation(at, rt, t);
+		
+		Assert.assertEquals(1, topicmap.getAssociations().size());
+		
+		Collection<AssociationIF> assocs = t.getAssociations();
+		
+		Assert.assertEquals(1, assocs.size());
+		Assert.assertEquals(a, assocs.iterator().next());
+	}
+	
+	@Test
+	public void testTopicQuery_AssociationsByType() {
+		TopicIF rt = builder.makeTopic();
+		TopicIF t = builder.makeTopic();
+		TopicIF at = builder.makeTopic();
+		AssociationIF a = builder.makeAssociation(at, rt, t);
+		
+		Assert.assertEquals(1, topicmap.getAssociations().size());
+		
+		Collection<AssociationIF> assocs = t.getAssociationsByType(at);
+		
+		Assert.assertEquals(1, assocs.size());
+		Assert.assertEquals(a, assocs.iterator().next());
 	}
 	
 }
