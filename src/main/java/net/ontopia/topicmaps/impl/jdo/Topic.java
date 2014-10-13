@@ -24,7 +24,6 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.jdo.JDODataStoreException;
 import javax.jdo.JDOException;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
@@ -261,6 +260,10 @@ public class Topic extends TMObject implements TopicIF {
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setValue(value, datatype);
 		return occurrence;
+	}
+	
+	void associationRoleCreated(AssociationRole role) {
+		roles.add(role);
 	}
 	
 	// temp for test
