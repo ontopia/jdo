@@ -34,6 +34,7 @@ import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
 import net.ontopia.topicmaps.entry.TopicMapSourceIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
+import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
 
@@ -48,15 +49,19 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 
 	private PersistenceManagerFactory persistenceManagerFactory = null;
 	private final Collection<JDOTopicMapReference> references = new HashSet<JDOTopicMapReference>();
+	private final Queries queries;
 
 	public JDOTopicMapSource() {
+		queries = new Queries();
 	}
 
 	public JDOTopicMapSource(String propertyFile) {
+		this();
 		this.propertyFile = propertyFile;
 	}
 
 	public JDOTopicMapSource(Map<?, ?> properties) {
+		this();
 		this.properties = properties;
 	}
 
@@ -121,7 +126,14 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 				throw new OntopiaRuntimeException("Could not load JDO persistence manager factory: " + ioe.getMessage(), ioe);
 			} catch (JDOException jdoe) {
 				throw new OntopiaRuntimeException("Error encountered during loading of JDO persistence manager factory: " + jdoe.getMessage(), jdoe);
-			} 
+			}
+			
+//			try {
+//				// load default queries
+//				queries.load(Queries.DEFAULT_QUERIES);
+//			} catch (IOException ioe) {
+//				throw new OntopiaRuntimeException(ioe);
+//			}
 		}
 	}
 
@@ -166,6 +178,10 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 	PersistenceManagerFactory getPersistenceManagerFactory() {
 		createPersistenceManagerFactory();
 		return persistenceManagerFactory;
+	}
+
+	public Queries getQueries() {
+		return queries;
 	}
 
 	/* --- getter/setter for sources xml --- */
