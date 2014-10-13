@@ -46,6 +46,9 @@ public class Queries {
 	
 	// default query name constants
 	public static final String TOPICMAP_TOPIC_BY_SUBJECT_IDENTIFIER = "TopicMap.getTopicBySubjectIdentifier";
+	public static final String TOPICMAP_TOPIC_BY_ITEM_IDENTIFIER = "TopicMap.getObjectByItemIdentifier";
+	public static final String TOPICMAP_TOPIC_BY_SUBJECT_LOCATOR = "TopicMap.getTopicBySubjectLocator";
+	public static final String TOPICMAP_OBJECT_BY_IDENTIFIER = "TopicMap.getObjectByIdentifier";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
