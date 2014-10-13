@@ -23,7 +23,6 @@ package net.ontopia.topicmaps.impl.jdo;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import javax.jdo.JDODataStoreException;
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
