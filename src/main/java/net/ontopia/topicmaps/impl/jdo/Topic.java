@@ -22,9 +22,12 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.io.Reader;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.jdo.JDOException;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
@@ -70,6 +73,65 @@ public class Topic extends TMObject implements TopicIF {
 	@Persistent(mappedBy = "reifier")
 	private ReifiableIF reified = null;
 
+	private static enum TopicQuery {
+		NAMES_BY_TYPE(TopicName.class, 
+			"topic == t && type == nt && topicmap == tm", 
+			"Topic t, Topic nt, TopicMap tm"),
+		OCCURRENCES_BY_TYPE(Occurrence.class, 
+			"topic == t && topicmap == tm && type == ot", 
+			"Topic t, Topic ot, TopicMap tm"),
+		ROLES_BY_TYPE1(AssociationRole.class, 
+			"player == t && topicmap == tm && type == rt",
+			"Topic t, Topic rt, TopicMap tm"),
+		ROLES_BY_TYPE2(AssociationRole.class, 
+			"player == t && topicmap == tm && type == rt && association.type == at",
+			"Topic t, Topic rt, Topic at, TopicMap tm"),
+		ASSOCIATIONS(AssociationRole.class, 
+			"player == t && topicmap == tm", 
+			"Topic t, TopicMap tm") {
+			@Override
+			protected void extend(Query q) {
+				q.setResult("distinct association");
+			}
+		},
+		ASSOCIATIONS_BY_TYPE(AssociationRole.class,
+			"player == t && topicmap == tm && association.type == at", 
+			"Topic t, Topic at, TopicMap tm") {
+			@Override
+			protected void extend(Query q) {
+				q.setResult("distinct association");
+			}
+		};
+
+		private final Class<?> klass;
+		private final String filter;
+		private final String parameters;
+		private static final EnumMap<TopicQuery, Query> queryCache = 
+				new EnumMap<TopicQuery, Query>(TopicQuery.class);
+		
+		private TopicQuery(Class<?> klazz, String filter, String parameters) {
+			this.filter = filter;
+			this.parameters = parameters;
+			this.klass = klazz;
+		}
+		
+		Query get(PersistenceManager pm) {
+			Query q = queryCache.get(this);
+			if (q == null) {
+				q = pm.newQuery(klass, filter);
+				q.declareParameters(parameters);
+				extend(q);
+				q.compile();
+				queryCache.put(this, q);
+				return q;
+			} else {
+				return pm.newQuery(q);
+			}
+		}
+		
+		protected void extend(Query q) { }
+	}
+	
 	Topic(TopicMap topicmap) {
 		super(topicmap);
 	}
@@ -158,8 +220,10 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	@Override
-	public Collection<TopicNameIF> getTopicNamesByType(TopicIF tif) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@SuppressWarnings("unchecked")
+	public Collection<TopicNameIF> getTopicNamesByType(TopicIF nt) {
+		if (nt == null) throw new NullPointerException("Topic name type cannot be null");
+		return (Collection) TopicQuery.NAMES_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, nt, getTopicMap());
 	}
 
 	@Override
@@ -168,8 +232,10 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	@Override
-	public Collection<OccurrenceIF> getOccurrencesByType(TopicIF tif) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@SuppressWarnings("unchecked")
+	public Collection<OccurrenceIF> getOccurrencesByType(TopicIF ot) {
+		if (ot == null) throw new NullPointerException("Occurrence type cannot be null");
+		return (Collection) TopicQuery.OCCURRENCES_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, ot, getTopicMap());
 	}
 
 	@Override
@@ -178,23 +244,31 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	@Override
-	public Collection<AssociationRoleIF> getRolesByType(TopicIF tif) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@SuppressWarnings("unchecked")
+	public Collection<AssociationRoleIF> getRolesByType(TopicIF rt) {
+		if (rt == null) throw new NullPointerException("Association role type cannot be null");
+		return (Collection) TopicQuery.ROLES_BY_TYPE1.get(getPersistenceManager()).executeWithArray(this, rt, getTopicMap());
 	}
 
 	@Override
-	public Collection<AssociationRoleIF> getRolesByType(TopicIF tif, TopicIF tif1) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@SuppressWarnings("unchecked")
+	public Collection<AssociationRoleIF> getRolesByType(TopicIF rt, TopicIF at) {
+		if (rt == null) throw new NullPointerException("Association role type cannot be null");
+		if (at == null) throw new NullPointerException("Association type cannot be null");
+		return (Collection) TopicQuery.ROLES_BY_TYPE2.get(getPersistenceManager()).executeWithArray(this, rt, at, getTopicMap());
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Collection<AssociationIF> getAssociations() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		return (Collection) TopicQuery.ASSOCIATIONS.get(getPersistenceManager()).executeWithArray(this, getTopicMap());
 	}
 
 	@Override
-	public Collection<AssociationIF> getAssociationsByType(TopicIF tif) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	@SuppressWarnings("unchecked")
+	public Collection<AssociationIF> getAssociationsByType(TopicIF at) {
+		if (at == null) throw new NullPointerException("Association type cannot be null");
+		return (Collection) TopicQuery.ASSOCIATIONS_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, at, getTopicMap());
 	}
 
 	@Override
