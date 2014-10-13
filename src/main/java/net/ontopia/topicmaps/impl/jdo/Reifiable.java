@@ -37,10 +37,6 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 	@Persistent(name = "reifier", column = "reifier" )
 	private Topic reifier;
 
-	Reifiable() {
-		super();
-	}
-
 	Reifiable(TopicMap topicmap) {
 		super(topicmap);
 	}

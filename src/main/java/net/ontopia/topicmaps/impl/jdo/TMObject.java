@@ -59,9 +59,6 @@ public abstract class TMObject implements TMObjectIF {
 	@Persistent(mappedBy = "object")
 	protected Set<IdentityLocator> itemIdentifiers = new HashSet<IdentityLocator>();
 
-	TMObject() {
-	}
-
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
 	}

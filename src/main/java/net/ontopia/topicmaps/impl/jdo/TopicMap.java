@@ -112,7 +112,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 	
 	public TopicMap() {
-		super();
+		super(null);
 	}
 	
 	public TopicMap(long id) {
