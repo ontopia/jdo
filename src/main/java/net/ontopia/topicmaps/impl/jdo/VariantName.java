@@ -21,21 +21,14 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.io.Reader;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Element;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.URILocator;
-import net.ontopia.topicmaps.core.DuplicateReificationException;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
@@ -47,7 +40,7 @@ import net.ontopia.topicmaps.core.VariantNameIF;
 	@Index(name = "TM_VARIANT_NAME_IX_ID_TOPICMAP", members = {"id", "topicmap"}), // hash not implemented
 	@Index(name = "TM_VARIANT_NAME_IX_NAME", members = {"topicname"})
 })
-public class VariantName extends TMObject implements VariantNameIF {
+public class VariantName extends Scoped implements VariantNameIF {
 	
 	@Column(name = "topicname")
 	private TopicName topicname;
@@ -59,15 +52,6 @@ public class VariantName extends TMObject implements VariantNameIF {
 
 	@Column(name = "length")
 	private long length;
-
-	@Column(name = "reifier")
-	private Topic reifier;
-	
-	@Persistent(table = "TM_SCOPES_VN")
-	@Join(column = "scoped")
-	@Element(column = "scope")
-	private Set<Topic> scope = new HashSet<Topic>();
-	// probleem hier: conflicteerd met Scoped
 
 	public VariantName(TopicName name) {
 		super((TopicMap) name.getTopicMap());
@@ -138,34 +122,6 @@ public class VariantName extends TMObject implements VariantNameIF {
 	@Override
 	public TopicIF getTopic() {
 		return topicname.getTopic();
-	}
-
-	@Override
-	public Collection<TopicIF> getScope() {
-		return new HashSet<TopicIF>(scope);
-	}
-
-	@Override
-	public void addTheme(TopicIF theme) {
-		if (isReadOnly()) throw new ReadOnlyException();
-		scope.add((Topic) theme);
-	}
-
-	@Override
-	public void removeTheme(TopicIF theme) {
-		if (isReadOnly()) throw new ReadOnlyException();
-		scope.remove((Topic) theme);
-	}
-
-	@Override
-	public TopicIF getReifier() {
-		return reifier;
-	}
-
-	@Override
-	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
-		if (isReadOnly()) throw new ReadOnlyException();
-		this.reifier = (Topic) reifier;
 	}
 
 	@Override

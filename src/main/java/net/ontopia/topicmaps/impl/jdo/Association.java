@@ -33,6 +33,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
+import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 
@@ -43,7 +44,10 @@ public class Association extends Scoped implements AssociationIF {
 	
 	@Persistent(mappedBy = "association")
 	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
-	
+
+	@Persistent(name = "type", column = "type")
+	private Topic type;
+
 	private static enum AssociationQuery {
 		ROLE_TYPES("association == assoc && topicmap == tm", "Association assoc, TopicMap tm") {
 
@@ -82,12 +86,24 @@ public class Association extends Scoped implements AssociationIF {
 	}
 
 	Association(Topic type) {
-		super(type);
+		super((TopicMap) type.getTopicMap());
+		this.type = type;
 	}
 
 	@Override
 	protected String getClassIndicator() {
 		return "A";
+	}
+	
+	@Override
+	public TopicIF getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(TopicIF type) {
+		if (isReadOnly()) throw new ReadOnlyException();
+		this.type = (Topic) type;
 	}
 
 	@Override

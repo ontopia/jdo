@@ -41,7 +41,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 		@Index(name = "TM_ASSOCIATION_ROLE_IX_ASSOCIATION", members = {"association"}),
 		@Index(name = "TM_ASSOCIATION_ROLE_IX_PLAYER", members = {"player"})
 })
-public class AssociationRole extends Typed implements AssociationRoleIF {
+public class AssociationRole extends Reifiable implements AssociationRoleIF {
 	
 	@Persistent(name = "player", column = "player")
 	private Topic player;
@@ -49,10 +49,14 @@ public class AssociationRole extends Typed implements AssociationRoleIF {
 	@Persistent(name = "association", column = "association")
 	private Association association;
 
+	@Persistent(name = "type", column = "type")
+	private Topic type;
+
 	AssociationRole(Association association, Topic type, Topic player) {
-		super(type);
+		super((TopicMap) association.getTopicMap());
 		this.association = association;
 		this.player = player;
+		this.type = type;
 	}
 
 	@Override
@@ -74,6 +78,17 @@ public class AssociationRole extends Typed implements AssociationRoleIF {
 	public void setPlayer(TopicIF player) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.player = (Topic) player;
+	}
+	
+	@Override
+	public TopicIF getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(TopicIF type) {
+		if (isReadOnly()) throw new ReadOnlyException();
+		this.type = (Topic) type;
 	}
 
 	@Override

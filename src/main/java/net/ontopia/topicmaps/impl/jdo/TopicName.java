@@ -56,10 +56,13 @@ public class TopicName extends Scoped implements TopicNameIF {
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
 	private String value;
+	@Persistent(name = "type", column = "type")
+	private Topic type;
 
 	public TopicName(Topic topic, Topic type, String value) {
-		super(type);
+		super((TopicMap) topic.getTopicMap());
 		this.topic = topic;
+		this.type = type;
 		this.value = value;
 	}
 
@@ -78,6 +81,17 @@ public class TopicName extends Scoped implements TopicNameIF {
 		return topic;
 	}
 
+	@Override
+	public TopicIF getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(TopicIF type) {
+		if (isReadOnly()) throw new ReadOnlyException();
+		this.type = (Topic) type;
+	}
+	
 	@Override
 	public String getValue() {
 		return value;

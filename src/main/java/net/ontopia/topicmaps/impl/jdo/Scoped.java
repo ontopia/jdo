@@ -36,7 +36,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
-public abstract class Scoped extends Typed implements ScopedIF {
+public abstract class Scoped extends Reifiable implements ScopedIF {
 	
 	@Persistent(table = "TM_SCOPES")
 	@Join(column = "scoped")
@@ -44,8 +44,8 @@ public abstract class Scoped extends Typed implements ScopedIF {
 	@Index(name = "TM_SCOPE_IX", members = {"scoped", "scope"})
 	private Set<Topic> scope = new HashSet<Topic>();
 
-	Scoped(Topic type) {
-		super(type);
+	Scoped(TopicMap topicmap) {
+		super(topicmap);
 	}
 
 	@Override

@@ -57,10 +57,13 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Persistent(name = "length", column = "length")
 	private long length;
+	@Persistent(name = "type", column = "type")
+	private Topic type;
 
 	Occurrence(Topic topic, Topic type) {
-		super(type);
+		super((TopicMap) topic.getTopicMap());
 		this.topic = topic;
+		this.type = type;
 	}
 
 	@Override
@@ -71,6 +74,17 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public TopicIF getTopic() {
 		return topic;
+	}
+	
+	@Override
+	public TopicIF getType() {
+		return type;
+	}
+
+	@Override
+	public void setType(TopicIF type) {
+		if (isReadOnly())throw new ReadOnlyException();
+		this.type = (Topic) type;
 	}
 
 	@Override
