@@ -42,4 +42,23 @@
 		<range-min>0</range-min>
 		<range-max>1</range-max>
 	</query>
+	
+	<!-- Association -->
+	
+	<query name="Association.getRoleTypes">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Association assoc</parameters>
+		<filter><![CDATA[
+			association == assoc && topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="Association.getRolesByType">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Association assoc, Topic rt</parameters>
+		<filter><![CDATA[
+			association == assoc && topicmap == tm && type == rt
+		]]></filter>
+	</query>
 </queries>

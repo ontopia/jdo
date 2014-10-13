@@ -21,11 +21,8 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Set;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -36,6 +33,7 @@ import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
+import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 
 @PersistenceCapable(table = "TM_ASSOCIATION")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -47,43 +45,6 @@ public class Association extends Scoped implements AssociationIF {
 
 	@Persistent(name = "type", column = "type")
 	private Topic type;
-
-	private static enum AssociationQuery {
-		ROLE_TYPES("association == assoc && topicmap == tm", "Association assoc, TopicMap tm") {
-
-			@Override
-			protected void extend(Query q) {
-				q.setResult("distinct type");
-			}
-		},
-		ROLES_BY_TYPE("association == assoc && topicmap == tm && type == rt", "Association assoc, TopicMap tm, Topic rt");
-
-		private final String filter;
-		private final String parameters;
-		private static final EnumMap<AssociationQuery, Query> queryCache = 
-				new EnumMap<AssociationQuery, Query>(AssociationQuery.class);
-		
-		private AssociationQuery(String filter, String parameters) {
-			this.filter = filter;
-			this.parameters = parameters;
-		}
-		
-		Query get(PersistenceManager pm) {
-			Query q = queryCache.get(this);
-			if (q == null) {
-				q = pm.newQuery(AssociationRole.class, filter);
-				q.declareParameters(parameters);
-				extend(q);
-				q.compile();
-				queryCache.put(this, q);
-				return q;
-			} else {
-				return pm.newQuery(q);
-			}
-		}
-		
-		protected void extend(Query q) { }
-	}
 
 	Association(Topic type) {
 		super((TopicMap) type.getTopicMap());
@@ -108,14 +69,16 @@ public class Association extends Scoped implements AssociationIF {
 
 	@Override
 	public Collection<TopicIF> getRoleTypes() {
-		return JDOQueryUtils.queryToWrappedSet(AssociationQuery.ROLE_TYPES.get(getPersistenceManager()),this, getTopicMap());
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.ASSOCIATION_ROLE_TYPES), getTopicMap(), this);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF roletype) {
 		if (roletype == null) throw new NullPointerException("Role type cannot be null");
-		return JDOQueryUtils.queryToWrappedSet(AssociationQuery.ROLES_BY_TYPE.get(getPersistenceManager()), this, getTopicMap(), roletype);
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.ASSOCIATION_ROLES_BY_TYPE), getTopicMap(), this, roletype);
 	}
 
 	@Override

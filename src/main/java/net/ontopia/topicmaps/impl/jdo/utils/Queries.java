@@ -49,6 +49,8 @@ public class Queries {
 	public static final String TOPICMAP_TOPIC_BY_ITEM_IDENTIFIER = "TopicMap.getObjectByItemIdentifier";
 	public static final String TOPICMAP_TOPIC_BY_SUBJECT_LOCATOR = "TopicMap.getTopicBySubjectLocator";
 	public static final String TOPICMAP_OBJECT_BY_IDENTIFIER = "TopicMap.getObjectByIdentifier";
+	public static final String ASSOCIATION_ROLE_TYPES = "Association.getRoleTypes";
+	public static final String ASSOCIATION_ROLES_BY_TYPE = "Association.getRolesByType";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
