@@ -35,4 +35,15 @@ public class JDOQueryUtils {
 		return new HashSet<T>(JDOQueryUtils.<T>queryToCollection(query, parameters));
 	}
 
+	public static <T> T singularResultQuery(Query query, Class<T> expected, Object... variables) {
+		try {
+			Collection<T> result = queryToCollection(query, variables);
+			if ((result == null) || (result.isEmpty())) {
+				return null;
+			}
+			return result.iterator().next();
+		} finally {
+			query.closeAll();
+		}
+	}
 }

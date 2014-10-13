@@ -44,6 +44,7 @@ import net.ontopia.topicmaps.core.TopicMapBuilderIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
+import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.utils.OntopiaRuntimeException;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
@@ -178,7 +179,8 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Override
 	public TMObjectIF getObjectByItemIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
-		IdentityLocator itemIdentifier = singularResultQuery(TopicMapQuery.OBJECT_BY_ITEM_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
+		IdentityLocator itemIdentifier = JDOQueryUtils.singularResultQuery(
+				TopicMapQuery.OBJECT_BY_ITEM_IDENTIFIER.get(getPersistenceManager()), IdentityLocator.class, locator.getAddress(), this);
 		if (itemIdentifier == null) return null;
 		return itemIdentifier.getObject();
 	}
@@ -186,7 +188,8 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Override
 	public TopicIF getTopicBySubjectLocator(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
-		SubjectLocator subjectLocator = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_LOCATOR, SubjectLocator.class, locator.getAddress(), this);
+		SubjectLocator subjectLocator = JDOQueryUtils.singularResultQuery(
+				TopicMapQuery.TOPIC_BY_SUBJECT_LOCATOR.get(getPersistenceManager()), SubjectLocator.class, locator.getAddress(), this);
 		if (subjectLocator == null) return null;
 		TMObject object = subjectLocator.getObject();
 		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject locator " + locator + " was added to the non-topic " + object);
@@ -196,7 +199,8 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Override
 	public TopicIF getTopicBySubjectIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
-		IdentityLocator subjectIdentifier = singularResultQuery(TopicMapQuery.TOPIC_BY_SUBJECT_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
+		IdentityLocator subjectIdentifier = JDOQueryUtils.singularResultQuery(
+				TopicMapQuery.TOPIC_BY_SUBJECT_IDENTIFIER.get(getPersistenceManager()), IdentityLocator.class, locator.getAddress(), this);
 		if (subjectIdentifier == null) return null;
 		TMObject object = subjectIdentifier.getObject();
 		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject identifier " + locator + " was added to the non-topic " + object);
@@ -210,7 +214,8 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	 * @return 
 	 */
 	TMObject getObjectByIdentifier(LocatorIF locator) {
-		IdentityLocator identifier = singularResultQuery(TopicMapQuery.OBJECT_BY_IDENTIFIER, IdentityLocator.class, locator.getAddress(), this);
+		IdentityLocator identifier = JDOQueryUtils.singularResultQuery(
+				TopicMapQuery.OBJECT_BY_IDENTIFIER.get(getPersistenceManager()), IdentityLocator.class, locator.getAddress(), this);
 		if (identifier == null) return null;
 		return identifier.getObject();
 	}
@@ -263,24 +268,5 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		getPersistenceManager().makePersistent(association);
 		associations.add(association);
 		return association;
-	}
-		
-	@SuppressWarnings("unchecked")
-	private <T> T singularResultQuery(TopicMapQuery query, Class<T> expected, Object... variables) {
-		Query q = query.get(getPersistenceManager());
-		try {
-			Collection<?> result = (Collection) q.executeWithArray(variables);
-			if ((result == null) || (result.isEmpty())) return null;
-
-			Object o = result.iterator().next();
-			if (o == null) return null;
-			if (o.getClass().isAssignableFrom(expected)) {
-				return (T) o;
-			}
-
-			return null;
-		} finally {
-			q.closeAll();
-		}
 	}
 }
