@@ -26,13 +26,18 @@ import javax.jdo.Query;
 
 public class JDOQueryUtils {
 	
+	// does not close the query result, make sure the caller does!
 	@SuppressWarnings("unchecked")
-	public static <T> Collection<T> queryToCollection(Query query, Object... parameters) {
+	private static <T> Collection<T> queryToCollection(Query query, Object... parameters) {
 		return (Collection<T>) query.executeWithArray(parameters);
 	}
 
 	public static <T> Collection<T> queryToWrappedSet(Query query, Object... parameters) {
-		return new HashSet<T>(JDOQueryUtils.<T>queryToCollection(query, parameters));
+		try {
+			return new HashSet<T>(JDOQueryUtils.<T>queryToCollection(query, parameters));
+		} finally {
+			query.closeAll();
+		}
 	}
 
 	public static <T> T singularResultQuery(Query query, Class<T> expected, Object... variables) {
