@@ -26,6 +26,7 @@ import java.util.Set;
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -43,6 +44,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
+import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
 import net.ontopia.topicmaps.impl.utils.ObjectStrings;
 
 @PersistenceCapable
@@ -169,5 +171,10 @@ public abstract class TMObject implements TMObjectIF {
 			set.remove(toRemove);
 			getPersistenceManager().deletePersistent(toRemove);
 		}
+	}
+	
+	public Query getQuery(String name) {
+		JDOTopicMapSource source = (JDOTopicMapSource) getTopicMap().getStore().getReference().getSource();
+		return source.getQueries().get(name, getPersistenceManager());
 	}
 }
