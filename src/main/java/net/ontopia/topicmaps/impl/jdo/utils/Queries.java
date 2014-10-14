@@ -113,9 +113,10 @@ public class Queries {
 	public synchronized Query get(String name, PersistenceManager persistenceManager) {
 		PersistedQuery pq = loadedQueries.get(name);
 		if (pq == null) throw new OntopiaRuntimeException("Unknown query " + name);
+		if (pq.isAbstract) throw new OntopiaRuntimeException("Cannot instantiate abstract query " + name);
 		Query query = queryCache.get(pq);
 		if (query == null) {
-			query = pq.create(persistenceManager);
+			query = pq.create(persistenceManager, loadedQueries);
 			queryCache.put(pq, query);
 			return query;
 		} else {
@@ -128,6 +129,12 @@ public class Queries {
 		
 		@XmlAttribute
 		private String name;
+		
+		@XmlAttribute
+		private String inherit;
+		
+		@XmlAttribute(name = "abstract")
+		private boolean isAbstract = false;
 		
 		@XmlElement(name = "class")
 		private String klass;
@@ -150,11 +157,22 @@ public class Queries {
 		@XmlElement(name = "range-max")
 		private int max = -1;
 
-		private Query create(PersistenceManager pm) {
+		private Query create(PersistenceManager pm, Map<String, PersistedQuery> loadedQueries) {
 			
 			try {
-				Class<?> klazz = Class.forName(klass);
-				Query q = pm.newQuery(klazz, filter);
+				Query q;
+				if (inherit != null) {
+					PersistedQuery pq = loadedQueries.get(inherit);
+					if (pq == null) throw new OntopiaRuntimeException("Unknown query " + inherit + " specified as inheritance");
+					q = pq.create(pm, loadedQueries);
+				} else {
+					q = pm.newQuery();
+				}
+
+				if (klass != null) {
+					q.setClass(Class.forName(klass));
+				}
+				if (filter != null) q.setFilter(filter);
 				if (result != null) q.setResult(result);
 				if (parameters != null) q.declareParameters(parameters);
 				if (resultClass != null) {
@@ -165,8 +183,10 @@ public class Queries {
 					q.setRange(min, max);
 				}
 				
-				q.setUnmodifiable();
-				q.compile();
+				if (!isAbstract) {
+					q.setUnmodifiable();
+					q.compile();
+				}
 				return q;
 			} catch (ClassNotFoundException cnfe) {
 				throw new OntopiaRuntimeException("Could not load query " + name + ", class " + klass + " not found", cnfe);

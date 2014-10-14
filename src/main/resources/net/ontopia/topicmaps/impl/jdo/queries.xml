@@ -80,36 +80,27 @@
 		]]></filter>
 	</query>
 	
-	<query name="ClassInstanceIndex.getTopicNames">
+	<query name="ClassInstanceIndex.abstract.getObjectsByType" abstract="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == t
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNames" inherit="ClassInstanceIndex.abstract.getObjectsByType">
 		<class>TopicName</class>
-		<parameters>TopicMap tm, Topic nt</parameters>
-		<filter><![CDATA[
-			topicmap == tm && type == nt
-		]]></filter>
 	</query>
 	
-	<query name="ClassInstanceIndex.getOccurrences">
+	<query name="ClassInstanceIndex.getOccurrences" inherit="ClassInstanceIndex.abstract.getObjectsByType">
 		<class>Occurrence</class>
-		<parameters>TopicMap tm, Topic ot</parameters>
-		<filter><![CDATA[
-			topicmap == tm && type == ot
-		]]></filter>
 	</query>
 	
-	<query name="ClassInstanceIndex.getAssociations">
+	<query name="ClassInstanceIndex.getAssociations" inherit="ClassInstanceIndex.abstract.getObjectsByType">
 		<class>Association</class>
-		<parameters>TopicMap tm, Topic at</parameters>
-		<filter><![CDATA[
-			topicmap == tm && type == at
-		]]></filter>
 	</query>
 	
-	<query name="ClassInstanceIndex.getAssociationRoles">
+	<query name="ClassInstanceIndex.getAssociationRoles" inherit="ClassInstanceIndex.abstract.getObjectsByType">
 		<class>AssociationRole</class>
-		<parameters>TopicMap tm, Topic rt</parameters>
-		<filter><![CDATA[
-			topicmap == tm && type == rt
-		]]></filter>
 	</query>
 	
 	<query name="ClassInstanceIndex.getTopicTypes">
@@ -121,110 +112,77 @@
 		<result>distinct type</result>
 	</query>
 	
-	<query name="ClassInstanceIndex.getTopicNameTypes">
+	<query name="ClassInstanceIndex.abstract.getObjectTypes" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNameTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
 		<class>TopicName</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm
-		]]></filter>
-		<result>distinct type</result>
 	</query>
 	
-	<query name="ClassInstanceIndex.getOccurrenceTypes">
+	<query name="ClassInstanceIndex.getOccurrenceTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
 		<class>Occurrence</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm
-		]]></filter>
-		<result>distinct type</result>
 	</query>
 	
-	<query name="ClassInstanceIndex.getAssociationTypes">
+	<query name="ClassInstanceIndex.getAssociationTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
 		<class>Association</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm
-		]]></filter>
-		<result>distinct type</result>
 	</query>
 	
-	<query name="ClassInstanceIndex.getAssociationRoleTypes">
+	<query name="ClassInstanceIndex.getAssociationRoleTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
 		<class>AssociationRole</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm
-		]]></filter>
-		<result>distinct type</result>
 	</query>
 	
 	<!-- ScopeIndex -->
 	
-	<query name="ScopeIndex.getTopicNames">
+	<query name="ScopeIndex.abstract.getScopedObject" abstract="true">
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getTopicNames" inherit="ScopeIndex.abstract.getScopedObject">
 		<class>TopicName</class>
-		<parameters>TopicMap tm, Topic topic</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(topic)
-		]]></filter>
 	</query>
 	
-	<query name="ScopeIndex.getVariants">
+	<query name="ScopeIndex.getVariants" inherit="ScopeIndex.abstract.getScopedObject">
 		<class>VariantName</class>
-		<parameters>TopicMap tm, Topic topic</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(topic)
-		]]></filter>
 	</query>
 	
-	<query name="ScopeIndex.getOccurrences">
+	<query name="ScopeIndex.getOccurrences" inherit="ScopeIndex.abstract.getScopedObject">
 		<class>Occurrence</class>
-		<parameters>TopicMap tm, Topic topic</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(topic)
-		]]></filter>
 	</query>
 	
-	<query name="ScopeIndex.getAssociations">
+	<query name="ScopeIndex.getAssociations" inherit="ScopeIndex.abstract.getScopedObject">
 		<class>Association</class>
-		<parameters>TopicMap tm, Topic topic</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(topic)
-		]]></filter>
 	</query>
 	
-	<query name="ScopeIndex.getTopicNameThemes">
+	<query name="ScopeIndex.abstract.getObjectScopes" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+
+	<query name="ScopeIndex.getTopicNameThemes" inherit="ScopeIndex.abstract.getObjectScopes">
 		<class>TopicName</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(st)
-		]]></filter>
-		<result>distinct st</result>
 	</query>
 	
-	<query name="ScopeIndex.getVariantThemes">
+	<query name="ScopeIndex.getVariantThemes" inherit="ScopeIndex.abstract.getObjectScopes">
 		<class>VariantName</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(st)
-		]]></filter>
-		<result>distinct st</result>
 	</query>
 	
-	<query name="ScopeIndex.getOccurrenceThemes">
+	<query name="ScopeIndex.getOccurrenceThemes" inherit="ScopeIndex.abstract.getObjectScopes">
 		<class>Occurrence</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(st)
-		]]></filter>
-		<result>distinct st</result>
 	</query>
 	
-	<query name="ScopeIndex.getAssociationThemes">
+	<query name="ScopeIndex.getAssociationThemes" inherit="ScopeIndex.abstract.getObjectScopes">
 		<class>Association</class>
-		<parameters>TopicMap tm</parameters>
-		<filter><![CDATA[
-			topicmap == tm && scope.contains(st)
-		]]></filter>
-		<result>distinct st</result>
 	</query>
 	
 </queries>
