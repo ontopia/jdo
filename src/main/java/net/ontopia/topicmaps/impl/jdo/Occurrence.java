@@ -49,7 +49,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Persistent(name = "datatype", column = "datatype")
 	@Column(jdbcType = "LONGVARCHAR")
-	private String dataType;
+	private String dataType = PSI.XSD_STRING;
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
