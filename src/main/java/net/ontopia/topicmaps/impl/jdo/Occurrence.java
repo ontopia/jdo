@@ -26,7 +26,6 @@ import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
@@ -34,6 +33,7 @@ import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
+import net.ontopia.topicmaps.utils.PSI;
 
 @PersistenceCapable(table = "TM_OCCURRENCE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -47,9 +47,9 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;
 
-	//@Persistent(name = "datatype", column = "datatype")
-	@NotPersistent
-	private LocatorIF dataType;
+	@Persistent(name = "datatype", column = "datatype")
+	@Column(jdbcType = "LONGVARCHAR")
+	private String dataType;
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
@@ -89,7 +89,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getDataType() {
-		return dataType;
+		return URILocator.create(dataType);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getLocator() {
-		if (dataType.getAddress().equals("")) { // todo
+		if (PSI.XSD_URI.equals(dataType)) {
 			return URILocator.create(getValue());
 		}
 		return null;
@@ -114,24 +114,24 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		setValue(locator.getAddress(), null); // todo: datatype uri
+		setValue(locator.getAddress(), URILocator.create(PSI.XSD_URI));
 	}
 
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		setValue(value);
-		this.dataType = datatype;
+		this.dataType = datatype.getAddress();
 	}
 
 	@Override
 	public Reader getReader() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
