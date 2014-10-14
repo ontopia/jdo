@@ -72,6 +72,10 @@ public class Queries {
 	public static final String SCOPEINDEX_OCCURRENCE_SCOPES = "ScopeIndex.getOccurrenceThemes";
 	public static final String SCOPEINDEX_ASSOCIATION_SCOPES = "ScopeIndex.getAssociationThemes";
 
+	public static final String NAMEINDEX_TOPIC_NAMES = "NameIndex.getTopicNames";
+	public static final String NAMEINDEX_VARIANT_NAMES = "NameIndex.getVariants";
+	public static final String NAMEINDEX_VARIANT_NAMES_DATATYPE = "NameIndex.getVariants_datatype";
+
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
 	

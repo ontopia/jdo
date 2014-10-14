@@ -185,4 +185,29 @@
 		<class>Association</class>
 	</query>
 	
+	<!-- NameIndex -->
+
+	<query name="NameIndex.getTopicNames">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, String v</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="NameIndex.getVariants">
+		<class>VariantName</class>
+		<parameters>TopicMap tm, String v</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="NameIndex.getVariants_datatype">
+		<class>VariantName</class>
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && datatype == dt
+		]]></filter>
+	</query>
 </queries>
