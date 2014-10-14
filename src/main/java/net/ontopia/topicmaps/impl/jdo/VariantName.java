@@ -33,6 +33,7 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
+import net.ontopia.topicmaps.utils.PSI;
 
 @PersistenceCapable(table = "TM_VARIANT_NAME")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -45,9 +46,10 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Column(name = "topicname")
 	private TopicName topicname;
 	
-	private LocatorIF datatype;
-	
-	@Column(name = "value")
+	@Column(name = "datatype", jdbcType = "LONGVARCHAR")
+	private String datatype = PSI.XSD_STRING;
+
+	@Column(name = "value", jdbcType = "LONGVARCHAR")
 	private String value;
 
 	@Column(name = "length")
@@ -69,7 +71,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	public LocatorIF getDataType() {
-		return datatype;
+		return URILocator.create(datatype);
 	}
 
 	@Override
@@ -79,7 +81,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	public Reader getReader() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
@@ -90,7 +92,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	public LocatorIF getLocator() {
-		if (datatype.getAddress().equals("")) {
+		if (PSI.XSD_URI.equals(datatype)) {
 			return URILocator.create(value);
 		}
 		return null;
@@ -99,19 +101,19 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		setValue(locator.getAddress(), URILocator.create("uri")); // todo
+		setValue(locator.getAddress(), URILocator.create(PSI.XSD_URI));
 	}
 
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		this.value = value;
-		this.datatype = datatype;
+		this.datatype = datatype.getAddress();
 	}
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
 	@Override
