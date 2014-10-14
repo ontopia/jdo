@@ -157,4 +157,74 @@
 		<result>distinct type</result>
 	</query>
 	
+	<!-- ScopeIndex -->
+	
+	<query name="ScopeIndex.getTopicNames">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getVariants">
+		<class>VariantName</class>
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getOccurrences">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getAssociations">
+		<class>Association</class>
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getTopicNameThemes">
+		<class>TopicName</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+	
+	<query name="ScopeIndex.getVariantThemes">
+		<class>VariantName</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+	
+	<query name="ScopeIndex.getOccurrenceThemes">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+	
+	<query name="ScopeIndex.getAssociationThemes">
+		<class>Association</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+	
 </queries>

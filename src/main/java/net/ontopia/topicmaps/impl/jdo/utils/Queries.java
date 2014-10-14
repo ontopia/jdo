@@ -62,6 +62,15 @@ public class Queries {
 	public static final String CLASSINSTANCEINDEX_OCCURRENCE_TYPES = "ClassInstanceIndex.getOccurrenceTypes";
 	public static final String CLASSINSTANCEINDEX_ASSOCIATION_TYPES = "ClassInstanceIndex.getAssociationTypes";
 	public static final String CLASSINSTANCEINDEX_ASSOCIATION_ROLE_TYPES = "ClassInstanceIndex.getAssociationRoleTypes";
+	
+	public static final String SCOPEINDEX_SCOPED_TOPIC_NAMES = "ScopeIndex.getTopicNames";
+	public static final String SCOPEINDEX_SCOPED_VARIANT_NAMES = "ScopeIndex.getVariants";
+	public static final String SCOPEINDEX_SCOPED_OCCURRENCES = "ScopeIndex.getOccurrences";
+	public static final String SCOPEINDEX_SCOPED_ASSOCIATIONS = "ScopeIndex.getAssociations";
+	public static final String SCOPEINDEX_TOPIC_NAME_SCOPES = "ScopeIndex.getTopicNameThemes";
+	public static final String SCOPEINDEX_VARIANT_NAME_SCOPES = "ScopeIndex.getVariantThemes";
+	public static final String SCOPEINDEX_OCCURRENCE_SCOPES = "ScopeIndex.getOccurrenceThemes";
+	public static final String SCOPEINDEX_ASSOCIATION_SCOPES = "ScopeIndex.getAssociationThemes";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
