@@ -147,6 +147,9 @@ public class Queries {
 		@XmlAttribute(name = "abstract")
 		private boolean isAbstract = false;
 		
+		@XmlAttribute(name = "unique")
+		private String isUnique;
+		
 		@XmlElement(name = "class")
 		private String klass;
 		
@@ -193,6 +196,8 @@ public class Queries {
 				if ((min > -1) && (max > -1)) {
 					q.setRange(min, max);
 				}
+				
+				if (isUnique != null) q.setUnique(isUnique.equalsIgnoreCase("true"));
 				
 				if (!isAbstract) {
 					q.setUnmodifiable();

@@ -139,7 +139,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		IdentityLocator itemIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_ITEM_IDENTIFIER),
-				IdentityLocator.class, this, locator.getAddress());
+				this, locator.getAddress());
 		if (itemIdentifier == null) return null;
 		return itemIdentifier.getObject();
 	}
@@ -149,7 +149,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		SubjectLocator subjectLocator = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_LOCATOR),
-				SubjectLocator.class, this, locator.getAddress());
+				this, locator.getAddress());
 		if (subjectLocator == null) return null;
 		TMObject object = subjectLocator.getObject();
 		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject locator " + locator + " was added to the non-topic " + object);
@@ -161,7 +161,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		IdentityLocator subjectIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_IDENTIFIER),
-				IdentityLocator.class, this, locator.getAddress());
+				this, locator.getAddress());
 		if (subjectIdentifier == null) return null;
 		TMObject object = subjectIdentifier.getObject();
 		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject identifier " + locator + " was added to the non-topic " + object);
@@ -177,7 +177,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	TMObject getObjectByIdentifier(LocatorIF locator) {
 		IdentityLocator identifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_OBJECT_BY_IDENTIFIER),
-				IdentityLocator.class, this, locator.getAddress());
+				this, locator.getAddress());
 		if (identifier == null) return null;
 		return identifier.getObject();
 	}

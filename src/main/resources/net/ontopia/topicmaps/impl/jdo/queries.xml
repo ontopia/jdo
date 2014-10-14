@@ -3,44 +3,36 @@
 	
 	<!-- TopicMap -->
 	
-	<query name="TopicMap.getTopicBySubjectIdentifier">
+	<query name="TopicMap.getTopicBySubjectIdentifier" unique="true">
 		<class>IdentityLocator</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
 			address == locator && topicmap == tm && type == IdentityLocator.SUBJECT_IDENTIFIER
 		]]></filter>
-		<range-min>0</range-min>
-		<range-max>1</range-max>
 	</query>
 	
-	<query name="TopicMap.getTopicBySubjectLocator">
+	<query name="TopicMap.getTopicBySubjectLocator" unique="true">
 		<class>SubjectLocator</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
 			address == locator && topicmap == tm
 		]]></filter>
-		<range-min>0</range-min>
-		<range-max>1</range-max>
 	</query>
 	
-	<query name="TopicMap.getObjectByItemIdentifier">
+	<query name="TopicMap.getObjectByItemIdentifier" unique="true">
 		<class>IdentityLocator</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
 			address == locator && topicmap == tm && type == IdentityLocator.ITEM_IDENTIFIER
 		]]></filter>
-		<range-min>0</range-min>
-		<range-max>1</range-max>
 	</query>
 	
-	<query name="TopicMap.getObjectByIdentifier">
+	<query name="TopicMap.getObjectByIdentifier" unique="true">
 		<class>IdentityLocator</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
 			address == locator && topicmap == tm
 		]]></filter>
-		<range-min>0</range-min>
-		<range-max>1</range-max>
 	</query>
 	
 	<!-- Association -->
