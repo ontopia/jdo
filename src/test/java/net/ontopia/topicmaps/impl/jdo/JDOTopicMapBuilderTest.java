@@ -20,8 +20,6 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import junit.framework.Assert;
 import net.ontopia.infoset.impl.basic.URILocator;
@@ -30,61 +28,11 @@ import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ConstraintViolationException;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
-import net.ontopia.topicmaps.core.TopicMapBuilderIF;
-import net.ontopia.topicmaps.core.TopicMapIF;
-import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
-import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
-import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
-import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSourceTest;
 import net.ontopia.topicmaps.utils.PSI;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class JDOTopicMapBuilderTest {
-	
-	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapBuilderTest.class);
-	
-	private static TopicMapReferenceIF reference;
-	private static JDOTopicMapSource source;
-	private TopicMapStoreIF store;
-	private TopicMapIF topicmap;
-	private TopicMapBuilderIF builder;
-	
-	@BeforeClass
-	public static void init() throws IOException {
-		File db = new File("target/ontopia.h2.db");
-		if (db.exists()) db.delete();
-		
-		source = new JDOTopicMapSource(JDOTopicMapSourceTest.PROPERTIES);
-		source.setSupportsCreate(true);
-		reference = source.createTopicMap("foo", "foo:bar");
-	}
-	
-	@Before
-	public void setUp() throws IOException {
-		store = reference.createStore(false);
-		store.open();  // check ontopia.rdbms if open is called in constructor / createStore / getTopicmap
-		topicmap = store.getTopicMap();
-		builder = topicmap.getBuilder();
-	}
-	
-	@After
-	public void tearDown() {
-		store.abort();
-		store.close();
-	}
-	
-	@AfterClass
-	public static void destroy() {
-		reference.close();
-		source.close();
-	}
+public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	
 	@Test
 	public void testCreateTopic() {
