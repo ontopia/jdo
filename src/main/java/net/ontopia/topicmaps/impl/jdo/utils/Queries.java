@@ -76,6 +76,13 @@ public class Queries {
 	public static final String NAMEINDEX_VARIANT_NAMES = "NameIndex.getVariants";
 	public static final String NAMEINDEX_VARIANT_NAMES_DATATYPE = "NameIndex.getVariants_datatype";
 
+	public static final String OCCURRENCEINDEX_OCCURRENCES = "OccurrenceIndex.getOccurrences";
+	public static final String OCCURRENCEINDEX_OCCURRENCES_DATATYPE = "OccurrenceIndex.getOccurrences(datatype)";
+	public static final String OCCURRENCEINDEX_OCCURRENCES_PREFIX = "OccurrenceIndex.getOccurrencesByPrefix";
+	public static final String OCCURRENCEINDEX_OCCURRENCES_PREFIX_DATATYPE = "OccurrenceIndex.getOccurrencesByPrefix(datatype)";
+	public static final String OCCURRENCEINDEX_VALUES_SMALLER_EQUAL = "OccurrenceIndex.getValuesGreaterThanOrEqual";
+	public static final String OCCURRENCEINDEX_VALUES_GREATER_EQUAL = "OccurrenceIndex.getValuesSmallerThanOrEqual";
+
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
 	

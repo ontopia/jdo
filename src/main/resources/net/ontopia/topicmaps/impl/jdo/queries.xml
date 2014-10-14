@@ -210,4 +210,51 @@
 			topicmap == tm && value == v && datatype == dt
 		]]></filter>
 	</query>
+	
+	<!-- OccurrenceIndex -->
+	
+	<query name="OccurrenceIndex.abstract" abstract="true">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm, String v</parameters>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrences" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrences(datatype)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && datatype == dt
+		]]></filter>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrencesByPrefix" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value.startsWith(v)
+		]]></filter>
+	</query>
+
+	<query name="OccurrenceIndex.getOccurrencesByPrefix(datatype)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value.startsWith(v) && datatype == dt
+		]]></filter>
+	</query>
+
+	<query name="OccurrenceIndex.getValuesGreaterThanOrEqual" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value >= v
+		]]></filter>
+		<result>distinct value</result>
+	</query>
+
+	<query name="OccurrenceIndex.getValuesSmallerThanOrEqual" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value <= v
+		]]></filter>
+		<result>distinct value</result>
+	</query>
 </queries>
