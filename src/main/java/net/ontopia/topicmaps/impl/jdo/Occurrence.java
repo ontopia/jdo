@@ -49,7 +49,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Persistent(name = "datatype", column = "datatype")
 	@Column(jdbcType = "LONGVARCHAR")
-	private String dataType = PSI.XSD_STRING;
+	private String datatype = PSI.XSD_STRING;
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
@@ -89,7 +89,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getDataType() {
-		return URILocator.create(dataType);
+		return URILocator.create(datatype);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getLocator() {
-		if (PSI.XSD_URI.equals(dataType)) {
+		if (PSI.XSD_URI.equals(datatype)) {
 			return URILocator.create(getValue());
 		}
 		return null;
@@ -121,7 +121,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		setValue(value);
-		this.dataType = datatype.getAddress();
+		this.datatype = datatype.getAddress();
 	}
 
 	@Override
