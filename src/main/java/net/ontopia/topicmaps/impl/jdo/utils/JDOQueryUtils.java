@@ -40,13 +40,19 @@ public class JDOQueryUtils {
 		}
 	}
 
-	public static <T> T singularResultQuery(Query query, Class<T> expected, Object... variables) {
+	@SuppressWarnings("unchecked")
+	public static <T> T singularResultQuery(Query query, Object... variables) {
 		try {
-			Collection<T> result = queryToCollection(query, variables);
-			if ((result == null) || (result.isEmpty())) {
-				return null;
+			Object queryResult = query.executeWithArray(variables);
+			if (queryResult instanceof Collection) {
+				Collection<T> result = (Collection<T>) queryResult;
+				if (result.isEmpty()) {
+					return null;
+				}
+				return result.iterator().next();
+			} else {
+				return (T) queryResult;
 			}
-			return result.iterator().next();
 		} finally {
 			query.closeAll();
 		}
