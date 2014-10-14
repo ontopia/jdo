@@ -61,4 +61,100 @@
 			association == assoc && topicmap == tm && type == rt
 		]]></filter>
 	</query>
+	
+	<!-- ClassInstanceIndex -->
+	
+	<query name="ClassInstanceIndex.getTopics(null)">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types == null
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopics">
+		<class>Topic</class>
+		<parameters>TopicMap tm, Topic type</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(type)
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNames">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, Topic nt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == nt
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getOccurrences">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm, Topic ot</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == ot
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociations">
+		<class>Association</class>
+		<parameters>TopicMap tm, Topic at</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == at
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationRoles">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Topic rt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == rt
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicTypes">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(type)
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNameTypes">
+		<class>TopicName</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getOccurrenceTypes">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationTypes">
+		<class>Association</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationRoleTypes">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
 </queries>

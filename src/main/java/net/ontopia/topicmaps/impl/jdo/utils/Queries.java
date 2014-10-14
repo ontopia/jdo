@@ -51,6 +51,17 @@ public class Queries {
 	public static final String TOPICMAP_OBJECT_BY_IDENTIFIER = "TopicMap.getObjectByIdentifier";
 	public static final String ASSOCIATION_ROLE_TYPES = "Association.getRoleTypes";
 	public static final String ASSOCIATION_ROLES_BY_TYPE = "Association.getRolesByType";
+	public static final String CLASSINSTANCEINDEX_UNTYPED_TOPICS = "ClassInstanceIndex.getTopics(null)";
+	public static final String CLASSINSTANCEINDEX_TOPICS_BY_TYPE = "ClassInstanceIndex.getTopics";
+	public static final String CLASSINSTANCEINDEX_NAMES_BY_TYPE = "ClassInstanceIndex.getTopicNames";
+	public static final String CLASSINSTANCEINDEX_OCCURRENCES_BY_TYPE = "ClassInstanceIndex.getOccurrences";
+	public static final String CLASSINSTANCEINDEX_ASSOCIATIONS_BY_TYPE = "ClassInstanceIndex.getAssociations";
+	public static final String CLASSINSTANCEINDEX_ROLES_BY_TYPE = "ClassInstanceIndex.getAssociationRoles";
+	public static final String CLASSINSTANCEINDEX_TOPIC_TYPES = "ClassInstanceIndex.getTopicTypes";
+	public static final String CLASSINSTANCEINDEX_TOPIC_NAME_TYPES = "ClassInstanceIndex.getTopicNameTypes";
+	public static final String CLASSINSTANCEINDEX_OCCURRENCE_TYPES = "ClassInstanceIndex.getOccurrenceTypes";
+	public static final String CLASSINSTANCEINDEX_ASSOCIATION_TYPES = "ClassInstanceIndex.getAssociationTypes";
+	public static final String CLASSINSTANCEINDEX_ASSOCIATION_ROLE_TYPES = "ClassInstanceIndex.getAssociationRoleTypes";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
