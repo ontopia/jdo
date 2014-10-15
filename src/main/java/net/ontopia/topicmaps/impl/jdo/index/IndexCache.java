@@ -37,11 +37,11 @@ public class IndexCache {
 			= new HashMap<String, Class<? extends IndexIF>>(5);
 	
 	static {
-		knownIndexes.put(ClassInstanceIndexIF.class.getSimpleName(), ClassInstanceIndex.class);
-		knownIndexes.put(NameIndexIF.class.getSimpleName(), NameIndex.class);
-		knownIndexes.put(OccurrenceIndexIF.class.getSimpleName(), OccurrenceIndex.class);
-		knownIndexes.put(ScopeIndexIF.class.getSimpleName(), ScopeIndex.class);
-		knownIndexes.put(StatisticsIndexIF.class.getSimpleName(), StatisticsIndex.class);
+		knownIndexes.put(ClassInstanceIndexIF.class.getName(), ClassInstanceIndex.class);
+		knownIndexes.put(NameIndexIF.class.getName(), NameIndex.class);
+		knownIndexes.put(OccurrenceIndexIF.class.getName(), OccurrenceIndex.class);
+		knownIndexes.put(ScopeIndexIF.class.getName(), ScopeIndex.class);
+		knownIndexes.put(StatisticsIndexIF.class.getName(), StatisticsIndex.class);
 	}
 	
 	private final TopicMap topicmap;
