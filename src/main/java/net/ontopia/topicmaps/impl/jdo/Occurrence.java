@@ -89,6 +89,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly())throw new ReadOnlyException();
+		if (type == null) throw new NullPointerException("Type cannot be null");
 		this.type = (Topic) type;
 	}
 
