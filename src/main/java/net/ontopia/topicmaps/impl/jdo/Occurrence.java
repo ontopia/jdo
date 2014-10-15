@@ -30,6 +30,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.URILocator;
+import net.ontopia.topicmaps.core.ConstraintViolationException;
 import net.ontopia.topicmaps.core.DataTypes;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
@@ -115,6 +116,8 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (!"URI".equalsIgnoreCase(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
 		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
 
