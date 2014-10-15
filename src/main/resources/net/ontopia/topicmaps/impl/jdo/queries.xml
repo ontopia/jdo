@@ -207,6 +207,29 @@
 		<class>Association</class>
 	</query>
 	
+	<query name="ScopeIndex.abstract.UsedAsScope" abstract="true" unique="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(t)
+		]]></filter>
+	</query>
+
+	<query name="ScopeIndex.usedAsTopicNameTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsVariantTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsOccurrenceTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsAssociationTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>Association</class>
+	</query>
+	
 	<!-- NameIndex -->
 
 	<query name="NameIndex.getTopicNames">

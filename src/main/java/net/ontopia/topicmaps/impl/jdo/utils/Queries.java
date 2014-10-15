@@ -76,6 +76,11 @@ public class Queries {
 	public static final String SCOPEINDEX_VARIANT_NAME_SCOPES = "ScopeIndex.getVariantThemes";
 	public static final String SCOPEINDEX_OCCURRENCE_SCOPES = "ScopeIndex.getOccurrenceThemes";
 	public static final String SCOPEINDEX_ASSOCIATION_SCOPES = "ScopeIndex.getAssociationThemes";
+	public static final String SCOPEINDEX_USED_AS_TOPIC_NAME_SCOPE = "ScopeIndex.usedAsTopicNameTheme";
+	public static final String SCOPEINDEX_USED_AS_VARIANT_NAME_SCOPE = "ScopeIndex.usedAsVariantTheme";
+	public static final String SCOPEINDEX_USED_AS_OCCURRENCE_SCOPE = "ScopeIndex.usedAsOccurrenceTheme";
+	public static final String SCOPEINDEX_USED_AS_ASSOCIATION_SCOPE = "ScopeIndex.usedAsAssociationTheme";
+	public static final String SCOPEINDEX_USED_AS_SCOPE = "ScopeIndex.usedAsTheme";
 
 	public static final String NAMEINDEX_TOPIC_NAMES = "NameIndex.getTopicNames";
 	public static final String NAMEINDEX_VARIANT_NAMES = "NameIndex.getVariants";

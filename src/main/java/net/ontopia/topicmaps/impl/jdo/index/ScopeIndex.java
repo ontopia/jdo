@@ -92,34 +92,42 @@ public class ScopeIndex extends AbstractIndex implements ScopeIndexIF {
 	@Override
 	public boolean usedAsTopicNameTheme(TopicIF topic) {
 		if (topic == null) return false;
-		return getTopicNameThemes().contains(topic); // todo: or query?
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.SCOPEINDEX_USED_AS_TOPIC_NAME_SCOPE), topicmap, topic)
+				!= null;
 	}
 
 	@Override
 	public boolean usedAsVariantTheme(TopicIF topic) {
 		if (topic == null) return false;
-		return getVariantThemes().contains(topic); // todo: or query?
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.SCOPEINDEX_USED_AS_VARIANT_NAME_SCOPE), topicmap, topic)
+				!= null;
 	}
 
 	@Override
 	public boolean usedAsOccurrenceTheme(TopicIF topic) {
 		if (topic == null) return false;
-		return getOccurrenceThemes().contains(topic); // todo: or query?
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.SCOPEINDEX_USED_AS_OCCURRENCE_SCOPE), topicmap, topic)
+				!= null;
 	}
 
 	@Override
 	public boolean usedAsAssociationTheme(TopicIF topic) {
 		if (topic == null) return false;
-		return getAssociationThemes().contains(topic); // todo: or query?
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.SCOPEINDEX_USED_AS_ASSOCIATION_SCOPE), topicmap, topic)
+				!= null;
 	}
 
 	@Override
 	public boolean usedAsTheme(TopicIF topic) {
 		if (topic == null) return false;
+		// cannot be ran from query as Scoped is stored in multiple tables
 		return usedAsTopicNameTheme(topic) ||
 				usedAsVariantTheme(topic) ||
 				usedAsOccurrenceTheme(topic) ||
 				usedAsAssociationTheme(topic);
-		// todo: or query?
 	}
 }
