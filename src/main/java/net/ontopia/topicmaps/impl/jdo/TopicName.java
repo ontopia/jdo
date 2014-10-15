@@ -100,6 +100,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (value == null) throw new NullPointerException("Value cannot be null");
 		this.value = value;
 	}
 
