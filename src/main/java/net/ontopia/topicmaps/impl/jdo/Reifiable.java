@@ -49,8 +49,16 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 	@Override
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isReadOnly()) throw new ReadOnlyException();
+		
+		if (this.reifier != null) {
+			this.reifier.setReified(null);
+		}
+		
 		this.reifier = (Topic) reifier;
-		this.reifier.setReified(this);
+		
+		if (this.reifier != null) {
+			this.reifier.setReified(this);
+		}
 	}
 
 	@Override
