@@ -281,6 +281,14 @@ public class Topic extends TMObject implements TopicIF {
 	public ReifiableIF getReified() {
 		return reified;
 	}
+	
+	/**
+	 * INTERNAL: sets the reified field for bidirectional 1-1 persistence
+	 * @param reified The object that this topic is reifying 
+	 */
+	void setReified(Reifiable reified) {
+		this.reified = reified;
+	}
 
 	@Override
 	protected void beforeRemove() {
