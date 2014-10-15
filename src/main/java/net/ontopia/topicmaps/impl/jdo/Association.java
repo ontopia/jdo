@@ -64,6 +64,7 @@ public class Association extends Scoped implements AssociationIF {
 	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (type == null) throw new NullPointerException("Type cannot be null");
 		this.type = (Topic) type;
 	}
 
