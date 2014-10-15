@@ -128,6 +128,36 @@
 		<class>AssociationRole</class>
 	</query>
 	
+	<query name="ClassInstanceIndex.abstract.UsedAsType" abstract="true" unique="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == t
+		]]></filter>
+	</query>
+
+	<query name="ClassInstanceIndex.usedAsTopicType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Topic</class>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(t)
+		]]></filter>
+	</query>
+
+	<query name="ClassInstanceIndex.usedAsTopicNameType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsOccurrenceType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsAssociationType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Association</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsAssociationRoleType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>AssociationRole</class>
+	</query>
+	
 	<!-- ScopeIndex -->
 	
 	<query name="ScopeIndex.abstract.getScopedObject" abstract="true">

@@ -62,6 +62,11 @@ public class Queries {
 	public static final String CLASSINSTANCEINDEX_OCCURRENCE_TYPES = "ClassInstanceIndex.getOccurrenceTypes";
 	public static final String CLASSINSTANCEINDEX_ASSOCIATION_TYPES = "ClassInstanceIndex.getAssociationTypes";
 	public static final String CLASSINSTANCEINDEX_ASSOCIATION_ROLE_TYPES = "ClassInstanceIndex.getAssociationRoleTypes";
+	public static final String CLASSINSTANCEINDEX_USED_AS_TOPIC_TYPE = "ClassInstanceIndex.usedAsTopicType";
+	public static final String CLASSINSTANCEINDEX_USED_AS_TOPIC_NAME_TYPE = "ClassInstanceIndex.usedAsTopicNameType";
+	public static final String CLASSINSTANCEINDEX_USED_AS_OCCURRENCE_TYPE = "ClassInstanceIndex.usedAsOccurrenceType";
+	public static final String CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_TYPE = "ClassInstanceIndex.usedAsAssociationType";
+	public static final String CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_ROLE_TYPE = "ClassInstanceIndex.usedAsAssociationRoleType";
 	
 	public static final String SCOPEINDEX_SCOPED_TOPIC_NAMES = "ScopeIndex.getTopicNames";
 	public static final String SCOPEINDEX_SCOPED_VARIANT_NAMES = "ScopeIndex.getVariants";

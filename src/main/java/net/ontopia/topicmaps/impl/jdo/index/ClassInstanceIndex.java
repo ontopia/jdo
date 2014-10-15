@@ -113,27 +113,42 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsTopicType(TopicIF topic) {
-		return getTopicTypes().contains(topic);
+		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_TOPIC_TYPE), topicmap, topic)
+				 != null;
 	}
 
 	@Override
 	public boolean usedAsTopicNameType(TopicIF topic) {
-		return getTopicNameTypes().contains(topic);
+		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_TOPIC_NAME_TYPE), topicmap, topic)
+				 != null;
 	}
 
 	@Override
 	public boolean usedAsOccurrenceType(TopicIF topic) {
-		return getOccurrenceTypes().contains(topic);
+		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_OCCURRENCE_TYPE), topicmap, topic)
+				 != null;
 	}
 
 	@Override
 	public boolean usedAsAssociationType(TopicIF topic) {
-		return getAssociationTypes().contains(topic);
+		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_TYPE), topicmap, topic)
+				 != null;
 	}
 
 	@Override
 	public boolean usedAsAssociationRoleType(TopicIF topic) {
-		return getAssociationRoleTypes().contains(topic);
+		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_ROLE_TYPE), topicmap, topic)
+				 != null;
 	}
 
 	@Override
