@@ -347,12 +347,4 @@ public class Topic extends TMObject implements TopicIF {
 	void associationRoleCreated(AssociationRole role) {
 		roles.add(role);
 	}
-	
-	// temp for test
-
-	public Set<IdentityLocator> _getSubjectIdentifiers() {
-		return subjectIdentifiers;
-	}
-	
-	
 }
