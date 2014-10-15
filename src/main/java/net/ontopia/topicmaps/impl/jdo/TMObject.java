@@ -43,6 +43,7 @@ import net.ontopia.topicmaps.core.TMObjectIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
 import net.ontopia.topicmaps.impl.utils.ObjectStrings;
@@ -99,7 +100,7 @@ public abstract class TMObject implements TMObjectIF {
 				itemIdentifiers.add(itemIdentifier);
 			}
 		} catch (JDOException re) {
-			throw new ConstraintViolationException("Item identifier " + item_identifier + " is already identifying another object: " 
+			throw new UniquenessViolationException("Item identifier " + item_identifier + " is already identifying another object: " 
 					+ topicmap.getObjectByIdentifier(item_identifier));
 		}
 	}

@@ -44,6 +44,7 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 
 @PersistenceCapable(table = "TM_TOPIC")
@@ -157,7 +158,7 @@ public class Topic extends TMObject implements TopicIF {
 				subjectLocators.add(subjectLocator);
 			}
 		} catch (JDOException re) {
-			throw new ConstraintViolationException("Subject locator " + lif + " is already identifying another topic: " 
+			throw new UniquenessViolationException("Subject locator " + lif + " is already identifying another topic: " 
 					+ topicmap.getTopicBySubjectLocator(lif));
 		}
 	}
@@ -184,7 +185,7 @@ public class Topic extends TMObject implements TopicIF {
 				subjectIdentifiers.add(subjectIdentity);
 			}
 		} catch (JDOException re) {
-			throw new ConstraintViolationException("Subject identifier " + lif + " is already identifying another object: " 
+			throw new UniquenessViolationException("Subject identifier " + lif + " is already identifying another object: " 
 					+ topicmap.getObjectByIdentifier(lif));
 		}
 	}
