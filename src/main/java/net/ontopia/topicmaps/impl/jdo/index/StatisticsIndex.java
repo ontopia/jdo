@@ -20,12 +20,13 @@
 
 package net.ontopia.topicmaps.impl.jdo.index;
 
+import net.ontopia.topicmaps.core.index.IndexIF;
 import net.ontopia.topicmaps.core.index.StatisticsIndexIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 
-public class StatisticsIndex extends AbstractIndex implements StatisticsIndexIF {
+public class StatisticsIndex extends AbstractIndex implements StatisticsIndexIF, IndexIF {
 
 	public StatisticsIndex(TopicMap topicmap) {
 		super(topicmap);
