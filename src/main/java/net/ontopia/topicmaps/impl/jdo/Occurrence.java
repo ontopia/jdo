@@ -30,10 +30,10 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.URILocator;
+import net.ontopia.topicmaps.core.DataTypes;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
-import net.ontopia.topicmaps.utils.PSI;
 
 @PersistenceCapable(table = "TM_OCCURRENCE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -49,7 +49,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Persistent(name = "datatype", column = "datatype")
 	@Column(jdbcType = "LONGVARCHAR")
-	private String datatype = PSI.XSD_STRING;
+	private String datatype = DataTypes.TYPE_STRING.getAddress();
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
@@ -105,7 +105,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getLocator() {
-		if (PSI.XSD_URI.equals(datatype)) {
+		if (DataTypes.TYPE_URI.getAddress().equals(datatype)) {
 			return URILocator.create(getValue());
 		}
 		return null;
@@ -114,7 +114,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		setValue(locator.getAddress(), URILocator.create(PSI.XSD_URI));
+		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
 
 	@Override
