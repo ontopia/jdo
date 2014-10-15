@@ -253,4 +253,10 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 		Assert.assertEquals(a, assocs.iterator().next());
 	}
 	
+	@Test
+	public void testObjectId() {
+		TopicIF t = builder.makeTopic();
+		Assert.assertEquals(t, topicmap.getObjectById(t.getObjectId()));
+	}
+	
 }
