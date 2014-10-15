@@ -41,6 +41,7 @@ import net.ontopia.topicmaps.core.TopicMapBuilderIF;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
+import net.ontopia.topicmaps.impl.jdo.index.IndexCache;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 import net.ontopia.utils.OntopiaRuntimeException;
@@ -68,13 +69,15 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	
 	/* -- not persistent -- */
 	private transient JDOTopicMapBuilder builder = null;
+	private transient final IndexCache indexes;
 	
 	public TopicMap() {
 		super(null);
+		indexes = new IndexCache(this);
 	}
 	
 	public TopicMap(long id) {
-		super(null);
+		this();
 		this.id = id;
 	}
 
@@ -115,7 +118,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public Object getIndex(String name) {
-		return null; // todo
+		return indexes.getIndex(name);
 	}
 
 	@Override
