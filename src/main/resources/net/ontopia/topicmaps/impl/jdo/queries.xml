@@ -249,4 +249,112 @@
 		]]></filter>
 		<result>distinct value</result>
 	</query>
+	
+	<!-- StatisticsIndex -->
+	
+	<query name="StatisticsIndex.abstract.ObjectCount" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter>topicmap == tm</filter>
+		<result>count(this)</result>
+	</query>
+	<query name="StatisticsIndex.abstract.TypeCount" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>count(distinct type)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Topic</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTypedTopicCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && !types.isEmpty
+		]]></filter>
+		<result>count(this)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getUntypedTopicCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types == null
+		]]></filter>
+		<result>count(this)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicTypeCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(tt)
+		]]></filter>
+		<result>count(distinct tt)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getAssociationCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Association</class>
+	</query>
+	
+	<query name="StatisticsIndex.getAssociationTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>Association</class>
+	</query>
+	
+	<query name="StatisticsIndex.getRoleCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="StatisticsIndex.getRoleTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="StatisticsIndex.getOccurrenceCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="StatisticsIndex.getOccurrenceTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicNameCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicNameTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>TopicName</class>
+	</query>
+
+	<!-- workaround for subquery bug: count the topics that have a name and 
+		distract this count from the count of all topics -->
+	<query name="StatisticsIndex.getNoNameTopicCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>TopicName</class>
+		<result>count(distinct topic)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getVariantCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="StatisticsIndex.getSubjectIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>IdentityLocator</class>
+		<filter><![CDATA[
+			topicmap == tm && type == IdentityLocator.SUBJECT_IDENTIFIER
+		]]></filter>
+	</query>
+
+	<query name="StatisticsIndex.getItemIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>IdentityLocator</class>
+		<filter><![CDATA[
+			topicmap == tm && type == IdentityLocator.ITEM_IDENTIFIER
+		]]></filter>
+	</query>
+	
+	<query name="StatisticsIndex.getSubjectLocatorCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>SubjectLocator</class>
+	</query>
+	
 </queries>

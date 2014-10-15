@@ -82,6 +82,24 @@ public class Queries {
 	public static final String OCCURRENCEINDEX_OCCURRENCES_PREFIX_DATATYPE = "OccurrenceIndex.getOccurrencesByPrefix(datatype)";
 	public static final String OCCURRENCEINDEX_VALUES_SMALLER_EQUAL = "OccurrenceIndex.getValuesGreaterThanOrEqual";
 	public static final String OCCURRENCEINDEX_VALUES_GREATER_EQUAL = "OccurrenceIndex.getValuesSmallerThanOrEqual";
+	
+	public static final String STATISTICSINDEX_TOPICS = "StatisticsIndex.getTopicCount";
+	public static final String STATISTICSINDEX_TYPED_TOPICS = "StatisticsIndex.getTypedTopicCount";
+	public static final String STATISTICSINDEX_UNTYPED_TOPICS = "StatisticsIndex.getUntypedTopicCount";
+	public static final String STATISTICSINDEX_TOPIC_TYPES = "StatisticsIndex.getTopicTypeCount";
+	public static final String STATISTICSINDEX_ASSOCIATIONS = "StatisticsIndex.getAssociationCount";
+	public static final String STATISTICSINDEX_ASSOCIATION_TYPES = "StatisticsIndex.getAssociationTypeCount";
+	public static final String STATISTICSINDEX_ROLES = "StatisticsIndex.getRoleCount";
+	public static final String STATISTICSINDEX_ROLE_TYPES = "StatisticsIndex.getRoleTypeCount";
+	public static final String STATISTICSINDEX_OCCURRENCES = "StatisticsIndex.getOccurrenceCount";
+	public static final String STATISTICSINDEX_OCCURRENCE_TYPES = "StatisticsIndex.getOccurrenceTypeCount";
+	public static final String STATISTICSINDEX_TOPIC_NAMES = "StatisticsIndex.getTopicNameCount";
+	public static final String STATISTICSINDEX_NO_NAMES = "StatisticsIndex.getNoNameTopicCount";
+	public static final String STATISTICSINDEX_TOPIC_NAME_TYPES = "StatisticsIndex.getTopicNameTypeCount";
+	public static final String STATISTICSINDEX_VARIANTS = "StatisticsIndex.getVariantCount";
+	public static final String STATISTICSINDEX_SUBJECT_IDENTIFIERS = "StatisticsIndex.getSubjectIdentifierCount";
+	public static final String STATISTICSINDEX_SUBJECT_LOCATORS = "StatisticsIndex.getSubjectLocatorCount";
+	public static final String STATISTICSINDEX_ITEM_IDENTIFIERS = "StatisticsIndex.getItemIdentifierCount";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
