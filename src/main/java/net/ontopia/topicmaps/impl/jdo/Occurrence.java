@@ -20,7 +20,9 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
@@ -35,6 +37,8 @@ import net.ontopia.topicmaps.core.DataTypes;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
+import net.ontopia.utils.OntopiaRuntimeException;
+import net.ontopia.utils.StreamUtils;
 
 @PersistenceCapable(table = "TM_OCCURRENCE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -124,18 +128,26 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
 		setValue(value);
 		this.datatype = datatype.getAddress();
 	}
 
 	@Override
 	public Reader getReader() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		if (value == null) return null;
+		return new StringReader(value);
 	}
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		if (value == null) throw new NullPointerException("Reader cannot be null");
+		try {
+			setValue(StreamUtils.readString(value, length), datatype);
+		} catch (IOException ioe) {
+			throw new OntopiaRuntimeException(ioe);
+		}
 	}
 
 	@Override
