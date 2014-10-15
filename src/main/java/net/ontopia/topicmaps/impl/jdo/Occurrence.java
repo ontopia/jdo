@@ -105,8 +105,9 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public LocatorIF getLocator() {
+		if (value == null) return null;
 		if (DataTypes.TYPE_URI.getAddress().equals(datatype)) {
-			return URILocator.create(getValue());
+			return URILocator.create(value);
 		}
 		return null;
 	}
