@@ -74,7 +74,7 @@ public class JDOTopicMapBuilder implements TopicMapBuilderIF {
 		return checkAndCast(topic, "Topic", Topic.class).makeTopicName(bntype, value);
 	}
 
-	private TopicIF getDefaultNameType() {
+	TopicIF getDefaultNameType() {
 		TopicIF defaultNameType = topicmap.getTopicBySubjectIdentifier(PSI.getSAMNameType());
 		if (defaultNameType == null) {
 			defaultNameType = makeTopic();

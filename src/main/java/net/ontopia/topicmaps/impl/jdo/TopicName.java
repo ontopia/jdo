@@ -89,6 +89,9 @@ public class TopicName extends Scoped implements TopicNameIF {
 	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (type == null) {
+			type = ((JDOTopicMapBuilder)topicmap.getBuilder()).getDefaultNameType();
+		}
 		this.type = (Topic) type;
 	}
 	
