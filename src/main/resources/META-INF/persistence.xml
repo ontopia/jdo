@@ -8,7 +8,9 @@
 		<class>net.ontopia.topicmaps.impl.jdo.AssociationRole</class>
 		<class>net.ontopia.topicmaps.impl.jdo.TopicName</class>
 		<class>net.ontopia.topicmaps.impl.jdo.VariantName</class>
-		<class>net.ontopia.topicmaps.impl.jdo.IdentityLocator</class>
+		<class>net.ontopia.topicmaps.impl.jdo.SubjectIdentifier</class>
+		<class>net.ontopia.topicmaps.impl.jdo.ItemIdentifier</class>
+		<class>net.ontopia.topicmaps.impl.jdo.SubjectLocator</class>
 		<exclude-unlisted-classes/>
 	</persistence-unit>
 </persistence>
