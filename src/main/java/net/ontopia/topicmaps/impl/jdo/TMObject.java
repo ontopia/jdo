@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.jdo.JDOException;
 import javax.jdo.JDOHelper;
+import javax.jdo.ObjectState;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.annotations.IdGeneratorStrategy;
@@ -119,6 +120,8 @@ public abstract class TMObject implements TMObjectIF {
 
 	@Override
 	public void remove() {
+		ObjectState state = JDOHelper.getObjectState(this);
+		if ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED)) return;
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();
 		getPersistenceManager().deletePersistent(this);
