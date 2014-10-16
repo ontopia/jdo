@@ -86,8 +86,9 @@ public class JDOTopicMapSourceTest {
 		JDOTopicMapReference ref = (JDOTopicMapReference) source.createTopicMap("foo", "foo:bar");
 		
 		Assert.assertEquals("Title changed after save", "foo", ref.getTitle());
-		Assert.assertNotNull("Unexpected id", ref.getId());
-		Assert.assertTrue("Unexpected id", ref.getId().startsWith("ontopia-test-jdo-1"));
+		String id = ref.getId();
+		Assert.assertNotNull("Unexpected id", id);
+		Assert.assertTrue("Unexpected id", id.startsWith("ontopia-test-jdo-1"));
 		Assert.assertEquals("Incorrect number of references after create", 1, source.getReferences().size());
 		
 		TopicMapStoreIF store = null;
@@ -103,7 +104,7 @@ public class JDOTopicMapSourceTest {
 			Assert.assertEquals("Incorrect number of references after refresh", 1, source.getReferences().size());
 			ref = (JDOTopicMapReference) source.getReferences().iterator().next();
 			Assert.assertEquals("Title changed after refresh", "foo", ref.getTitle());
-			Assert.assertEquals("Id changed after refresh", "ontopia-test-jdo-1", ref.getId());
+			Assert.assertEquals("Id changed after refresh", id, ref.getId());
 
 			store = ref.createStore(true);
 			tm = (TopicMap) store.getTopicMap();
