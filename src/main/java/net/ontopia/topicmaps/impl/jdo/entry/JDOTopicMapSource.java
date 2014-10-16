@@ -183,6 +183,10 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 	public Queries getQueries() {
 		return queries;
 	}
+	
+	void referenceRemoved(JDOTopicMapReference reference) {
+		references.remove(reference);
+	}
 
 	/* --- getter/setter for sources xml --- */
 	

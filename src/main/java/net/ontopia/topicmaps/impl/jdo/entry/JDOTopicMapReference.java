@@ -17,16 +17,16 @@
  * limitations under the License.
  * !#
  */
-
 package net.ontopia.topicmaps.impl.jdo.entry;
 
 import java.io.IOException;
 import javax.jdo.PersistenceManagerFactory;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.entry.AbstractTopicMapReference;
+import net.ontopia.utils.OntopiaRuntimeException;
 
 public class JDOTopicMapReference extends AbstractTopicMapReference {
-	
+
 	private final long identity;
 
 	public JDOTopicMapReference(JDOTopicMapSource source, String id, String title, long identity) {
@@ -37,14 +37,45 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 
 	@Override
 	public TopicMapStoreIF createStore(boolean readonly) throws IOException {
-		final JDOTopicMapStore store = new JDOTopicMapStore(identity, readonly, 
+		if (deleted) throw new IOException("Cannot open a store on a deleted topicmap");
+		final JDOTopicMapStore store = new JDOTopicMapStore(identity, readonly,
 				getPersistenceManagerFactory());
 		store.setReference(this);
 		return store;
 	}
-	
+
+	@Override
+	public synchronized void delete() {
+		if (source == null) {
+			throw new UnsupportedOperationException("This reference cannot be deleted as it does not belong to a source.");
+		}
+		if (!source.supportsDelete()) {
+			throw new UnsupportedOperationException("This reference cannot be deleted as the source does not allow deleting.");
+		}
+		// ignore if store already deleted
+		if (isDeleted()) {
+			return;
+		}
+
+		// close reference
+		close();
+
+		TopicMapStoreIF store = null;
+		try {
+			store = createStore(false);
+			store.delete(true);
+			store.commit();
+			deleted = true;
+			((JDOTopicMapSource) source).referenceRemoved(this);
+		} catch (IOException ioe) {
+			throw new OntopiaRuntimeException("Could not delete topicmap: " + ioe.getMessage(), ioe);
+		} finally {
+			if (store != null) store.close();
+		}
+	}
+
 	PersistenceManagerFactory getPersistenceManagerFactory() {
-		return ((JDOTopicMapSource)getSource()).getPersistenceManagerFactory();
+		return ((JDOTopicMapSource) getSource()).getPersistenceManagerFactory();
 	}
 
 	public long getLongId() {

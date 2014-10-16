@@ -25,8 +25,10 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.NotRemovableException;
+import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicMapIF;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
+import net.ontopia.topicmaps.core.index.StatisticsIndexIF;
 import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.OntopiaRuntimeException;
@@ -123,7 +125,19 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public void delete(boolean force) throws NotRemovableException {
-		// todo
+		if (readOnly) throw new ReadOnlyException();
+
+		if (!force) {
+
+			StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
+			int objects = index.getTopicCount();
+			objects += index.getAssociationCount();
+
+			if (objects > 0) {
+				throw new NotRemovableException("Topicmap is not empty");
+			}
+		}
+		persistenceManager.deletePersistent(topicmap);
 	}
 
 	@Override
