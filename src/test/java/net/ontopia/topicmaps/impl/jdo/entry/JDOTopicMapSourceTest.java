@@ -88,7 +88,7 @@ public class JDOTopicMapSourceTest {
 		Assert.assertEquals("Title changed after save", "foo", ref.getTitle());
 		String id = ref.getId();
 		Assert.assertNotNull("Unexpected id", id);
-		Assert.assertTrue("Unexpected id", id.startsWith("ontopia-test-jdo-1"));
+		Assert.assertTrue("Unexpected id", id.startsWith("ontopia-test-jdo-"));
 		Assert.assertEquals("Incorrect number of references after create", 1, source.getReferences().size());
 		
 		TopicMapStoreIF store = null;
