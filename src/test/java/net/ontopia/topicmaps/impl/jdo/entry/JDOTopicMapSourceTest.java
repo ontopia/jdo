@@ -86,21 +86,26 @@ public class JDOTopicMapSourceTest {
 		Assert.assertEquals("Unexpected id", "ontopia-test-jdo-1", ref.getId());
 		Assert.assertEquals("Incorrect number of references after create", 1, source.getReferences().size());
 		
-		TopicMapStoreIF store = ref.createStore(true);
-		TopicMap tm = (TopicMap) store.getTopicMap();
-		Assert.assertEquals("Unexpected base", "foo:bar", tm.getBaseAddress().getAddress());
-		store.close();
-		
-		// refresh
-		source.refresh();
-		
-		Assert.assertEquals("Incorrect number of references after refresh", 1, source.getReferences().size());
-		ref = (JDOTopicMapReference) source.getReferences().iterator().next();
-		Assert.assertEquals("Title changed after refresh", "foo", ref.getTitle());
-		Assert.assertEquals("Id changed after refresh", "ontopia-test-jdo-1", ref.getId());
-		
-		store = ref.createStore(true);
-		tm = (TopicMap) store.getTopicMap();
-		Assert.assertEquals("Changed base after refresh", "foo:bar", tm.getBaseAddress().getAddress());
+		TopicMapStoreIF store = null;
+		try {
+			store = ref.createStore(true);
+			TopicMap tm = (TopicMap) store.getTopicMap();
+			Assert.assertEquals("Unexpected base", "foo:bar", tm.getBaseAddress().getAddress());
+			store.close();
+
+			// refresh
+			source.refresh();
+
+			Assert.assertEquals("Incorrect number of references after refresh", 1, source.getReferences().size());
+			ref = (JDOTopicMapReference) source.getReferences().iterator().next();
+			Assert.assertEquals("Title changed after refresh", "foo", ref.getTitle());
+			Assert.assertEquals("Id changed after refresh", "ontopia-test-jdo-1", ref.getId());
+
+			store = ref.createStore(true);
+			tm = (TopicMap) store.getTopicMap();
+			Assert.assertEquals("Changed base after refresh", "foo:bar", tm.getBaseAddress().getAddress());
+		} finally {
+			if (store != null) store.close();
+		}
 	}
 }
