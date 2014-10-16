@@ -20,7 +20,9 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
 import javax.jdo.annotations.Indices;
@@ -29,11 +31,14 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.URILocator;
+import net.ontopia.topicmaps.core.ConstraintViolationException;
+import net.ontopia.topicmaps.core.DataTypes;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
-import net.ontopia.topicmaps.utils.PSI;
+import net.ontopia.utils.OntopiaRuntimeException;
+import net.ontopia.utils.StreamUtils;
 
 @PersistenceCapable(table = "TM_VARIANT_NAME")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -47,13 +52,10 @@ public class VariantName extends Scoped implements VariantNameIF {
 	private TopicName topicname;
 	
 	@Column(name = "datatype", jdbcType = "LONGVARCHAR")
-	private String datatype = PSI.XSD_STRING;
+	private String datatype = DataTypes.TYPE_STRING.getAddress();
 
 	@Column(name = "value", jdbcType = "LONGVARCHAR")
 	private String value;
-
-	@Column(name = "length")
-	private long length;
 
 	public VariantName(TopicName name) {
 		super((TopicMap) name.getTopicMap());
@@ -81,18 +83,21 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	public Reader getReader() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		if (value == null) return null;
+		return new StringReader(value);
 	}
 
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (value == null) throw new NullPointerException("Value cannot be null");
 		this.value = value;
 	}
 
 	@Override
 	public LocatorIF getLocator() {
-		if (PSI.XSD_URI.equals(datatype)) {
+		if (value == null) return null;
+		if (DataTypes.TYPE_URI.getAddress().equals(datatype)) {
 			return URILocator.create(value);
 		}
 		return null;
@@ -101,24 +106,33 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		setValue(locator.getAddress(), URILocator.create(PSI.XSD_URI));
+		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (!"URI".equals(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
+		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
 
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		this.value = value;
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
+		setValue(value);
 		this.datatype = datatype.getAddress();
 	}
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		throw new UnsupportedOperationException("Not supported yet.");
+		if (value == null) throw new NullPointerException("Reader cannot be null");
+		try {
+			setValue(StreamUtils.readString(value, length), datatype);
+		} catch (IOException ioe) {
+			throw new OntopiaRuntimeException(ioe);
+		}
 	}
 
 	@Override
 	public long getLength() {
-		return length;
+		return (value == null ? 0 : value.length());
 	}
 
 	@Override
