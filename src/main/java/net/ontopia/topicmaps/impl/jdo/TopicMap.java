@@ -21,7 +21,9 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Index;
@@ -44,12 +46,22 @@ import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
 import net.ontopia.topicmaps.impl.jdo.index.IndexCache;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
-import net.ontopia.utils.OntopiaRuntimeException;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_MAP_IX_BASE_ID", members = {"base", "id"})
 public class TopicMap extends Reifiable implements TopicMapIF {
+	
+	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<Character, Class<? extends TMObject>>();
+	static {
+		classmap.put('M', TopicMap.class);
+		classmap.put('A', Association.class);
+		classmap.put('T', Topic.class);
+		classmap.put('R', AssociationRole.class);
+		classmap.put('O', Occurrence.class);
+		classmap.put('V', VariantName.class);
+		classmap.put('N', TopicName.class);
+	}
 	
 	@Persistent(name = "title", column = "title", defaultFetchGroup = "true")
 	private String title;
@@ -133,8 +145,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public TMObjectIF getObjectById(String object_id) {
-		if (object_id == null) throw new NullPointerException("Object id cannot be null");
-		return getPersistenceManager().getObjectById(TMObject.class, object_id.substring(1));
+		if ((object_id == null) || (object_id.isEmpty())) throw new NullPointerException("Object id cannot be null");
+		Class<? extends TMObject> cls = classmap.get(object_id.charAt(0));
+		if (cls == null) return null; // unknown indicator
+		return getPersistenceManager().getObjectById(cls, object_id.substring(1));
 	}
 
 	@Override
