@@ -40,12 +40,14 @@ public class JDOTopicMapSourceTest {
 	private JDOTopicMapSource source;
 	
 	@Before
-	@After
 	public void setUp() {
-		if (source != null) source.close();
-		
 		File db = new File("target/ontopia.h2.db");
 		if (db.exists()) db.delete();
+	}
+
+	@After
+	public void tearDown() {
+		if (source != null) source.close();
 	}
 	
 	@Test
@@ -76,6 +78,7 @@ public class JDOTopicMapSourceTest {
 		source = new JDOTopicMapSource(PROPERTIES);
 		source.setId("ontopia-test-jdo");
 		source.setSupportsCreate(true);
+		source.setSupportsDelete(true);
 		source.refresh();
 		
 		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
@@ -83,7 +86,8 @@ public class JDOTopicMapSourceTest {
 		JDOTopicMapReference ref = (JDOTopicMapReference) source.createTopicMap("foo", "foo:bar");
 		
 		Assert.assertEquals("Title changed after save", "foo", ref.getTitle());
-		Assert.assertEquals("Unexpected id", "ontopia-test-jdo-1", ref.getId());
+		Assert.assertNotNull("Unexpected id", ref.getId());
+		Assert.assertTrue("Unexpected id", ref.getId().startsWith("ontopia-test-jdo-1"));
 		Assert.assertEquals("Incorrect number of references after create", 1, source.getReferences().size());
 		
 		TopicMapStoreIF store = null;
@@ -106,6 +110,17 @@ public class JDOTopicMapSourceTest {
 			Assert.assertEquals("Changed base after refresh", "foo:bar", tm.getBaseAddress().getAddress());
 		} finally {
 			if (store != null) store.close();
+		}
+		
+		ref.delete();
+		Assert.assertTrue("Reference not set to deleted after delete", ref.isDeleted());
+		Assert.assertTrue("Reference set not empty after delete", source.getReferences().isEmpty());
+
+		try {
+			ref.createStore(true).close();
+			Assert.fail("Could open store after reference delete");
+		} catch (IOException ioe) {
+			// expected
 		}
 	}
 }
