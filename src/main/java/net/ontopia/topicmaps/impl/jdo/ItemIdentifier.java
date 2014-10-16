@@ -20,11 +20,14 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 
 @PersistenceCapable(table = "TM_ITEM_IDENTIFIER")
+@Inheritance(strategy = InheritanceStrategy.COMPLETE_TABLE)
 public class ItemIdentifier extends AbstractJDOLocator {
 	private static final long serialVersionUID = 1L;
 
