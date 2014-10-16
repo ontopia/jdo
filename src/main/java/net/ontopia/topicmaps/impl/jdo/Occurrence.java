@@ -60,8 +60,6 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Column(jdbcType = "LONGVARCHAR")
 	private String value;
 
-	@Persistent(name = "length", column = "length")
-	private long length;
 	@Persistent(name = "type", column = "type")
 	private Topic type;
 
