@@ -103,6 +103,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public TopicMapIF getTopicMap() {
+		if (!isOpen()) open();
 		return topicmap;
 	}
 
