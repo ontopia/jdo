@@ -106,6 +106,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (value == null) throw new NullPointerException("Value cannot be null");
 		this.value = value;
 	}
 
@@ -153,6 +154,6 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public long getLength() {
-		return length;
+		return (value == null ? 0 : value.length());
 	}
 }
