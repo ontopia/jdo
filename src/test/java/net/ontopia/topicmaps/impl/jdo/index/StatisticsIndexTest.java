@@ -157,10 +157,10 @@ public class StatisticsIndexTest extends AbstractJDOTest {
 		Assert.assertEquals(1, index.getSubjectLocatorCount());
 	}
 
-//	@Test // disabled because II's cause problems
-//	public void testGetItemIdentifierCount() {
-//		Assert.assertEquals(0, index.getItemIdentifierCount());
-//		builder.makeTopic().addItemIdentifier(URILocator.create("foo:bar"));
-//		Assert.assertEquals(1, index.getItemIdentifierCount());
-//	}
+	@Test
+	public void testGetItemIdentifierCount() {
+		Assert.assertEquals(0, index.getItemIdentifierCount());
+		builder.makeTopic().addItemIdentifier(URILocator.create("foo:bar"));
+		Assert.assertEquals(1, index.getItemIdentifierCount());
+	}
 }
