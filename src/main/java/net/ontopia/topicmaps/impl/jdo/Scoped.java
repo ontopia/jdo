@@ -56,6 +56,7 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 	@Override
 	public void addTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (theme == null) throw new NullPointerException("Scope cannot be null");
 		Topic themeTopic = (Topic) theme;
 		if (!scope.contains(themeTopic)) {
 			scope.add(themeTopic);
@@ -65,6 +66,7 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 	@Override
 	public void removeTheme(TopicIF theme) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		if (theme == null) throw new NullPointerException("Scope cannot be null");
 		scope.remove((Topic) theme);
 	}
 
