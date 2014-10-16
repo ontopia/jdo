@@ -30,6 +30,7 @@ import javax.jdo.Query;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -47,10 +48,15 @@ import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
 import net.ontopia.topicmaps.impl.utils.ObjectStrings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class TMObject implements TMObjectIF {
+	
+	@NotPersistent
+	protected final Logger logger;
 	
 	@PrimaryKey
 	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
@@ -64,6 +70,7 @@ public abstract class TMObject implements TMObjectIF {
 
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
+		logger = LoggerFactory.getLogger(getClass());
 	}
 	
 	protected abstract String getClassIndicator();
