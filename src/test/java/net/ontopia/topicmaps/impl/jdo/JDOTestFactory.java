@@ -66,7 +66,6 @@ public class JDOTestFactory implements TestFactoryIF {
 
 	@Override
 	public void releaseTopicMapReference(TopicMapReferenceIF topicmapRef) {
-		// todo: actual delete to avoid having to delete the file
-		topicmapRef.close();
+		topicmapRef.delete();
 	}
 }
