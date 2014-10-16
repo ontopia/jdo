@@ -25,15 +25,15 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import net.ontopia.infoset.core.LocatorIF;
 
-@PersistenceCapable(table = "TM_SUBJECT_LOCATOR")
+@PersistenceCapable(table = "TM_SUBJECT_IDENTIFER")
 @Inheritance(strategy = InheritanceStrategy.COMPLETE_TABLE)
-public class SubjectLocator extends TopicLocator {
+public class SubjectIdentifier extends TopicLocator {
 	private static final long serialVersionUID = 1L;
 
-	public SubjectLocator() {
+	public SubjectIdentifier() {
 	}
-	
-	public SubjectLocator(LocatorIF locator, Topic topic) {
+
+	public SubjectIdentifier(LocatorIF locator, Topic topic) {
 		super(locator, topic);
 	}
 }

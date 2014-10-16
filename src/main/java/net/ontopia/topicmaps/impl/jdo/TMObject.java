@@ -60,7 +60,7 @@ public abstract class TMObject implements TMObjectIF {
 	protected TopicMap topicmap;
 	
 	@Persistent(mappedBy = "object")
-	protected Set<IdentityLocator> itemIdentifiers = new HashSet<IdentityLocator>();
+	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<ItemIdentifier>();
 
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
@@ -94,7 +94,7 @@ public abstract class TMObject implements TMObjectIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
 		try {
-			IdentityLocator itemIdentifier = new IdentityLocator(item_identifier, this, IdentityLocator.ITEM_IDENTIFIER);
+			ItemIdentifier itemIdentifier = new ItemIdentifier(item_identifier, this);
 			if (!itemIdentifiers.contains(itemIdentifier)) {
 				getPersistenceManager().makePersistent(itemIdentifier);
 				itemIdentifiers.add(itemIdentifier);
@@ -120,7 +120,7 @@ public abstract class TMObject implements TMObjectIF {
 	// implementation for TMObject: remove item identifiers on object remove
 	protected void beforeRemove() {
 		PersistenceManager pm = getPersistenceManager();
-		for (IdentityLocator idLocator : itemIdentifiers) {
+		for (ItemIdentifier idLocator : itemIdentifiers) {
 			pm.deletePersistent(idLocator);
 		}
 	}
@@ -155,11 +155,11 @@ public abstract class TMObject implements TMObjectIF {
 	 * @param set
 	 * @param remove 
 	 */
-	protected void removeLocator(Set<? extends JDOLocator> set, LocatorIF remove) {
+	protected void removeLocator(Set<? extends LocatorIF> set, LocatorIF remove) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (remove == null) throw new NullPointerException("Locator cannot be null");
-		JDOLocator toRemove = null;
-		for (JDOLocator locator : set) {
+		LocatorIF toRemove = null;
+		for (LocatorIF locator : set) {
 			if (locator.equals(remove)) {
 				toRemove = locator;
 				break;

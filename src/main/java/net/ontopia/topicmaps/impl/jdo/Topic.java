@@ -51,10 +51,10 @@ import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_IX_ID_TOPICMAP", members = {"id", "topicmap"})
 public class Topic extends TMObject implements TopicIF {
-	@Persistent(mappedBy = "object")
+	@Persistent(mappedBy = "topic")
 	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();
-	@Persistent(mappedBy = "object")
-	private Set<IdentityLocator> subjectIdentifiers = new HashSet<IdentityLocator>();
+	@Persistent(mappedBy = "topic")
+	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<SubjectIdentifier>();
 
 	@Persistent(table = "TM_TOPIC_TYPES")
 	@Join(column = "topic")
@@ -179,7 +179,7 @@ public class Topic extends TMObject implements TopicIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
 		try {
-			IdentityLocator subjectIdentity = new IdentityLocator(lif, this, IdentityLocator.SUBJECT_IDENTIFIER);
+			SubjectIdentifier subjectIdentity = new SubjectIdentifier(lif, this);
 			if (!subjectIdentifiers.contains(subjectIdentity)) {
 				getPersistenceManager().makePersistent(subjectIdentity);
 				subjectIdentifiers.add(subjectIdentity);

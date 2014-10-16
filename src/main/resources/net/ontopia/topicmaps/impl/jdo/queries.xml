@@ -4,10 +4,10 @@
 	<!-- TopicMap -->
 	
 	<query name="TopicMap.getTopicBySubjectIdentifier" unique="true">
-		<class>IdentityLocator</class>
+		<class>SubjectIdentifier</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
-			address == locator && topicmap == tm && type == IdentityLocator.SUBJECT_IDENTIFIER
+			address == locator && topicmap == tm
 		]]></filter>
 	</query>
 	
@@ -20,15 +20,7 @@
 	</query>
 	
 	<query name="TopicMap.getObjectByItemIdentifier" unique="true">
-		<class>IdentityLocator</class>
-		<parameters>TopicMap tm, String locator</parameters>
-		<filter><![CDATA[
-			address == locator && topicmap == tm && type == IdentityLocator.ITEM_IDENTIFIER
-		]]></filter>
-	</query>
-	
-	<query name="TopicMap.getObjectByIdentifier" unique="true">
-		<class>IdentityLocator</class>
+		<class>ItemIdentifier</class>
 		<parameters>TopicMap tm, String locator</parameters>
 		<filter><![CDATA[
 			address == locator && topicmap == tm
@@ -393,17 +385,11 @@
 	</query>
 	
 	<query name="StatisticsIndex.getSubjectIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
-		<class>IdentityLocator</class>
-		<filter><![CDATA[
-			topicmap == tm && type == IdentityLocator.SUBJECT_IDENTIFIER
-		]]></filter>
+		<class>SubjectIdentifier</class>
 	</query>
 
 	<query name="StatisticsIndex.getItemIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
-		<class>IdentityLocator</class>
-		<filter><![CDATA[
-			topicmap == tm && type == IdentityLocator.ITEM_IDENTIFIER
-		]]></filter>
+		<class>ItemIdentifier</class>
 	</query>
 	
 	<query name="StatisticsIndex.getSubjectLocatorCount" inherit="StatisticsIndex.abstract.ObjectCount">

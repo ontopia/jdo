@@ -20,40 +20,22 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import net.ontopia.infoset.core.LocatorIF;
 
-@PersistenceCapable(table = "TM_IDENTIFIERS")
-@Inheritance(strategy = InheritanceStrategy.COMPLETE_TABLE)
-public class IdentityLocator extends JDOLocator {
+@PersistenceCapable(table = "TM_ITEM_IDENTIFIER")
+public class ItemIdentifier extends AbstractJDOLocator {
 	private static final long serialVersionUID = 1L;
-	
-	public static final int ITEM_IDENTIFIER = 0;
-	public static final int SUBJECT_IDENTIFIER = 1;
-	
-	@Persistent
-	private int type;
 
-	public IdentityLocator() {
+	@Persistent(name = "object", column = "object")
+	protected TMObject object;	
+	
+	public ItemIdentifier(LocatorIF locator, TMObject object) {
+		super(locator, (TopicMap) object.getTopicMap());
 	}
 
-	public IdentityLocator(LocatorIF locator, TMObject object, int type) {
-		super(locator, object);
-		this.type = type;
-	}
-
-	public int getType() {
-		return type;
-	}
-	
-	public boolean isItemIdentifier() {
-		return type == ITEM_IDENTIFIER;
-	}
-	
-	public boolean isSubjectIdentifier() {
-		return type == SUBJECT_IDENTIFIER;
+	public TMObject getObject() {
+		return object;
 	}
 }

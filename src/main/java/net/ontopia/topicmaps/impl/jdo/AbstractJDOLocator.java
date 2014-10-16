@@ -25,7 +25,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -36,10 +35,10 @@ import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.infoset.impl.basic.AbstractLocator;
 import net.ontopia.infoset.impl.basic.URILocator;
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
+@PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 @Unique(members = {"address", "topicmap"})
-public abstract class JDOLocator extends AbstractLocator implements Externalizable {
+public abstract class AbstractJDOLocator extends AbstractLocator implements Externalizable {
 	private static final long serialVersionUID = 1L;
 	
 	@PrimaryKey
@@ -53,22 +52,18 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 	@Persistent(name = "topicmap", column = "topicmap")
 	protected TopicMap topicmap;
 	
-	@Persistent(name = "object", column = "object")
-	protected TMObject object;
-
-	public JDOLocator() {
+	public AbstractJDOLocator() {
 	}
 
-	public JDOLocator(LocatorIF locator, TMObject object) {
+	public AbstractJDOLocator(LocatorIF locator, TMObject object) {
 		this(locator.getAddress(), object);
 	}
 
-	private JDOLocator(String address, TMObject object) {
+	private AbstractJDOLocator(String address, TMObject object) {
 		if (address == null) {
 			throw new NullPointerException("The locator address cannot be null.");
 		}
 		this.address = address;
-		this.object = object;
 		this.topicmap = (TopicMap) object.getTopicMap();
 	}
 
@@ -80,10 +75,6 @@ public abstract class JDOLocator extends AbstractLocator implements Externalizab
 	@Override
 	public String getAddress() {
 		return address;
-	}
-
-	TMObject getObject() {
-		return object;
 	}
 
 	@Override

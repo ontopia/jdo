@@ -140,7 +140,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Override
 	public TMObjectIF getObjectByItemIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
-		IdentityLocator itemIdentifier = JDOQueryUtils.singularResultQuery(
+		ItemIdentifier itemIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_ITEM_IDENTIFIER),
 				this, locator.getAddress());
 		if (itemIdentifier == null) return null;
@@ -154,21 +154,17 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_LOCATOR),
 				this, locator.getAddress());
 		if (subjectLocator == null) return null;
-		TMObject object = subjectLocator.getObject();
-		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject locator " + locator + " was added to the non-topic " + object);
-		return (TopicIF) object;
+		return subjectLocator.getTopic();
 	}
 
 	@Override
 	public TopicIF getTopicBySubjectIdentifier(LocatorIF locator) {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
-		IdentityLocator subjectIdentifier = JDOQueryUtils.singularResultQuery(
+		SubjectIdentifier subjectIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_IDENTIFIER),
 				this, locator.getAddress());
 		if (subjectIdentifier == null) return null;
-		TMObject object = subjectIdentifier.getObject();
-		if (!(object instanceof TopicIF)) throw new OntopiaRuntimeException("Data inconsistency: the subject identifier " + locator + " was added to the non-topic " + object);
-		return (TopicIF) object;
+		return subjectIdentifier.getTopic();
 	}
 
 	/**
@@ -178,11 +174,11 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	 * @return 
 	 */
 	TMObject getObjectByIdentifier(LocatorIF locator) {
-		IdentityLocator identifier = JDOQueryUtils.singularResultQuery(
-				getQuery(Queries.TOPICMAP_OBJECT_BY_IDENTIFIER),
-				this, locator.getAddress());
-		if (identifier == null) return null;
-		return identifier.getObject();
+		TMObject o = (TMObject) getTopicBySubjectIdentifier(locator);
+		if (o == null) {
+			o = (TMObject) getObjectByItemIdentifier(locator);
+		}
+		return o;
 	}
 
 	@Override
