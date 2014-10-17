@@ -50,7 +50,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;
 	
-	@Persistent(mappedBy = "topicname")
+	@Persistent(mappedBy = "topicname", dependentElement = "true")
 	private Set<VariantName> variants = new HashSet<VariantName>();
 
 	@Persistent(name = "value", column = "value")
