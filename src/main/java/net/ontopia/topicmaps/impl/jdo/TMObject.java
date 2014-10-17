@@ -140,12 +140,7 @@ public abstract class TMObject implements TMObjectIF {
 		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED));
 	}
 
-	// implementation for TMObject: remove item identifiers on object remove
 	protected void beforeRemove() {
-		PersistenceManager pm = getPersistenceManager();
-		for (ItemIdentifier idLocator : itemIdentifiers) {
-			pm.deletePersistent(idLocator);
-		}
 	}
 
 	@Override
