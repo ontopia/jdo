@@ -152,6 +152,7 @@ public class Topic extends TMObject implements TopicIF {
 
 	@Override
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
+		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject locator when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
 		try {
@@ -179,6 +180,7 @@ public class Topic extends TMObject implements TopicIF {
 
 	@Override
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
+		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject identifier when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
 
