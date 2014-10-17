@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import javax.jdo.Query;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -28,12 +29,13 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
-import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Reifiable extends TMObject implements ReifiableIF {
+	
+	private static Query GET_REIFIER = null;
 
 	Reifiable(TopicMap topicmap) {
 		super(topicmap);
@@ -41,8 +43,10 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 
 	@Override
 	public TopicIF getReifier() {
-		return JDOQueryUtils.singularResultQuery(
-				getQuery(Queries.REIFIABLE_GET_REIFIER), topicmap, this);
+		if (GET_REIFIER == null) {
+			GET_REIFIER = getPersistenceManager().newQuery(Topic.class, "topicmap == :tm && reified == :o");
+		}
+		return JDOQueryUtils.singularResultQuery(GET_REIFIER, topicmap, this);
 	}
 
 	@Override
