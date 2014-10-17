@@ -52,9 +52,11 @@ import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_IX_ID_TOPICMAP", members = {"id", "topicmap"})
 public class Topic extends TMObject implements TopicIF {
-	@Persistent(mappedBy = "topic")
+	
+	@Persistent(mappedBy = "topic", dependentElement = "true")
 	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();
-	@Persistent(mappedBy = "topic")
+
+	@Persistent(mappedBy = "topic", dependentElement = "true")
 	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<SubjectIdentifier>();
 
 	@Persistent(table = "TM_TOPIC_TYPES")
@@ -63,13 +65,13 @@ public class Topic extends TMObject implements TopicIF {
 	@Index(name = "TM_TOPIC_TYPE_IX", members = {"topic", "type"})
 	private Set<Topic> types = new HashSet<Topic>(1);
 
-	@Persistent(mappedBy = "topic")
+	@Persistent(mappedBy = "topic", dependentElement = "true")
 	private Set<TopicName> topicNames = new HashSet<TopicName>();
 
-	@Persistent(mappedBy = "topic")
+	@Persistent(mappedBy = "topic", dependentElement = "true")
 	private Set<Occurrence> occurrences = new HashSet<Occurrence>();
 	
-	@Persistent(mappedBy = "player")
+	@Persistent(mappedBy = "player", dependentElement = "true")
 	private Set<AssociationRole> roles = new HashSet<AssociationRole>();
 	
 	@Persistent(mappedBy = "reifier")
