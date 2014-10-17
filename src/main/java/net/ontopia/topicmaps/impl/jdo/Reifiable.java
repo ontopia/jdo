@@ -35,6 +35,7 @@ import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Reifiable extends TMObject implements ReifiableIF {
 	
+	// bug: compile fails on this query
 	private static Query GET_REIFIER = null;
 
 	Reifiable(TopicMap topicmap) {
