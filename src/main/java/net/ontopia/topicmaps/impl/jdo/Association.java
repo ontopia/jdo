@@ -90,13 +90,6 @@ public class Association extends Scoped implements AssociationIF {
 	@Override
 	protected void beforeRemove() {
 		
-		// remove roles
-		for (AssociationRole role : new HashSet<AssociationRole>(roles)) {
-			role.remove();
-		}
-		
-		roles.clear();
-		
 		// let super cleanup
 		super.beforeRemove();
 	}
