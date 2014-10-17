@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
+import net.ontopia.topicmaps.entry.AbstractTopicMapSourceTest;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
@@ -123,5 +124,13 @@ public class JDOTopicMapSourceTest {
 		} catch (IOException ioe) {
 			// expected
 		}
+	}
+	
+	@Test
+	public void testAbstractSourceTests() {
+		source = new JDOTopicMapSource(PROPERTIES);
+		source.setId("jdo");
+		source.setTitle("JDO source");
+		AbstractTopicMapSourceTest.doAbstractTopicMapSourceTests(source);
 	}
 }
