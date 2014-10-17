@@ -102,4 +102,8 @@ public class Association extends Scoped implements AssociationIF {
 		((Topic) player).associationRoleCreated(role);
 		return role;
 	}
+
+	void removeRole(AssociationRole role) {
+		roles.remove(role);
+	}
 }
