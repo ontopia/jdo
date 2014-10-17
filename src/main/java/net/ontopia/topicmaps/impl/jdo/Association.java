@@ -40,7 +40,7 @@ import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 @Index(name = "TM_ASSOCIATION_IX_ID_TM_TYPE", members = {"id", "topicmap", "type"})
 public class Association extends Scoped implements AssociationIF {
 	
-	@Persistent(mappedBy = "association")
+	@Persistent(mappedBy = "association", dependentElement = "true")
 	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
 
 	@Persistent(name = "type", column = "type")
