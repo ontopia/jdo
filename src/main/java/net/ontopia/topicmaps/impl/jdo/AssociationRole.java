@@ -95,17 +95,15 @@ public class AssociationRole extends Reifiable implements AssociationRoleIF {
 
 	@Override
 	protected void beforeRemove() {
+		super.beforeRemove();
 
-		// unregister at the association
-		association.getRoles().remove(this);
-		
 		// consistency check: 0-role associations are not allowed
 		// todo: on commit?
-		if (association.getRoles().isEmpty()) {
-			association.remove();
-		}
-		
-		// let super cleanup
-		super.beforeRemove();
+//		if (association.getRoles().isEmpty()) {
+//			association.remove();
+//		}
+
+		// unregister at the association
+		association.removeRole(this);
 	}
 }
