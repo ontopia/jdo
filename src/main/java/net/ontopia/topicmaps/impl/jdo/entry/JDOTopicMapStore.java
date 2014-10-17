@@ -37,31 +37,26 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	public static final int JDO_IMPLEMENTATION = 3;
 	
 	private final boolean readOnly;
-	protected final PersistenceManager persistenceManager;
-	private final Transaction transaction;
-	private final TopicMap topicmap;
+	protected final PersistenceManagerFactory factory;
+	protected long id;
+
+	protected PersistenceManager persistenceManager = null;
+	private Transaction transaction = null;
+	private TopicMap topicmap = null;
 
 	private JDOTopicMapReference reference;
 
 	JDOTopicMapStore(long id, boolean readonly, PersistenceManagerFactory factory) {
 		this.readOnly = readonly;
-		persistenceManager = factory.getPersistenceManager();
-		transaction = persistenceManager.currentTransaction();
-		
-		topicmap = persistenceManager.getObjectById(TopicMap.class, id);
-		if (topicmap == null) {
-			throw new OntopiaRuntimeException("Could not find topicmap with id " + id);
-		}
-		topicmap.setStore(this);
+		this.factory = factory;
+		this.id = id;
 	}
 
 	// for creating a new topicmap
 	JDOTopicMapStore(PersistenceManagerFactory factory) {
 		this.readOnly = false;
-		this.persistenceManager = factory.getPersistenceManager();
-		transaction = persistenceManager.currentTransaction();
-		topicmap = new TopicMap();
-		topicmap.setStore(this);
+		this.factory = factory;
+		this.id = -1;
 	}
 	
 	@Override
@@ -76,21 +71,41 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public boolean isOpen() {
-		return transaction.isActive();
+		return (persistenceManager != null) && (!persistenceManager.isClosed());
 	}
 
 	@Override
 	public void open() {
 		if (isOpen()) throw new OntopiaRuntimeException("Cannot open store: already open");
+		
+		persistenceManager = factory.getPersistenceManager();
+		transaction = persistenceManager.currentTransaction();
+		
+		if (id == -1) {
+			// create new
+			topicmap = new TopicMap();
+			id = topicmap.getLongId();
+		} else {
+			topicmap = persistenceManager.getObjectById(TopicMap.class, id);
+			if (topicmap == null) {
+				throw new OntopiaRuntimeException("Could not find topicmap with id " + id);
+			}
+		}
+		topicmap.setStore(this);
+		
 		transaction.begin();
 	}
 
 	@Override
 	public void close() {
-		if (transaction.isActive()) {
-			transaction.rollback();
+		if (isOpen()) {
+			if (transaction.isActive()) {
+				transaction.rollback();
+			}
+			persistenceManager.close();
+			transaction = null;
+			persistenceManager = null;
 		}
-		persistenceManager.close();
 	}
 
 	@Override
@@ -127,6 +142,8 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	public void delete(boolean force) throws NotRemovableException {
 		if (readOnly) throw new ReadOnlyException();
 
+		if (!isOpen()) open();
+		
 		if (!force) {
 
 			StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
