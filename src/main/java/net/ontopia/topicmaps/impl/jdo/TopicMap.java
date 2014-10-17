@@ -244,4 +244,13 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		associations.add(association);
 		return association;
 	}
+	
+	// remove methods
+	void removeTopic(Topic topic) {
+		topics.remove(topic);
+	}
+
+	void removeAssociation(Association association) {
+		associations.remove(association);
+	}
 }
