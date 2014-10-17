@@ -101,6 +101,13 @@ public abstract class TMObject implements TMObjectIF {
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
+		
+		// TMDM constraint: II cannot be SI of a topic
+		TMObjectIF existing = topicmap.getTopicBySubjectIdentifier(item_identifier);
+		if (existing != null && existing != this && (this instanceof TopicIF)) {
+			throw new UniquenessViolationException("Another topic " + existing + " already has this item identifier as its subject identifier: " + item_identifier + " (" + this + ")");
+		}
+		
 		try {
 			ItemIdentifier itemIdentifier = new ItemIdentifier(item_identifier, this);
 			if (!itemIdentifiers.contains(itemIdentifier)) {

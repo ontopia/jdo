@@ -42,6 +42,7 @@ import net.ontopia.topicmaps.core.ConstraintViolationException;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
+import net.ontopia.topicmaps.core.TMObjectIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.UniquenessViolationException;
@@ -178,6 +179,13 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
+
+		// TMDM constraint: SI cannot be II of another object
+		TMObjectIF existing = topicmap.getObjectByItemIdentifier(lif);
+		if ((existing != null) && (existing != this) && (existing instanceof TopicIF)) {
+			throw new UniquenessViolationException("Another topic " + existing + " already has this subject identifier as its item identifier: " + lif + " (" + this + ")");
+		}
+
 		try {
 			SubjectIdentifier subjectIdentity = new SubjectIdentifier(lif, this);
 			if (!subjectIdentifiers.contains(subjectIdentity)) {
