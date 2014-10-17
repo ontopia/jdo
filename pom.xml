@@ -68,6 +68,13 @@
             <artifactId>h2</artifactId>
 			<scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>net.ontopia</groupId>
+			<artifactId>ontopia-engine</artifactId>
+			<classifier>tests</classifier>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		
 	</dependencies>
 
