@@ -85,6 +85,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	
 	public TopicMap() {
 		super(null);
+		topicmap = this;
 		indexes = new IndexCache(this);
 	}
 	
