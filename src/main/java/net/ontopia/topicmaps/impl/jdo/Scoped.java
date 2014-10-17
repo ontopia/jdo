@@ -72,11 +72,9 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 
 	@Override
 	protected void beforeRemove() {
+		super.beforeRemove();
 		
 		// disconnect scoping topics
-		scope.clear();
-		
-		// let super cleanuo
-		super.beforeRemove();
+		if (!isDeleted()) scope.clear();
 	}
 }
