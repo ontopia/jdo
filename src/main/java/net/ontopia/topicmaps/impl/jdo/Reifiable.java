@@ -66,10 +66,4 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 			((Topic) reifier).setReified(this);
 		}
 	}
-
-	@Override
-	protected void beforeRemove() {
-		DeletionUtils.removeDependencies(this);		
-		super.beforeRemove();
-	}
 }
