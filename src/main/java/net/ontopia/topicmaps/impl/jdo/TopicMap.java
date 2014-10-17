@@ -70,10 +70,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	@Column(jdbcType = "LONGVARCHAR")
 	private String base;
 
-	@Persistent(mappedBy = "topicmap")
+	@Persistent(mappedBy = "topicmap", dependentElement = "true")
 	private Set<Association> associations = new HashSet<Association>();
 
-	@Persistent(mappedBy = "topicmap")
+	@Persistent(mappedBy = "topicmap", dependentElement = "true")
 	private Set<Topic> topics = new HashSet<Topic>();
 	
 	@NotPersistent
