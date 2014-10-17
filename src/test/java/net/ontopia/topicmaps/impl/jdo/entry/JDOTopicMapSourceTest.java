@@ -25,6 +25,10 @@ import java.io.IOException;
 import java.util.Properties;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.entry.AbstractTopicMapSourceTest;
+import net.ontopia.topicmaps.entry.TopicMapRepositoryIF;
+import net.ontopia.topicmaps.entry.TopicMapSourceIF;
+import net.ontopia.topicmaps.entry.TopicMaps;
+import net.ontopia.topicmaps.entry.XMLConfigSource;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
@@ -132,5 +136,18 @@ public class JDOTopicMapSourceTest {
 		source.setId("jdo");
 		source.setTitle("JDO source");
 		AbstractTopicMapSourceTest.doAbstractTopicMapSourceTests(source);
+	}
+	
+	@Test
+	public void testFromTMSourcesXML() {
+		TopicMapRepositoryIF repo = XMLConfigSource.getRepositoryFromClassPath("net/ontopia/topicmaps/impl/jdo/tm-sources.xml");
+		source = (JDOTopicMapSource) repo.getSourceById("jdo");
+		
+		Assert.assertEquals("jdo", source.getId());
+		Assert.assertEquals("My JDO topicmaps", source.getTitle());
+		
+		source.refresh();
+		
+		Assert.assertEquals(0, source.getReferences().size());
 	}
 }
