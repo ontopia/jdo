@@ -89,8 +89,7 @@ public class Association extends Scoped implements AssociationIF {
 
 	@Override
 	protected void beforeRemove() {
-		
-		// let super cleanup
+		topicmap.removeAssociation(this);
 		super.beforeRemove();
 	}
 	
