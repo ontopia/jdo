@@ -107,17 +107,6 @@ public class TopicName extends Scoped implements TopicNameIF {
 		this.value = value;
 	}
 
-	@Override
-	protected void beforeRemove() {
-		
-		// remove variants
-		for (VariantName variant : new HashSet<VariantName>(variants)) {
-			variant.remove();
-		}
-		
-		super.beforeRemove();
-	}
-
 	public VariantName makeVariantName(Collection<TopicIF> scope) {
 		if (scope == null) throw new NullPointerException("Scope cannot be null");
 		VariantName variant = new VariantName(this);
