@@ -21,6 +21,7 @@
 package net.ontopia.topicmaps.impl.jdo.entry;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -116,7 +117,9 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		if (persistenceManagerFactory == null) {
 			try {
 				if (propertyFile != null) {
-					persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(StreamUtils.getInputStream(propertyFile));
+					InputStream in = StreamUtils.getInputStream(propertyFile);
+					if (in == null) throw new OntopiaRuntimeException("Could not load JDO properties from '" + propertyFile + "', not found");
+					persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(in);
 				} else if (properties != null) {
 					persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(properties);
 				} else {
