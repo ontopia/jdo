@@ -148,4 +148,8 @@ public class TopicName extends Scoped implements TopicNameIF {
 		variant.setReader(value, length, datatype);
 		return variant;
 	}
+
+	void removeVariant(VariantName variant) {
+		variants.remove(variant);
+	}
 }
