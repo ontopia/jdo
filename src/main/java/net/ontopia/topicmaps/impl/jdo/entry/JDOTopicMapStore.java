@@ -36,13 +36,13 @@ import net.ontopia.utils.OntopiaRuntimeException;
 public class JDOTopicMapStore implements TopicMapStoreIF {
 	public static final int JDO_IMPLEMENTATION = 3;
 	
-	private final boolean readOnly;
+	protected final boolean readOnly;
 	protected final PersistenceManagerFactory factory;
 	protected long id;
 
 	protected PersistenceManager persistenceManager = null;
-	private Transaction transaction = null;
-	private TopicMap topicmap = null;
+	protected Transaction transaction = null;
+	protected TopicMap topicmap = null;
 
 	private JDOTopicMapReference reference;
 
