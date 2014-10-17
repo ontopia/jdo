@@ -261,37 +261,47 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 		Assert.assertEquals(t, topicmap.getObjectById(t.getObjectId()));
 	}
 	
-//	@Test
-//	public void testClearTopicmap() {
-//
-//		StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
-//		
-//		Assert.assertEquals(0, topicmap.getTopics().size());
-//		Assert.assertEquals(0, topicmap.getAssociations().size());
-//		Assert.assertEquals(0, index.getOccurrenceCount());
-//		Assert.assertEquals(0, index.getTopicNameCount());
-//		Assert.assertEquals(0, index.getVariantCount());
-//		
-//		// make stuff
-//		builder.makeAssociation(builder.makeTopic(), builder.makeTopic(), builder.makeTopic()).addTheme(builder.makeTopic());
-//		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo").addTheme(builder.makeTopic());
-//		builder.makeTopicName(builder.makeTopic(), "foo").setReifier(builder.makeTopic());
-//		builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
-//
-//		Assert.assertTrue(topicmap.getTopics().size() > 0);
-//		Assert.assertTrue(topicmap.getAssociations().size() > 0);
-//		Assert.assertTrue(index.getOccurrenceCount() > 0);
-//		Assert.assertTrue(index.getTopicNameCount() > 0);
-//		Assert.assertTrue(index.getVariantCount() > 0);
-//		
-//		// clear
-//		topicmap.clear();
-//		
-//		Assert.assertEquals(0, topicmap.getTopics().size());
-//		Assert.assertEquals(0, topicmap.getAssociations().size());
-//		Assert.assertEquals(0, index.getOccurrenceCount());
-//		Assert.assertEquals(0, index.getTopicNameCount());
-//		Assert.assertEquals(0, index.getVariantCount());
-//	}
+	@Test
+	public void testClearTopicmap() {
+
+		StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
+		
+		Assert.assertEquals(0, topicmap.getTopics().size());
+		Assert.assertEquals(0, topicmap.getAssociations().size());
+		Assert.assertEquals(0, index.getTopicCount());
+		Assert.assertEquals(0, index.getAssociationCount());
+		Assert.assertEquals(0, index.getOccurrenceCount());
+		Assert.assertEquals(0, index.getTopicNameCount());
+		Assert.assertEquals(0, index.getVariantCount());
+		Assert.assertEquals(0, index.getSubjectIdentifierCount());
+		
+		// make stuff
+		builder.makeAssociation(builder.makeTopic(), builder.makeTopic(), builder.makeTopic()).addTheme(builder.makeTopic());
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo").addTheme(builder.makeTopic());
+		builder.makeTopicName(builder.makeTopic(), "foo").setReifier(builder.makeTopic());
+		builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
+		builder.makeTopic().addSubjectIdentifier(URILocator.create("foo:bar"));
+
+		Assert.assertTrue(topicmap.getTopics().size() > 0);
+		Assert.assertTrue(topicmap.getAssociations().size() > 0);
+		Assert.assertTrue(index.getTopicCount() > 0);
+		Assert.assertTrue(index.getAssociationCount() > 0);
+		Assert.assertTrue(index.getOccurrenceCount() > 0);
+		Assert.assertTrue(index.getTopicNameCount() > 0);
+		Assert.assertTrue(index.getVariantCount() > 0);
+		Assert.assertTrue(index.getSubjectIdentifierCount() > 0);
+		
+		// clear
+		topicmap.clear();
+		
+		Assert.assertEquals(0, topicmap.getTopics().size());
+		Assert.assertEquals(0, topicmap.getAssociations().size());
+		Assert.assertEquals(0, index.getTopicCount());
+		Assert.assertEquals(0, index.getAssociationCount());
+		Assert.assertEquals(0, index.getOccurrenceCount());
+		Assert.assertEquals(0, index.getTopicNameCount());
+		Assert.assertEquals(0, index.getVariantCount());
+		Assert.assertEquals(0, index.getSubjectIdentifierCount());
+	}
 	
 }

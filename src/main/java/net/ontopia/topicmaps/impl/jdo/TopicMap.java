@@ -197,7 +197,13 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public void clear() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		if (isReadOnly()) throw new ReadOnlyException();
+		if (isDeleted()) return;
+		
+		// remove all topics, cascades to all other objects
+		for (TopicIF t : getTopics()) {
+			t.remove();
+		}
 	}
 
 	@Override
