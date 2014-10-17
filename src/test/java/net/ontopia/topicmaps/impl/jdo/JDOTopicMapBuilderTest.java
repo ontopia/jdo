@@ -21,6 +21,7 @@
 package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
+import java.util.Collections;
 import junit.framework.Assert;
 import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.AssociationIF;
@@ -29,6 +30,7 @@ import net.ontopia.topicmaps.core.ConstraintViolationException;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.index.StatisticsIndexIF;
 import net.ontopia.topicmaps.utils.PSI;
 import org.junit.Test;
 
@@ -70,12 +72,12 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 		builder.makeTopic().addSubjectIdentifier(URILocator.create("foo:bar"));
 	}
 	
-//	@Test(expected = ConstraintViolationException.class)
-//	public void testDuplicateSI_II() {
-//		builder.makeTopic().addSubjectIdentifier(URILocator.create("foo:bar"));
-//		Assert.assertNotNull(topicmap.getTopicBySubjectIdentifier(URILocator.create("foo:bar")));
-//		builder.makeTopic().addItemIdentifier(URILocator.create("foo:bar"));
-//	}
+	@Test(expected = ConstraintViolationException.class)
+	public void testDuplicateSI_II() {
+		builder.makeTopic().addSubjectIdentifier(URILocator.create("foo:bar"));
+		Assert.assertNotNull(topicmap.getTopicBySubjectIdentifier(URILocator.create("foo:bar")));
+		builder.makeTopic().addItemIdentifier(URILocator.create("foo:bar"));
+	}
 	
 	@Test(expected = ConstraintViolationException.class)
 	public void testDuplicateII() {
@@ -258,5 +260,38 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 		TopicIF t = builder.makeTopic();
 		Assert.assertEquals(t, topicmap.getObjectById(t.getObjectId()));
 	}
+	
+//	@Test
+//	public void testClearTopicmap() {
+//
+//		StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
+//		
+//		Assert.assertEquals(0, topicmap.getTopics().size());
+//		Assert.assertEquals(0, topicmap.getAssociations().size());
+//		Assert.assertEquals(0, index.getOccurrenceCount());
+//		Assert.assertEquals(0, index.getTopicNameCount());
+//		Assert.assertEquals(0, index.getVariantCount());
+//		
+//		// make stuff
+//		builder.makeAssociation(builder.makeTopic(), builder.makeTopic(), builder.makeTopic()).addTheme(builder.makeTopic());
+//		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo").addTheme(builder.makeTopic());
+//		builder.makeTopicName(builder.makeTopic(), "foo").setReifier(builder.makeTopic());
+//		builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
+//
+//		Assert.assertTrue(topicmap.getTopics().size() > 0);
+//		Assert.assertTrue(topicmap.getAssociations().size() > 0);
+//		Assert.assertTrue(index.getOccurrenceCount() > 0);
+//		Assert.assertTrue(index.getTopicNameCount() > 0);
+//		Assert.assertTrue(index.getVariantCount() > 0);
+//		
+//		// clear
+//		topicmap.clear();
+//		
+//		Assert.assertEquals(0, topicmap.getTopics().size());
+//		Assert.assertEquals(0, topicmap.getAssociations().size());
+//		Assert.assertEquals(0, index.getOccurrenceCount());
+//		Assert.assertEquals(0, index.getTopicNameCount());
+//		Assert.assertEquals(0, index.getVariantCount());
+//	}
 	
 }
