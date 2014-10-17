@@ -306,7 +306,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	protected void beforeRemove() {
 		DeletionUtils.removeDependencies(this);
-		super.beforeRemove();
+		topicmap.removeTopic(this);
 	}
 
 	// builder methods
