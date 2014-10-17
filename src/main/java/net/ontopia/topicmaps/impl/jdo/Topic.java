@@ -74,8 +74,8 @@ public class Topic extends TMObject implements TopicIF {
 	@Persistent(mappedBy = "player", dependentElement = "true")
 	private Set<AssociationRole> roles = new HashSet<AssociationRole>();
 	
-	@Persistent(mappedBy = "reifier")
-	private ReifiableIF reified = null;
+	@Persistent(name = "reified", column = "reified")
+	private Reifiable reified = null;
 
 	private static enum TopicQuery {
 		NAMES_BY_TYPE(TopicName.class, 

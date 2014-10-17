@@ -51,6 +51,7 @@ public class Queries {
 	public static final String TOPICMAP_OBJECT_BY_IDENTIFIER = "TopicMap.getObjectByIdentifier";
 	public static final String ASSOCIATION_ROLE_TYPES = "Association.getRoleTypes";
 	public static final String ASSOCIATION_ROLES_BY_TYPE = "Association.getRolesByType";
+	public static final String REIFIABLE_GET_REIFIER = "Reifiable.getReifier";
 	public static final String CLASSINSTANCEINDEX_UNTYPED_TOPICS = "ClassInstanceIndex.getTopics(null)";
 	public static final String CLASSINSTANCEINDEX_TOPICS_BY_TYPE = "ClassInstanceIndex.getTopics";
 	public static final String CLASSINSTANCEINDEX_NAMES_BY_TYPE = "ClassInstanceIndex.getTopicNames";

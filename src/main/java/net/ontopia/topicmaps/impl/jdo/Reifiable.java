@@ -23,19 +23,17 @@ package net.ontopia.topicmaps.impl.jdo;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 import net.ontopia.topicmaps.core.DuplicateReificationException;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
+import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
+import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Reifiable extends TMObject implements ReifiableIF {
-
-	@Persistent(name = "reifier", column = "reifier" )
-	private Topic reifier;
 
 	Reifiable(TopicMap topicmap) {
 		super(topicmap);
@@ -43,7 +41,8 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 
 	@Override
 	public TopicIF getReifier() {
-		return reifier;
+		return JDOQueryUtils.singularResultQuery(
+				getQuery(Queries.REIFIABLE_GET_REIFIER), topicmap, this);
 	}
 
 	@Override
@@ -52,14 +51,14 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 		
 		DuplicateReificationException.check(this, reifier);
 		
-		if (this.reifier != null) {
-			this.reifier.setReified(null);
+		Topic current = (Topic) getReifier();
+		
+		if (current != null) {
+			current.setReified(null);
 		}
-		
-		this.reifier = (Topic) reifier;
-		
-		if (this.reifier != null) {
-			this.reifier.setReified(this);
+
+		if (reifier != null) {
+			((Topic) reifier).setReified(this);
 		}
 	}
 

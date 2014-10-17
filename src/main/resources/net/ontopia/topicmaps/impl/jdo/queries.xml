@@ -46,6 +46,15 @@
 		]]></filter>
 	</query>
 	
+	<!-- Reifiable -->
+	<query name="Reifiable.getReifier">
+		<class>Topic</class>
+		<parameters>TopicMap tm, Reifiable r</parameters>
+		<filter><![CDATA[
+			topicmap == tm && reified == r
+		]]></filter>
+	</query>
+	
 	<!-- ClassInstanceIndex -->
 	
 	<query name="ClassInstanceIndex.getTopics(null)">
