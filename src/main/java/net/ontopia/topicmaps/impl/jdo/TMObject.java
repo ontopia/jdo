@@ -89,6 +89,7 @@ public abstract class TMObject implements TMObjectIF {
 
 	@Override
 	public TopicMapIF getTopicMap() {
+		if (isDeleted()) return null;
 		return topicmap;
 	}
 
@@ -99,6 +100,7 @@ public abstract class TMObject implements TMObjectIF {
 
 	@Override
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
+		if (isDeleted()) throw new ConstraintViolationException("Cannot modify item identifiers when object isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
 		
@@ -127,11 +129,15 @@ public abstract class TMObject implements TMObjectIF {
 
 	@Override
 	public void remove() {
-		ObjectState state = JDOHelper.getObjectState(this);
-		if ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED)) return;
+		if (isDeleted()) return;
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();
 		getPersistenceManager().deletePersistent(this);
+	}
+	
+	protected boolean isDeleted() {
+		ObjectState state = JDOHelper.getObjectState(this);
+		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED));
 	}
 
 	// implementation for TMObject: remove item identifiers on object remove
