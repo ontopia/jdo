@@ -142,10 +142,10 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	protected void beforeRemove() {
-		// unregister at name
-		topicname.getVariants().remove(this);
-		
 		// let super cleanup
 		super.beforeRemove();
+
+		// unregister at name
+		topicname.removeVariant(this);
 	}
 }
