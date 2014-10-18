@@ -50,6 +50,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 
 	private PersistenceManagerFactory persistenceManagerFactory = null;
 	private final Collection<JDOTopicMapReference> references = new HashSet<JDOTopicMapReference>();
+	private boolean initialized = false;
 	private final Queries queries;
 
 	public JDOTopicMapSource() {
@@ -68,7 +69,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 
 	@Override
 	public Collection<TopicMapReferenceIF> getReferences() {
-		if (references == null) {
+		if (!initialized) {
 			refresh();
 		}
 
@@ -92,6 +93,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 				references.add(new JDOTopicMapReference(this, makeId(tm), tm.getTitle(), tm.getLongId()));
 			}
 			extent.closeAll();
+			initialized = true;
 		} catch (JDOException jdoe) {
 			throw new OntopiaRuntimeException("Could not refresh source: " + jdoe.getMessage(), jdoe);
 		} finally {
