@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries name="default" defaultPackage="net.ontopia.topicmaps.impl.jdo">
+	
+	<!-- TopicMap -->
+	
+	<query name="TopicMap.getTopicBySubjectIdentifier" unique="true">
+		<class>SubjectIdentifier</class>
+		<parameters>TopicMap tm, String locator</parameters>
+		<filter><![CDATA[
+			address == locator && topicmap == tm
+		]]></filter>
+	</query>
+	
+	<query name="TopicMap.getTopicBySubjectLocator" unique="true">
+		<class>SubjectLocator</class>
+		<parameters>TopicMap tm, String locator</parameters>
+		<filter><![CDATA[
+			address == locator && topicmap == tm
+		]]></filter>
+	</query>
+	
+	<query name="TopicMap.getObjectByItemIdentifier" unique="true">
+		<class>ItemIdentifier</class>
+		<parameters>TopicMap tm, String locator</parameters>
+		<filter><![CDATA[
+			address == locator && topicmap == tm
+		]]></filter>
+	</query>
+	
+	<!-- Association -->
+	
+	<query name="Association.getRoleTypes">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Association assoc</parameters>
+		<filter><![CDATA[
+			association == assoc && topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="Association.getRolesByType">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Association assoc, Topic rt</parameters>
+		<filter><![CDATA[
+			association == assoc && topicmap == tm && type == rt
+		]]></filter>
+	</query>
+	
+	<!-- ClassInstanceIndex -->
+	
+	<query name="ClassInstanceIndex.getTopics(null)">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types == null
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopics">
+		<class>Topic</class>
+		<parameters>TopicMap tm, Topic type</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(type)
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.abstract.getObjectsByType" abstract="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == t
+		]]></filter>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNames" inherit="ClassInstanceIndex.abstract.getObjectsByType">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getOccurrences" inherit="ClassInstanceIndex.abstract.getObjectsByType">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociations" inherit="ClassInstanceIndex.abstract.getObjectsByType">
+		<class>Association</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationRoles" inherit="ClassInstanceIndex.abstract.getObjectsByType">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicTypes">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(type)
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.abstract.getObjectTypes" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>distinct type</result>
+	</query>
+	
+	<query name="ClassInstanceIndex.getTopicNameTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getOccurrenceTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
+		<class>Association</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.getAssociationRoleTypes" inherit="ClassInstanceIndex.abstract.getObjectTypes">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.abstract.UsedAsType" abstract="true" unique="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == t
+		]]></filter>
+	</query>
+
+	<query name="ClassInstanceIndex.usedAsTopicType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Topic</class>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(t)
+		]]></filter>
+	</query>
+
+	<query name="ClassInstanceIndex.usedAsTopicNameType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsOccurrenceType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsAssociationType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>Association</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.usedAsAssociationRoleType" inherit="ClassInstanceIndex.abstract.UsedAsType">
+		<class>AssociationRole</class>
+	</query>
+	
+	<!-- ScopeIndex -->
+	
+	<query name="ScopeIndex.abstract.getScopedObject" abstract="true">
+		<parameters>TopicMap tm, Topic topic</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(topic)
+		]]></filter>
+	</query>
+	
+	<query name="ScopeIndex.getTopicNames" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ScopeIndex.getVariants" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="ScopeIndex.getOccurrences" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ScopeIndex.getAssociations" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>Association</class>
+	</query>
+	
+	<query name="ScopeIndex.abstract.getObjectScopes" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(st)
+		]]></filter>
+		<result>distinct st</result>
+	</query>
+
+	<query name="ScopeIndex.getTopicNameThemes" inherit="ScopeIndex.abstract.getObjectScopes">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ScopeIndex.getVariantThemes" inherit="ScopeIndex.abstract.getObjectScopes">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="ScopeIndex.getOccurrenceThemes" inherit="ScopeIndex.abstract.getObjectScopes">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ScopeIndex.getAssociationThemes" inherit="ScopeIndex.abstract.getObjectScopes">
+		<class>Association</class>
+	</query>
+	
+	<query name="ScopeIndex.abstract.UsedAsScope" abstract="true" unique="true">
+		<parameters>TopicMap tm, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.contains(t)
+		]]></filter>
+	</query>
+
+	<query name="ScopeIndex.usedAsTopicNameTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsVariantTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsOccurrenceTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="ScopeIndex.usedAsAssociationTheme" inherit="ScopeIndex.abstract.UsedAsScope">
+		<class>Association</class>
+	</query>
+	
+	<!-- NameIndex -->
+
+	<query name="NameIndex.getTopicNames">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, String v</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="NameIndex.getVariants">
+		<class>VariantName</class>
+		<parameters>TopicMap tm, String v</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="NameIndex.getVariants_datatype">
+		<class>VariantName</class>
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && datatype == dt
+		]]></filter>
+	</query>
+	
+	<!-- OccurrenceIndex -->
+	
+	<query name="OccurrenceIndex.abstract" abstract="true">
+		<class>Occurrence</class>
+		<parameters>TopicMap tm, String v</parameters>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrences" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value == v
+		]]></filter>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrences(datatype)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && datatype == dt
+		]]></filter>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrencesByPrefix" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value.startsWith(v)
+		]]></filter>
+	</query>
+
+	<query name="OccurrenceIndex.getOccurrencesByPrefix(datatype)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, String dt</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value.startsWith(v) && datatype == dt
+		]]></filter>
+	</query>
+
+	<query name="OccurrenceIndex.getValuesGreaterThanOrEqual" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value >= v
+		]]></filter>
+		<result>distinct value</result>
+	</query>
+
+	<query name="OccurrenceIndex.getValuesSmallerThanOrEqual" inherit="OccurrenceIndex.abstract">
+		<filter><![CDATA[
+			topicmap == tm && value <= v
+		]]></filter>
+		<result>distinct value</result>
+	</query>
+	
+	<!-- StatisticsIndex -->
+	
+	<query name="StatisticsIndex.abstract.ObjectCount" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter>topicmap == tm</filter>
+		<result>count(this)</result>
+	</query>
+	<query name="StatisticsIndex.abstract.TypeCount" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+		<result>count(distinct type)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Topic</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTypedTopicCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && !types.isEmpty
+		]]></filter>
+		<result>count(this)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getUntypedTopicCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types == null
+		]]></filter>
+		<result>count(this)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicTypeCount">
+		<class>Topic</class>
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm && types.contains(tt)
+		]]></filter>
+		<result>count(distinct tt)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getAssociationCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Association</class>
+	</query>
+	
+	<query name="StatisticsIndex.getAssociationTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>Association</class>
+	</query>
+	
+	<query name="StatisticsIndex.getRoleCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="StatisticsIndex.getRoleTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>AssociationRole</class>
+	</query>
+	
+	<query name="StatisticsIndex.getOccurrenceCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="StatisticsIndex.getOccurrenceTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>Occurrence</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicNameCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="StatisticsIndex.getTopicNameTypeCount" inherit="StatisticsIndex.abstract.TypeCount">
+		<class>TopicName</class>
+	</query>
+
+	<!-- workaround for subquery bug: count the topics that have a name and 
+		distract this count from the count of all topics -->
+	<query name="StatisticsIndex.getNoNameTopicCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>TopicName</class>
+		<result>count(distinct topic)</result>
+	</query>
+	
+	<query name="StatisticsIndex.getVariantCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>VariantName</class>
+	</query>
+	
+	<query name="StatisticsIndex.getSubjectIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>SubjectIdentifier</class>
+	</query>
+
+	<query name="StatisticsIndex.getItemIdentifierCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>ItemIdentifier</class>
+	</query>
+	
+	<query name="StatisticsIndex.getSubjectLocatorCount" inherit="StatisticsIndex.abstract.ObjectCount">
+		<class>SubjectLocator</class>
+	</query>
+	
+</queries>

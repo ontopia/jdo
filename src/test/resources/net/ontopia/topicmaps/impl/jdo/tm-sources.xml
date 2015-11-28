@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<repository>
+  <source class="net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource">
+    <param name="id" value="jdo"/>
+    <param name="title" value="My JDO topicmaps"/>
+    <param name="supportsCreate" value="true"/>
+    <param name="supportsDelete" value="true"/>
+    <param name="propertyFile" value="classpath:net/ontopia/topicmaps/impl/jdo/h2.props"/>
+  </source>
+</repository>

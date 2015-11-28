@@ -1,0 +1,3 @@
+javax.jdo.option.ConnectionDriverName=org.h2.Driver
+javax.jdo.option.ConnectionURL=jdbc:h2:target/ontopia-broken
+javax.jdo.option.ConnectionUserName=sa
