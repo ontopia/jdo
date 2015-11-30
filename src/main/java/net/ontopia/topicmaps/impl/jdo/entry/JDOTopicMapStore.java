@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo.entry;
 
+import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
@@ -154,7 +155,12 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 				throw new NotRemovableException("Topicmap is not empty");
 			}
 		}
-		persistenceManager.deletePersistent(topicmap);
+		try {
+			topicmap.clear();
+			persistenceManager.deletePersistent(topicmap);
+		} catch (JDOException e) {
+			throw new NotRemovableException("Could not delete topicmap", e);
+		}
 	}
 
 	@Override
@@ -180,5 +186,13 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	public PersistenceManager getPersistenceManager() {
 		return persistenceManager;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		if ((persistenceManager != null) && (!persistenceManager.isClosed())) {
+			persistenceManager.close();
+		}
+		super.finalize();
 	}
 }
