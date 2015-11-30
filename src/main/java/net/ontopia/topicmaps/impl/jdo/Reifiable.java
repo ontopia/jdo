@@ -29,6 +29,9 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
+import net.ontopia.topicmaps.utils.KeyGenerator;
+import net.ontopia.topicmaps.utils.MergeUtils;
+import net.ontopia.utils.ObjectUtils;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
@@ -53,16 +56,33 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isDeleted()) return;
 		if (isReadOnly()) throw new ReadOnlyException();
-		
-		DuplicateReificationException.check(this, reifier);
-		
+
 		Topic current = (Topic) getReifier();
+
+		// check for no-op case
+		if (!ObjectUtils.different(current, reifier)) return;
 		
+		// unset
 		if (current != null) {
 			current.setReified(null);
 		}
-
+		
+		// set
+		// Partial copy from DuplicateReificationException.check() due to #490
+		// refactor when #409 is resolved
+		// base: 3805eff9d0c3d256e367821072238122f06ffb31
 		if (reifier != null) {
+			ReifiableIF existingReified = reifier.getReified();
+			if (existingReified != null && ObjectUtils.different(existingReified, this)) {
+				String key1 = KeyGenerator.makeKey(this);
+				String key2 = KeyGenerator.makeKey(existingReified);
+				if (!key1.equals(key2)) {
+					throw new DuplicateReificationException("The topic " + reifier
+							+ " cannot reify more than one reifiable object. 1: " + existingReified
+							+ " 2: " + this);
+				}
+				MergeUtils.mergeInto(this, existingReified);
+			}
 			((Topic) reifier).setReified(this);
 		}
 	}
