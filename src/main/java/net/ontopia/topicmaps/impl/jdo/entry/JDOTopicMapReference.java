@@ -81,4 +81,9 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 	public long getLongId() {
 		return identity;
 	}
+
+	@Override
+	public String toString() {
+		return "[" + getClass().getSimpleName() + " " + getId() + "]";
+	}
 }
