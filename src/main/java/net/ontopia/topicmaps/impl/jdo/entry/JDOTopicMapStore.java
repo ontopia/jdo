@@ -133,8 +133,8 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	}
 
 	@Override
-	public void abort() {
-		if (transaction.isActive()) {
+	public void abort() {		
+		if ((transaction != null) && (transaction.isActive())) {
 			transaction.rollback();
 		}
 	}
