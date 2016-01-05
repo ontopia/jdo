@@ -141,7 +141,7 @@ public abstract class TMObject implements TMObjectIF {
 	
 	protected boolean isDeleted() {
 		ObjectState state = JDOHelper.getObjectState(this);
-		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED));
+		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED) || (topicmap == null));
 	}
 
 	protected void beforeRemove() {
