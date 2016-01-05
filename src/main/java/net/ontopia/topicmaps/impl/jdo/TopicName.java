@@ -37,6 +37,8 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC_NAME")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -46,6 +48,7 @@ import net.ontopia.topicmaps.core.VariantNameIF;
 	@Index(name = "TM_TOPIC_NAME_IX_TOPIC", members = {"topic"})
 })
 public class TopicName extends Scoped implements TopicNameIF {
+	private static final Logger logger = LoggerFactory.getLogger(TopicName.class);
 	
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;

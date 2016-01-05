@@ -46,11 +46,14 @@ import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
 import net.ontopia.topicmaps.impl.jdo.index.IndexCache;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_MAP_IX_BASE_ID", members = {"base", "id"})
 public class TopicMap extends Reifiable implements TopicMapIF {
+	private static final Logger logger = LoggerFactory.getLogger(TopicMap.class);
 	
 	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<Character, Class<? extends TMObject>>();
 	static {

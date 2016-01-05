@@ -47,11 +47,14 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_IX_ID_TOPICMAP", members = {"id", "topicmap"})
 public class Topic extends TMObject implements TopicIF {
+	private static final Logger logger = LoggerFactory.getLogger(Topic.class);
 	
 	@Persistent(mappedBy = "topic", dependentElement = "true")
 	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();

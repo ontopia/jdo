@@ -39,6 +39,8 @@ import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_VARIANT_NAME")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -47,6 +49,7 @@ import net.ontopia.utils.StreamUtils;
 	@Index(name = "TM_VARIANT_NAME_IX_NAME", members = {"topicname"})
 })
 public class VariantName extends Scoped implements VariantNameIF {
+	private static final Logger logger = LoggerFactory.getLogger(VariantName.class);
 	
 	@Column(name = "topicname")
 	private TopicName topicname;

@@ -39,6 +39,8 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_OCCURRENCE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -48,6 +50,7 @@ import net.ontopia.utils.StreamUtils;
 	@Index(name = "TM_OCCURRENCE_IX_TOPIC", members = {"topic"})
 })
 public class Occurrence extends Scoped implements OccurrenceIF {
+	private static final Logger logger = LoggerFactory.getLogger(Occurrence.class);
 	
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;

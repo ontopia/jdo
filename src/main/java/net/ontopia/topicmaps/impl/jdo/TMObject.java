@@ -55,9 +55,7 @@ import org.slf4j.LoggerFactory;
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class TMObject implements TMObjectIF {
-	
-	@NotPersistent
-	protected final Logger logger;
+	private static final Logger logger = LoggerFactory.getLogger(TMObject.class);
 	
 	@PrimaryKey
 	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
@@ -74,7 +72,6 @@ public abstract class TMObject implements TMObjectIF {
 
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
-		logger = LoggerFactory.getLogger(getClass());
 		readOnly = ((topicmap == null) || topicmap.getStore().isReadOnly());
 	}
 	

@@ -30,6 +30,8 @@ import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_ASSOCIATION_ROLE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -42,6 +44,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 		@Index(name = "TM_ASSOCIATION_ROLE_IX_PLAYER", members = {"player"})
 })
 public class AssociationRole extends Reifiable implements AssociationRoleIF {
+	private static final Logger logger = LoggerFactory.getLogger(AssociationRole.class);
 	
 	@Persistent(name = "player", column = "player")
 	private Topic player;

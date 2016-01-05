@@ -34,11 +34,14 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_ASSOCIATION")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_ASSOCIATION_IX_ID_TM_TYPE", members = {"id", "topicmap", "type"})
 public class Association extends Scoped implements AssociationIF {
+	private static final Logger logger = LoggerFactory.getLogger(Association.class);
 	
 	@Persistent(mappedBy = "association", dependentElement = "true")
 	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
