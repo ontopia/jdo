@@ -94,6 +94,11 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		this.id = id;
 	}
 
+	@Override
+	public boolean isReadOnly() {
+		return (store == null) || store.isReadOnly();
+	}
+
 	public String getTitle() {
 		return title;
 	}

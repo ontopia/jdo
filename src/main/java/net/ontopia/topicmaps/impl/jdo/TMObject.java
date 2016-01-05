@@ -68,10 +68,14 @@ public abstract class TMObject implements TMObjectIF {
 	
 	@Persistent(mappedBy = "object", dependentElement = "true")
 	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<ItemIdentifier>();
+	
+	@NotPersistent
+	protected final boolean readOnly;
 
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
 		logger = LoggerFactory.getLogger(getClass());
+		readOnly = ((topicmap == null) || topicmap.getStore().isReadOnly());
 	}
 	
 	protected abstract String getClassIndicator();
@@ -84,7 +88,7 @@ public abstract class TMObject implements TMObjectIF {
 	// todo: actually implement on setters
 	@Override
 	public boolean isReadOnly() {
-		return getTopicMap().getStore().isReadOnly();
+		return readOnly;
 	}
 
 	@Override
