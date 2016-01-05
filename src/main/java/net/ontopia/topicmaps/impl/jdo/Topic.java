@@ -305,6 +305,9 @@ public class Topic extends TMObject implements TopicIF {
 
 	@Override
 	protected void beforeRemove() {
+		// unset types to avoid indirect circulation
+		types.clear();
+		
 		DeletionUtils.removeDependencies(this);
 		topicmap.removeTopic(this);
 	}
