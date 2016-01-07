@@ -41,6 +41,7 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 		final JDOTopicMapStore store = new JDOTopicMapStore(identity, readonly,
 				getPersistenceManagerFactory());
 		store.setReference(this);
+		store.setProperties(getPersistenceManagerFactory().getProperties());
 		return store;
 	}
 

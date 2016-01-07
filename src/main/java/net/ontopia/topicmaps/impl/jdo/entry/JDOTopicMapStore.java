@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo.entry;
 
+import java.util.Properties;
 import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -46,6 +47,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	protected TopicMap topicmap = null;
 
 	private JDOTopicMapReference reference;
+	private Properties properties;
 
 	JDOTopicMapStore(long id, boolean readonly, PersistenceManagerFactory factory) {
 		this.readOnly = readonly;
@@ -170,7 +172,11 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public String getProperty(String propertyName) {
-		return null; // todo: needed?
+		return properties.getProperty(propertyName);
+	}
+
+	void setProperties(Properties properties) {
+		this.properties = properties;
 	}
 
 	@Override
