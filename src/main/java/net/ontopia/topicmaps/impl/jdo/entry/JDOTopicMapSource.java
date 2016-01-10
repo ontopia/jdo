@@ -38,8 +38,11 @@ import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JDOTopicMapSource implements TopicMapSourceIF {
+	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapSource.class);
 
 	private String id;
 	private String title;
@@ -60,11 +63,13 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 	public JDOTopicMapSource(String propertyFile) {
 		this();
 		this.propertyFile = propertyFile;
+		logger.trace("{} init {}", this, propertyFile);
 	}
 
 	public JDOTopicMapSource(Map<?, ?> properties) {
 		this();
 		this.properties = properties;
+		logger.trace("{} init {}", this, properties);
 	}
 
 	@Override
@@ -78,6 +83,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 
 	@Override
 	public synchronized void refresh() {
+		logger.trace("{} refresh", this);
 		createPersistenceManagerFactory();
 		
 		references.clear();
@@ -90,7 +96,9 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 			tx.begin();
 			Extent<TopicMap> extent = persistenceManager.getExtent(TopicMap.class, false);
 			for (TopicMap tm : extent) {
-				references.add(new JDOTopicMapReference(this, makeId(tm), tm.getTitle(), tm.getLongId()));
+				final JDOTopicMapReference reference = new JDOTopicMapReference(this, makeId(tm), tm.getTitle(), tm.getLongId());
+				references.add(reference);
+				logger.trace("{} +reference {}", this, reference);
 			}
 			extent.closeAll();
 			initialized = true;
@@ -119,10 +127,12 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		if (persistenceManagerFactory == null) {
 			try {
 				if (propertyFile != null) {
+					logger.trace("{} create PMF from propertyFile {}", this, propertyFile);
 					InputStream in = StreamUtils.getInputStream(propertyFile);
 					if (in == null) throw new OntopiaRuntimeException("Could not load JDO properties from '" + propertyFile + "', not found");
 					persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(in);
 				} else if (properties != null) {
+					logger.trace("{} create PMF from properties {}", this, properties);
 					persistenceManagerFactory = JDOHelper.getPersistenceManagerFactory(properties);
 				} else {
 					throw new OntopiaRuntimeException("Either propertyFile or properties fields have to be set!");
@@ -135,6 +145,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 			
 			try {
 				// load default queries
+				logger.trace("{} load queries", this);
 				queries.load(Queries.DEFAULT_QUERIES);
 			} catch (IOException ioe) {
 				throw new OntopiaRuntimeException(ioe);
