@@ -114,6 +114,7 @@ public abstract class TMObject implements TMObjectIF {
 		try {
 			ItemIdentifier itemIdentifier = new ItemIdentifier(item_identifier, this);
 			if (!itemIdentifiers.contains(itemIdentifier)) {
+				logger.trace("{} +II {}", this, itemIdentifier);
 				getPersistenceManager().makePersistent(itemIdentifier);
 				itemIdentifiers.add(itemIdentifier);
 			}
@@ -126,6 +127,7 @@ public abstract class TMObject implements TMObjectIF {
 	@Override
 	public void removeItemIdentifier(LocatorIF item_identifier) {
 		removeLocator(itemIdentifiers, item_identifier);
+		logger.trace("{} -II {}", this, item_identifier);
 	}
 
 	@Override
@@ -134,6 +136,7 @@ public abstract class TMObject implements TMObjectIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();
 		getPersistenceManager().deletePersistent(this);
+		logger.trace("-- {}", this);
 	}
 	
 	protected boolean isDeleted() {
