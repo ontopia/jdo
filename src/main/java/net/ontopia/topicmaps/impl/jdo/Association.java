@@ -68,6 +68,7 @@ public class Association extends Scoped implements AssociationIF {
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (type == null) throw new NullPointerException("Type cannot be null");
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 
@@ -102,11 +103,13 @@ public class Association extends Scoped implements AssociationIF {
 				JDOTopicMapBuilder.checkAndCast(player, "Player", Topic.class));
 		getPersistenceManager().makePersistent(role);
 		roles.add(role);
+		logger.trace("{} +role {}", this, role);
 		((Topic) player).associationRoleCreated(role);
 		return role;
 	}
 
 	void removeRole(AssociationRole role) {
 		roles.remove(role);
+		logger.trace("{} -role {}", this, role);
 	}
 }

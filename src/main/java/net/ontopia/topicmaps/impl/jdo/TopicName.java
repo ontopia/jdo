@@ -95,6 +95,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (type == null) {
 			type = ((JDOTopicMapBuilder)topicmap.getBuilder()).getDefaultNameType();
 		}
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 	
@@ -107,6 +108,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (value == null) throw new NullPointerException("Value cannot be null");
+		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
 
@@ -119,6 +121,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		}
 		getPersistenceManager().makePersistent(variant);
 		variants.add(variant);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 	
@@ -126,6 +129,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (value == null) throw new NullPointerException("Value cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -133,6 +137,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setLocator(locator);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -141,6 +146,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value, datatype);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -149,10 +155,12 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setReader(value, length, datatype);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
 	void removeVariant(VariantName variant) {
+		logger.trace("{} -var {}", this, variant);
 		variants.remove(variant);
 	}
 }

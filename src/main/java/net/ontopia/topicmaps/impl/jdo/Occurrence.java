@@ -91,6 +91,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setType(TopicIF type) {
 		if (isReadOnly())throw new ReadOnlyException();
 		if (type == null) throw new NullPointerException("Type cannot be null");
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 
@@ -108,6 +109,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (value == null) throw new NullPointerException("Value cannot be null");
+		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
 
@@ -125,6 +127,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		if (!"URI".equalsIgnoreCase(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
+		logger.trace("{} +locator {}", this, locator);
 		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
 
@@ -134,6 +137,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
 		setValue(value);
+		logger.trace("{} +value {} {}", this, value, datatype);
 		this.datatype = datatype.getAddress();
 	}
 

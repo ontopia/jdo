@@ -241,6 +241,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		Topic topic = new Topic(this);
 		getPersistenceManager().makePersistent(topic);
 		topics.add(topic);
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -249,6 +250,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		CrossTopicMapException.check(topic_type, this);
 		TopicIF topic = makeTopic();
 		topic.addType(topic_type);
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -259,6 +261,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 			CrossTopicMapException.check(type, this);
 			topic.addType(type);
 		}
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -267,15 +270,18 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 				JDOTopicMapBuilder.checkAndCast(assoc_type, "Type", Topic.class));
 		getPersistenceManager().makePersistent(association);
 		associations.add(association);
+		logger.trace("{} +assoc {}", this, association);
 		return association;
 	}
 	
 	// remove methods
 	void removeTopic(Topic topic) {
+		logger.trace("{} -topic {}", this, topic);
 		topics.remove(topic);
 	}
 
 	void removeAssociation(Association association) {
+		logger.trace("{} -assoc {}", this, association);
 		associations.remove(association);
 	}
 }

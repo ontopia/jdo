@@ -81,6 +81,7 @@ public class AssociationRole extends Reifiable implements AssociationRoleIF {
 	public void setPlayer(TopicIF player) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (player == null) throw new NullPointerException("Player cannot be null");
+		logger.trace("{} +player {}", this, player);
 		this.player = (Topic) player;
 	}
 	
@@ -93,6 +94,7 @@ public class AssociationRole extends Reifiable implements AssociationRoleIF {
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (type == null) throw new NullPointerException("Type cannot be null");
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 
