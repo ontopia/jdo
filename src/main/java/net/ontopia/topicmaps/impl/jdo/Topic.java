@@ -160,13 +160,15 @@ public class Topic extends TMObject implements TopicIF {
 		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject locator when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
+		
+		if (getSubjectLocators().contains(lif)) {
+			return;
+		}
+		
 		try {
 			SubjectLocator subjectLocator = new SubjectLocator(lif, this);
-			if (!subjectLocators.contains(subjectLocator)) {
-				getPersistenceManager().makePersistent(subjectLocator);
-				subjectLocators.add(subjectLocator);
-			}
-		} catch (JDOException re) {
+			subjectLocators.add(subjectLocator);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Subject locator " + lif + " is already identifying another topic: " 
 					+ topicmap.getTopicBySubjectLocator(lif));
 		}
@@ -196,16 +198,17 @@ public class Topic extends TMObject implements TopicIF {
 			throw new UniquenessViolationException("Another topic " + existing + " already has this subject identifier as its item identifier: " + lif + " (" + this + ")");
 		}
 
+		if (getSubjectIdentifiers().contains(lif)) {
+			return;
+		}
+		
 		logger.trace("{} ++SI {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		try {
 			SubjectIdentifier subjectIdentity = new SubjectIdentifier(lif, this);
-			if (!subjectIdentifiers.contains(subjectIdentity)) {
-				getPersistenceManager().makePersistent(subjectIdentity);
-				subjectIdentifiers.add(subjectIdentity);
-			}
-		} catch (JDOException re) {
+			subjectIdentifiers.add(subjectIdentity);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Subject identifier " + lif + " is already identifying another object: " 
-					+ topicmap.getObjectByIdentifier(lif));
+					+ topicmap.getTopicBySubjectIdentifier(lif), re);
 		}
 	}
 

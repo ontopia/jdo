@@ -117,14 +117,15 @@ public abstract class TMObject implements TMObjectIF {
 			throw new UniquenessViolationException("Another topic " + existing + " already has this item identifier as its subject identifier: " + item_identifier + " (" + this + ")");
 		}
 		
+		if (getItemIdentifiers().contains(item_identifier)) {
+			return;
+		}
+		
 		try {
 			ItemIdentifier itemIdentifier = new ItemIdentifier(item_identifier, this);
-			if (!itemIdentifiers.contains(itemIdentifier)) {
-				logger.trace("{} +II {}", this, itemIdentifier);
-				getPersistenceManager().makePersistent(itemIdentifier);
-				itemIdentifiers.add(itemIdentifier);
-			}
-		} catch (JDOException re) {
+			logger.trace("{} +II {}", this, itemIdentifier);
+			itemIdentifiers.add(itemIdentifier);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Item identifier " + item_identifier + " is already identifying another object: " 
 					+ topicmap.getObjectByIdentifier(item_identifier));
 		}
