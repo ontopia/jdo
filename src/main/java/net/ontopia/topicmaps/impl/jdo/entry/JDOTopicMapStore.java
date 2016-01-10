@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 public class JDOTopicMapStore implements TopicMapStoreIF {
 	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapStore.class);
 	public static final int JDO_IMPLEMENTATION = 3;
+	public final String DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS = "datanucleus.manageRelationshipsChecks";
 	
 	protected final boolean readOnly;
 	protected final PersistenceManagerFactory factory;
@@ -85,6 +86,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		if (isOpen()) throw new OntopiaRuntimeException("Cannot open store: already open");
 		
 		persistenceManager = factory.getPersistenceManager();
+		setProperties(persistenceManager);
 		transaction = persistenceManager.currentTransaction();
 		
 		if (id == -1) {
@@ -182,11 +184,22 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public String getProperty(String propertyName) {
+		if (properties == null) {
+			return null;
+		}
 		return properties.getProperty(propertyName);
 	}
 
 	void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+
+	protected void setProperties(PersistenceManager pm) {
+		// by default, ignore the relationship checks as they fail on add->remove
+		// overridable by settings DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS to true
+		pm.setProperty(
+				DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS, 
+				"true".equalsIgnoreCase(getProperty(DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS)));
 	}
 
 	@Override
