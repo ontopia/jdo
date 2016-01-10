@@ -23,10 +23,13 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import javax.jdo.JDOHelper;
+import javax.jdo.ObjectState;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -49,6 +52,9 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 	@Column(jdbcType = "LONGVARCHAR")
 	protected String address;
 	
+	@NotPersistent
+	protected String _address;
+	
 	@Persistent(name = "topicmap", column = "topicmap")
 	protected TopicMap topicmap;
 	
@@ -64,6 +70,7 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 			throw new NullPointerException("The locator address cannot be null.");
 		}
 		this.address = address;
+		this._address = address;
 		this.topicmap = (TopicMap) object.getTopicMap();
 	}
 
@@ -74,7 +81,18 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 
 	@Override
 	public String getAddress() {
+		ObjectState objectState = JDOHelper.getObjectState(this);
+		if ((objectState == ObjectState.PERSISTENT_DELETED) || (objectState == ObjectState.PERSISTENT_NEW_DELETED)) {
+			return _address;
+		}
+		
 		return address;
+	}
+	
+	void preRemove() {
+		// internal detach copy on delete, allows re-use
+		// see LocatorTest
+		_address = address;
 	}
 
 	@Override
@@ -105,7 +123,7 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 
 	@Override
 	public int hashCode() {
-		return address.hashCode();
+		return getAddress().hashCode();
 	}
 
 	@Override
@@ -113,7 +131,7 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 		if (!(object instanceof LocatorIF)) return false;
 		try {
 			LocatorIF locator = (LocatorIF) object;
-			return address.equals(locator.getAddress());
+			return getAddress().equals(locator.getAddress());
 		} catch (ClassCastException e) {
 			return false; // In case the object is not a locator
 		} catch (NullPointerException e) {
