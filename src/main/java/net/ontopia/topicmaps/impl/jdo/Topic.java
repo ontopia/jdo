@@ -39,6 +39,7 @@ import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ConstraintViolationException;
+import net.ontopia.topicmaps.core.CrossTopicMapException;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
@@ -47,6 +48,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
+import net.ontopia.topicmaps.utils.MergeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -294,10 +296,9 @@ public class Topic extends TMObject implements TopicIF {
 
 	@Override
 	public void merge(TopicIF tif) {
-		if (isReadOnly()) throw new ReadOnlyException();
-		// todo
-		
+		CrossTopicMapException.check(tif, this);
 		logger.trace("{} MERGE {}", this, tif);
+		MergeUtils.mergeInto(this, tif);
 	}
 
 	@Override
