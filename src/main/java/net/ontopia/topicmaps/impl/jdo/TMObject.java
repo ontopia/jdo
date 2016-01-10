@@ -140,7 +140,7 @@ public abstract class TMObject implements TMObjectIF {
 	}
 	
 	protected boolean isDeleted() {
-		ObjectState state = JDOHelper.getObjectState(this);
+		ObjectState state = getState();
 		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED) || (topicmap == null));
 	}
 
@@ -197,5 +197,9 @@ public abstract class TMObject implements TMObjectIF {
 	public Query getQuery(String name) {
 		JDOTopicMapSource source = (JDOTopicMapSource) getTopicMap().getStore().getReference().getSource();
 		return source.getQueries().get(name, getPersistenceManager());
+	}
+
+	protected ObjectState getState() {
+		return JDOHelper.getObjectState(this);
 	}
 }
