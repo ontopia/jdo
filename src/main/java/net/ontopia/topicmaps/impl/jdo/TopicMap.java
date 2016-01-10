@@ -56,7 +56,7 @@ import org.slf4j.LoggerFactory;
 public class TopicMap extends Reifiable implements TopicMapIF {
 	private static final Logger logger = LoggerFactory.getLogger(TopicMap.class);
 	
-	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<Character, Class<? extends TMObject>>();
+	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<>();
 	static final Map<Class<? extends TMObject>, Character> classmapInverted;
 	static {
 		classmap.put('M', TopicMap.class);
@@ -81,10 +81,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	private String base;
 
 	@Persistent(mappedBy = "topicmap", dependentElement = "true")
-	private Set<Association> associations = new HashSet<Association>();
+	private Set<Association> associations = new HashSet<>();
 
 	@Persistent(mappedBy = "topicmap", dependentElement = "true")
-	private Set<Topic> topics = new HashSet<Topic>();
+	private Set<Topic> topics = new HashSet<>();
 	
 	@NotPersistent
 	private JDOTopicMapStore store;

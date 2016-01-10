@@ -132,10 +132,10 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 		try {
 			LocatorIF locator = (LocatorIF) object;
 			return getAddress().equals(locator.getAddress());
-		} catch (ClassCastException e) {
-			return false; // In case the object is not a locator
-		} catch (NullPointerException e) {
-			return false; // In case the object is null
+		} catch (ClassCastException | NullPointerException e) {
+			// In case the object is not a locator
+			// In case the object is null
+			return false; 
 		}
 	}
 

@@ -45,7 +45,7 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 	@Join(column = "scoped")
 	@Element(column = "scope")
 	@Index(name = "TM_SCOPE_IX", members = {"scoped", "scope"})
-	private Set<Topic> scope = new HashSet<Topic>();
+	private Set<Topic> scope = new HashSet<>();
 
 	Scoped(TopicMap topicmap) {
 		super(topicmap);

@@ -44,7 +44,7 @@ public class Association extends Scoped implements AssociationIF {
 	private static final Logger logger = LoggerFactory.getLogger(Association.class);
 	
 	@Persistent(mappedBy = "association", dependentElement = "true")
-	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
+	private Set<AssociationRole> roles = new HashSet<>(2);
 
 	@Persistent(name = "type", column = "type")
 	private Topic type;

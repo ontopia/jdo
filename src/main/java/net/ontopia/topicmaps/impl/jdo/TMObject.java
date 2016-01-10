@@ -71,7 +71,7 @@ public abstract class TMObject implements TMObjectIF {
 	protected TopicMap topicmap;
 	
 	@Persistent(mappedBy = "object", dependentElement = "true")
-	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<ItemIdentifier>();
+	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<>();
 	
 	@NotPersistent
 	protected final boolean readOnly;

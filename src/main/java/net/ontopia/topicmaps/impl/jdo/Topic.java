@@ -59,25 +59,25 @@ public class Topic extends TMObject implements TopicIF {
 	private static final Logger logger = LoggerFactory.getLogger(Topic.class);
 	
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();
+	private Set<SubjectLocator> subjectLocators = new HashSet<>();
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<SubjectIdentifier>();
+	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<>();
 
 	@Persistent(table = "TM_TOPIC_TYPES")
 	@Join(column = "topic")
 	@Element(column = "type")
 	@Index(name = "TM_TOPIC_TYPE_IX", members = {"topic", "type"})
-	private Set<Topic> types = new HashSet<Topic>(1);
+	private Set<Topic> types = new HashSet<>(1);
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<TopicName> topicNames = new HashSet<TopicName>();
+	private Set<TopicName> topicNames = new HashSet<>();
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<Occurrence> occurrences = new HashSet<Occurrence>();
+	private Set<Occurrence> occurrences = new HashSet<>();
 	
 	@Persistent(mappedBy = "player", dependentElement = "true")
-	private Set<AssociationRole> roles = new HashSet<AssociationRole>();
+	private Set<AssociationRole> roles = new HashSet<>();
 	
 	@Persistent(name = "reified", column = "reified")
 	private Reifiable reified = null;

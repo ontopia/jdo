@@ -54,7 +54,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	private Topic topic;
 	
 	@Persistent(mappedBy = "topicname", dependentElement = "true")
-	private Set<VariantName> variants = new HashSet<VariantName>();
+	private Set<VariantName> variants = new HashSet<>();
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
