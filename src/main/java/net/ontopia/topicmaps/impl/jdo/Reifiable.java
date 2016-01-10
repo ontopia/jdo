@@ -29,8 +29,6 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
-import net.ontopia.topicmaps.utils.KeyGenerator;
-import net.ontopia.topicmaps.utils.MergeUtils;
 import net.ontopia.utils.ObjectUtils;
 
 @PersistenceCapable
@@ -68,6 +66,16 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 		}
 		
 		// set
+		if (!DuplicateReificationException.check(this, reifier)) {
+			if (reifier != null) {
+				((Topic) reifier).setReified(this);
+			}
+		}
+	}
+	
+	/*
+		Might no longer be needed:
+	
 		// Partial copy from DuplicateReificationException.check() due to #490
 		// refactor when #409 is resolved
 		// base: 3805eff9d0c3d256e367821072238122f06ffb31
@@ -85,5 +93,5 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 			}
 			((Topic) reifier).setReified(this);
 		}
-	}
+	*/
 }
