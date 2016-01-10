@@ -165,6 +165,7 @@ public class Topic extends TMObject implements TopicIF {
 			return;
 		}
 		
+		logger.trace("{} ++SL {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		try {
 			SubjectLocator subjectLocator = new SubjectLocator(lif, this);
 			subjectLocators.add(subjectLocator);
