@@ -30,10 +30,13 @@ import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.utils.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Reifiable extends TMObject implements ReifiableIF {
+	private static final Logger logger = LoggerFactory.getLogger(Reifiable.class);
 	
 	// bug: compile fails on this query
 	private static Query GET_REIFIER = null;
@@ -54,6 +57,7 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 	public void setReifier(TopicIF reifier) throws DuplicateReificationException {
 		if (isDeleted()) return;
 		if (isReadOnly()) throw new ReadOnlyException();
+		logger.trace("{} +reifier {}", this, reifier);
 
 		Topic current = (Topic) getReifier();
 
