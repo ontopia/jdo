@@ -188,6 +188,7 @@ public abstract class TMObject implements TMObjectIF {
 			}
 		}
 		if (toRemove != null) {
+			((AbstractJDOLocator) toRemove).preRemove();
 			set.remove(toRemove);
 			getPersistenceManager().deletePersistent(toRemove);
 		}
