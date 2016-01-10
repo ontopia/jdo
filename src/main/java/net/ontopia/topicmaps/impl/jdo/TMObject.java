@@ -28,13 +28,17 @@ import javax.jdo.JDOHelper;
 import javax.jdo.ObjectState;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Sequence;
+import javax.jdo.annotations.SequenceStrategy;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
@@ -52,13 +56,15 @@ import net.ontopia.topicmaps.impl.utils.ObjectStrings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.SEQUENCE, sequence = "TM_ADMIN_SEQ")
+@Sequence(name = "TM_ADMIN_SEQ", strategy = SequenceStrategy.CONTIGUOUS, datastoreSequence = "TM_ADMIN_SEQ")
 public abstract class TMObject implements TMObjectIF {
 	private static final Logger logger = LoggerFactory.getLogger(TMObject.class);
 	
 	@PrimaryKey
-	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
+	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.SEQUENCE, sequence = "TM_ADMIN_SEQ")
 	protected long id;
 
 	@Persistent(name = "topicmap", column = "topicmap")
