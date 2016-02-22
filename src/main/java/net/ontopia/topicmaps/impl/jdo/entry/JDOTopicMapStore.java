@@ -20,6 +20,8 @@
 
 package net.ontopia.topicmaps.impl.jdo.entry;
 
+import java.util.Properties;
+import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Transaction;
@@ -32,9 +34,13 @@ import net.ontopia.topicmaps.core.index.StatisticsIndexIF;
 import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.OntopiaRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JDOTopicMapStore implements TopicMapStoreIF {
+	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapStore.class);
 	public static final int JDO_IMPLEMENTATION = 3;
+	public final String DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS = "datanucleus.manageRelationshipsChecks";
 	
 	protected final boolean readOnly;
 	protected final PersistenceManagerFactory factory;
@@ -45,6 +51,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 	protected TopicMap topicmap = null;
 
 	private JDOTopicMapReference reference;
+	private Properties properties;
 
 	JDOTopicMapStore(long id, boolean readonly, PersistenceManagerFactory factory) {
 		this.readOnly = readonly;
@@ -79,6 +86,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		if (isOpen()) throw new OntopiaRuntimeException("Cannot open store: already open");
 		
 		persistenceManager = factory.getPersistenceManager();
+		setProperties(persistenceManager);
 		transaction = persistenceManager.currentTransaction();
 		
 		if (id == -1) {
@@ -94,6 +102,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		topicmap.setStore(this);
 		
 		transaction.begin();
+		logger.trace("{} open", this);
 	}
 
 	@Override
@@ -101,10 +110,12 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		if (isOpen()) {
 			if (transaction.isActive()) {
 				transaction.rollback();
+				logger.trace("{} rollback", this);
 			}
 			persistenceManager.close();
 			transaction = null;
 			persistenceManager = null;
+			logger.trace("{} close", this);
 		}
 	}
 
@@ -126,14 +137,16 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public void commit() {
+		logger.trace("{} commit", this);
 		if (transaction.isActive()) {
 			transaction.commit();
 		}
 	}
 
 	@Override
-	public void abort() {
-		if (transaction.isActive()) {
+	public void abort() {		
+		logger.trace("{} rollback", this);
+		if ((transaction != null) && (transaction.isActive())) {
 			transaction.rollback();
 		}
 	}
@@ -144,6 +157,8 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 		if (!isOpen()) open();
 		
+		logger.trace("{} delete", this);
+
 		if (!force) {
 
 			StatisticsIndexIF index = (StatisticsIndexIF) topicmap.getIndex(StatisticsIndexIF.class.getName());
@@ -154,7 +169,12 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 				throw new NotRemovableException("Topicmap is not empty");
 			}
 		}
-		persistenceManager.deletePersistent(topicmap);
+		try {
+			topicmap.clear();
+			persistenceManager.deletePersistent(topicmap);
+		} catch (JDOException e) {
+			throw new NotRemovableException("Could not delete topicmap", e);
+		}
 	}
 
 	@Override
@@ -164,7 +184,22 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	@Override
 	public String getProperty(String propertyName) {
-		return null; // todo: needed?
+		if (properties == null) {
+			return null;
+		}
+		return properties.getProperty(propertyName);
+	}
+
+	void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
+	protected void setProperties(PersistenceManager pm) {
+		// by default, ignore the relationship checks as they fail on add->remove
+		// overridable by settings DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS to true
+		pm.setProperty(
+				DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS, 
+				"true".equalsIgnoreCase(getProperty(DATANUCLEUS_MANAGE_RELATIONSHIPS_CHECKS)));
 	}
 
 	@Override
@@ -180,5 +215,14 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 
 	public PersistenceManager getPersistenceManager() {
 		return persistenceManager;
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		if (isOpen()) {
+			logger.warn("!! Finalize called on JDO store {}. Store was not closed properly, closing now!", Integer.toHexString(hashCode()));
+			close();
+		}
+		super.finalize();
 	}
 }

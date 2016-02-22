@@ -39,6 +39,7 @@ import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.ConstraintViolationException;
+import net.ontopia.topicmaps.core.CrossTopicMapException;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
@@ -47,32 +48,36 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.UniquenessViolationException;
 import net.ontopia.topicmaps.impl.utils.DeletionUtils;
+import net.ontopia.topicmaps.utils.MergeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_IX_ID_TOPICMAP", members = {"id", "topicmap"})
 public class Topic extends TMObject implements TopicIF {
+	private static final Logger logger = LoggerFactory.getLogger(Topic.class);
 	
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<SubjectLocator> subjectLocators = new HashSet<SubjectLocator>();
+	private Set<SubjectLocator> subjectLocators = new HashSet<>();
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<SubjectIdentifier>();
+	private Set<SubjectIdentifier> subjectIdentifiers = new HashSet<>();
 
 	@Persistent(table = "TM_TOPIC_TYPES")
 	@Join(column = "topic")
 	@Element(column = "type")
 	@Index(name = "TM_TOPIC_TYPE_IX", members = {"topic", "type"})
-	private Set<Topic> types = new HashSet<Topic>(1);
+	private Set<Topic> types = new HashSet<>(1);
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<TopicName> topicNames = new HashSet<TopicName>();
+	private Set<TopicName> topicNames = new HashSet<>();
 
 	@Persistent(mappedBy = "topic", dependentElement = "true")
-	private Set<Occurrence> occurrences = new HashSet<Occurrence>();
+	private Set<Occurrence> occurrences = new HashSet<>();
 	
 	@Persistent(mappedBy = "player", dependentElement = "true")
-	private Set<AssociationRole> roles = new HashSet<AssociationRole>();
+	private Set<AssociationRole> roles = new HashSet<>();
 	
 	@Persistent(name = "reified", column = "reified")
 	private Reifiable reified = null;
@@ -155,13 +160,16 @@ public class Topic extends TMObject implements TopicIF {
 		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject locator when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
+		
+		if (getSubjectLocators().contains(lif)) {
+			return;
+		}
+		
+		logger.trace("{} ++SL {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		try {
 			SubjectLocator subjectLocator = new SubjectLocator(lif, this);
-			if (!subjectLocators.contains(subjectLocator)) {
-				getPersistenceManager().makePersistent(subjectLocator);
-				subjectLocators.add(subjectLocator);
-			}
-		} catch (JDOException re) {
+			subjectLocators.add(subjectLocator);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Subject locator " + lif + " is already identifying another topic: " 
 					+ topicmap.getTopicBySubjectLocator(lif));
 		}
@@ -170,6 +178,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	public void removeSubjectLocator(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		logger.trace("{} --SL {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		removeLocator(subjectLocators, lif);
 	}
 
@@ -190,21 +199,24 @@ public class Topic extends TMObject implements TopicIF {
 			throw new UniquenessViolationException("Another topic " + existing + " already has this subject identifier as its item identifier: " + lif + " (" + this + ")");
 		}
 
+		if (getSubjectIdentifiers().contains(lif)) {
+			return;
+		}
+		
+		logger.trace("{} ++SI {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		try {
 			SubjectIdentifier subjectIdentity = new SubjectIdentifier(lif, this);
-			if (!subjectIdentifiers.contains(subjectIdentity)) {
-				getPersistenceManager().makePersistent(subjectIdentity);
-				subjectIdentifiers.add(subjectIdentity);
-			}
-		} catch (JDOException re) {
+			subjectIdentifiers.add(subjectIdentity);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Subject identifier " + lif + " is already identifying another object: " 
-					+ topicmap.getObjectByIdentifier(lif));
+					+ topicmap.getTopicBySubjectIdentifier(lif), re);
 		}
 	}
 
 	@Override
 	public void removeSubjectIdentifier(LocatorIF lif) {
 		if (isReadOnly()) throw new ReadOnlyException();
+		logger.trace("{} --SI {} {}", new Object[] {this, lif, lif.getClass().getSimpleName()});
 		removeLocator(subjectIdentifiers, lif);
 	}
 
@@ -217,6 +229,7 @@ public class Topic extends TMObject implements TopicIF {
 	public void addType(TopicIF tif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo: class check
+		logger.trace("{} +type {}", this, tif);
 		types.add((Topic) tif);
 	}
 
@@ -224,6 +237,7 @@ public class Topic extends TMObject implements TopicIF {
 	public void removeType(TopicIF tif) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		// todo: class check
+		logger.trace("{} -type {}", this, tif);
 		types.remove((Topic) tif);
 	}
 
@@ -286,8 +300,9 @@ public class Topic extends TMObject implements TopicIF {
 
 	@Override
 	public void merge(TopicIF tif) {
-		if (isReadOnly()) throw new ReadOnlyException();
-		// todo
+		CrossTopicMapException.check(tif, this);
+		logger.trace("{} MERGE {}", this, tif);
+		MergeUtils.mergeInto(this, tif);
 	}
 
 	@Override
@@ -300,11 +315,15 @@ public class Topic extends TMObject implements TopicIF {
 	 * @param reified The object that this topic is reifying 
 	 */
 	void setReified(Reifiable reified) {
+		logger.trace("{} +reified {}", this, reified);
 		this.reified = reified;
 	}
 
 	@Override
 	protected void beforeRemove() {
+		// unset types to avoid indirect circulation
+		types.clear();
+		
 		DeletionUtils.removeDependencies(this);
 		topicmap.removeTopic(this);
 	}
@@ -316,6 +335,7 @@ public class Topic extends TMObject implements TopicIF {
 		TopicName name = new TopicName(this, (Topic) bntype, value);
 		getPersistenceManager().makePersistent(name);
 		topicNames.add(name);
+		logger.trace("{} +name {}", this, name);
 		return name;
 	}
 
@@ -325,6 +345,7 @@ public class Topic extends TMObject implements TopicIF {
 		occurrence.setReader(value, length, datatype);
 		getPersistenceManager().makePersistent(occurrence);
 		occurrences.add(occurrence);
+		logger.trace("{} +occ {}", this, occurrence);
 		return occurrence;
 	}
 
@@ -332,6 +353,7 @@ public class Topic extends TMObject implements TopicIF {
 		Occurrence occurrence = new Occurrence(this, JDOTopicMapBuilder.checkAndCast(occurs_type, "Occurrence type", Topic.class));
 		getPersistenceManager().makePersistent(occurrence);
 		occurrences.add(occurrence);
+		logger.trace("{} +occ {}", this, occurrence);
 		return occurrence;
 	}
 	
@@ -339,6 +361,7 @@ public class Topic extends TMObject implements TopicIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setLocator(locator);
+		logger.trace("{} +occ {}", this, occurrence);
 		return occurrence;
 	}
 
@@ -346,6 +369,7 @@ public class Topic extends TMObject implements TopicIF {
 		if (value == null) throw new NullPointerException("Value cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setValue(value);
+		logger.trace("{} +occ {}", this, occurrence);
 		return occurrence;
 	}
 
@@ -354,10 +378,12 @@ public class Topic extends TMObject implements TopicIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setValue(value, datatype);
+		logger.trace("{} +occ {}", this, occurrence);
 		return occurrence;
 	}
 	
 	void associationRoleCreated(AssociationRole role) {
+		logger.trace("{} +role {}", this, role);
 		roles.add(role);
 	}
 }

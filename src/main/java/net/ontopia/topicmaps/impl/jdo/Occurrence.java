@@ -39,6 +39,8 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.utils.OntopiaRuntimeException;
 import net.ontopia.utils.StreamUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_OCCURRENCE")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -48,6 +50,7 @@ import net.ontopia.utils.StreamUtils;
 	@Index(name = "TM_OCCURRENCE_IX_TOPIC", members = {"topic"})
 })
 public class Occurrence extends Scoped implements OccurrenceIF {
+	private static final Logger logger = LoggerFactory.getLogger(Occurrence.class);
 	
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;
@@ -88,6 +91,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setType(TopicIF type) {
 		if (isReadOnly())throw new ReadOnlyException();
 		if (type == null) throw new NullPointerException("Type cannot be null");
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 
@@ -105,6 +109,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (value == null) throw new NullPointerException("Value cannot be null");
+		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
 
@@ -122,6 +127,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		if (!"URI".equalsIgnoreCase(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
+		logger.trace("{} +locator {}", this, locator);
 		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
 
@@ -131,6 +137,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
 		setValue(value);
+		logger.trace("{} +value {} {}", this, value, datatype);
 		this.datatype = datatype.getAddress();
 	}
 

@@ -33,16 +33,19 @@ import javax.jdo.annotations.Persistent;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ScopedIF;
 import net.ontopia.topicmaps.core.TopicIF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Scoped extends Reifiable implements ScopedIF {
+	private static final Logger logger = LoggerFactory.getLogger(Scoped.class);
 	
 	@Persistent(table = "TM_SCOPES")
 	@Join(column = "scoped")
 	@Element(column = "scope")
 	@Index(name = "TM_SCOPE_IX", members = {"scoped", "scope"})
-	private Set<Topic> scope = new HashSet<Topic>();
+	private Set<Topic> scope = new HashSet<>();
 
 	Scoped(TopicMap topicmap) {
 		super(topicmap);
@@ -60,6 +63,7 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 		Topic themeTopic = (Topic) theme;
 		if (!scope.contains(themeTopic)) {
 			scope.add(themeTopic);
+			logger.trace("{} +scope {}", this, theme);
 		}
 	}
 
@@ -68,6 +72,7 @@ public abstract class Scoped extends Reifiable implements ScopedIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (theme == null) throw new NullPointerException("Scope cannot be null");
 		scope.remove((Topic) theme);
+		logger.trace("{} -scope {}", this, theme);
 	}
 
 	@Override

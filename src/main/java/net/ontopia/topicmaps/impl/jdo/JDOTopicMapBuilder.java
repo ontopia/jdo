@@ -35,8 +35,11 @@ import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.utils.PSI;
 import net.ontopia.utils.OntopiaRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JDOTopicMapBuilder implements TopicMapBuilderIF {
+	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapBuilder.class);
 	private final TopicMap topicmap;
 
 	public JDOTopicMapBuilder(TopicMap topicmap) {

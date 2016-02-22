@@ -24,8 +24,11 @@ import javax.jdo.PersistenceManagerFactory;
 import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.entry.AbstractTopicMapReference;
 import net.ontopia.utils.OntopiaRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JDOTopicMapReference extends AbstractTopicMapReference {
+	private static final Logger logger = LoggerFactory.getLogger(JDOTopicMapReference.class);
 
 	private final long identity;
 
@@ -41,6 +44,8 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 		final JDOTopicMapStore store = new JDOTopicMapStore(identity, readonly,
 				getPersistenceManagerFactory());
 		store.setReference(this);
+		store.setProperties(getPersistenceManagerFactory().getProperties());
+		logger.trace("{} create {}", this, store);
 		return store;
 	}
 
@@ -57,6 +62,8 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 			return;
 		}
 
+		logger.trace("{} delete", this);
+		
 		// close reference
 		close();
 
@@ -80,5 +87,10 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 
 	public long getLongId() {
 		return identity;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + getClass().getSimpleName() + " " + getId() + "]";
 	}
 }

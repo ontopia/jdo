@@ -28,13 +28,17 @@ import javax.jdo.JDOHelper;
 import javax.jdo.ObjectState;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import javax.jdo.annotations.Sequence;
+import javax.jdo.annotations.SequenceStrategy;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
@@ -52,26 +56,29 @@ import net.ontopia.topicmaps.impl.utils.ObjectStrings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.DATASTORE)
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.SEQUENCE, sequence = "TM_ADMIN_SEQ")
+@Sequence(name = "TM_ADMIN_SEQ", strategy = SequenceStrategy.CONTIGUOUS, datastoreSequence = "TM_ADMIN_SEQ")
 public abstract class TMObject implements TMObjectIF {
-	
-	@NotPersistent
-	protected final Logger logger;
+	private static final Logger logger = LoggerFactory.getLogger(TMObject.class);
 	
 	@PrimaryKey
-	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.NATIVE)
+	@Persistent(name = "id", valueStrategy=IdGeneratorStrategy.SEQUENCE, sequence = "TM_ADMIN_SEQ")
 	protected long id;
 
 	@Persistent(name = "topicmap", column = "topicmap")
 	protected TopicMap topicmap;
 	
 	@Persistent(mappedBy = "object", dependentElement = "true")
-	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<ItemIdentifier>();
+	protected Set<ItemIdentifier> itemIdentifiers = new HashSet<>();
+	
+	@NotPersistent
+	protected final boolean readOnly;
 
 	TMObject(TopicMap topicmap) {
 		this.topicmap = topicmap;
-		logger = LoggerFactory.getLogger(getClass());
+		readOnly = ((topicmap == null) || topicmap.getStore().isReadOnly());
 	}
 	
 	protected abstract String getClassIndicator();
@@ -84,7 +91,7 @@ public abstract class TMObject implements TMObjectIF {
 	// todo: actually implement on setters
 	@Override
 	public boolean isReadOnly() {
-		return getTopicMap().getStore().isReadOnly();
+		return readOnly;
 	}
 
 	@Override
@@ -110,13 +117,15 @@ public abstract class TMObject implements TMObjectIF {
 			throw new UniquenessViolationException("Another topic " + existing + " already has this item identifier as its subject identifier: " + item_identifier + " (" + this + ")");
 		}
 		
+		if (getItemIdentifiers().contains(item_identifier)) {
+			return;
+		}
+		
 		try {
 			ItemIdentifier itemIdentifier = new ItemIdentifier(item_identifier, this);
-			if (!itemIdentifiers.contains(itemIdentifier)) {
-				getPersistenceManager().makePersistent(itemIdentifier);
-				itemIdentifiers.add(itemIdentifier);
-			}
-		} catch (JDOException re) {
+			logger.trace("{} +II {}", this, itemIdentifier);
+			itemIdentifiers.add(itemIdentifier);
+		} catch (JDOException | IllegalArgumentException re) {
 			throw new UniquenessViolationException("Item identifier " + item_identifier + " is already identifying another object: " 
 					+ topicmap.getObjectByIdentifier(item_identifier));
 		}
@@ -125,6 +134,7 @@ public abstract class TMObject implements TMObjectIF {
 	@Override
 	public void removeItemIdentifier(LocatorIF item_identifier) {
 		removeLocator(itemIdentifiers, item_identifier);
+		logger.trace("{} -II {}", this, item_identifier);
 	}
 
 	@Override
@@ -133,11 +143,12 @@ public abstract class TMObject implements TMObjectIF {
 		if (isReadOnly()) throw new ReadOnlyException();
 		beforeRemove();
 		getPersistenceManager().deletePersistent(this);
+		logger.trace("-- {}", this);
 	}
 	
 	protected boolean isDeleted() {
-		ObjectState state = JDOHelper.getObjectState(this);
-		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED));
+		ObjectState state = getState();
+		return ((state == ObjectState.PERSISTENT_DELETED) || (state == ObjectState.PERSISTENT_NEW_DELETED) || (topicmap == null));
 	}
 
 	protected void beforeRemove() {
@@ -184,6 +195,7 @@ public abstract class TMObject implements TMObjectIF {
 			}
 		}
 		if (toRemove != null) {
+			((AbstractJDOLocator) toRemove).preRemove();
 			set.remove(toRemove);
 			getPersistenceManager().deletePersistent(toRemove);
 		}
@@ -192,5 +204,9 @@ public abstract class TMObject implements TMObjectIF {
 	public Query getQuery(String name) {
 		JDOTopicMapSource source = (JDOTopicMapSource) getTopicMap().getStore().getReference().getSource();
 		return source.getQueries().get(name, getPersistenceManager());
+	}
+
+	protected ObjectState getState() {
+		return JDOHelper.getObjectState(this);
 	}
 }

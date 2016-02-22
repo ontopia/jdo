@@ -396,4 +396,14 @@
 		<class>SubjectLocator</class>
 	</query>
 	
+	<!-- Searcher -->
+	<query name="BasicSearcher.search">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, String s</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value.toLowerCase().indexOf(s.toLowerCase()) != -1
+		]]></filter>
+		<order>value</order>
+	</query>
+	
 </queries>

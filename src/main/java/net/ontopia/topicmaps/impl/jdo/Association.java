@@ -34,14 +34,17 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_ASSOCIATION")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_ASSOCIATION_IX_ID_TM_TYPE", members = {"id", "topicmap", "type"})
 public class Association extends Scoped implements AssociationIF {
+	private static final Logger logger = LoggerFactory.getLogger(Association.class);
 	
 	@Persistent(mappedBy = "association", dependentElement = "true")
-	private Set<AssociationRole> roles = new HashSet<AssociationRole>(2);
+	private Set<AssociationRole> roles = new HashSet<>(2);
 
 	@Persistent(name = "type", column = "type")
 	private Topic type;
@@ -65,6 +68,7 @@ public class Association extends Scoped implements AssociationIF {
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (type == null) throw new NullPointerException("Type cannot be null");
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 
@@ -99,11 +103,13 @@ public class Association extends Scoped implements AssociationIF {
 				JDOTopicMapBuilder.checkAndCast(player, "Player", Topic.class));
 		getPersistenceManager().makePersistent(role);
 		roles.add(role);
+		logger.trace("{} +role {}", this, role);
 		((Topic) player).associationRoleCreated(role);
 		return role;
 	}
 
 	void removeRole(AssociationRole role) {
 		roles.remove(role);
+		logger.trace("{} -role {}", this, role);
 	}
 }

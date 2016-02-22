@@ -46,13 +46,18 @@ import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapStore;
 import net.ontopia.topicmaps.impl.jdo.index.IndexCache;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
 import net.ontopia.topicmaps.impl.jdo.utils.Queries;
+import org.apache.commons.collections4.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC_MAP")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
 @Index(name = "TM_TOPIC_MAP_IX_BASE_ID", members = {"base", "id"})
 public class TopicMap extends Reifiable implements TopicMapIF {
+	private static final Logger logger = LoggerFactory.getLogger(TopicMap.class);
 	
-	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<Character, Class<? extends TMObject>>();
+	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<>();
+	static final Map<Class<? extends TMObject>, Character> classmapInverted;
 	static {
 		classmap.put('M', TopicMap.class);
 		classmap.put('A', Association.class);
@@ -61,6 +66,11 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		classmap.put('O', Occurrence.class);
 		classmap.put('V', VariantName.class);
 		classmap.put('N', TopicName.class);
+		classmapInverted = MapUtils.invertMap(classmap);
+	}
+	
+	public static String className(Class<? extends TMObject> klass) {
+		return classmapInverted.get(klass).toString();
 	}
 	
 	@Persistent(name = "title", column = "title", defaultFetchGroup = "true")
@@ -71,10 +81,10 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	private String base;
 
 	@Persistent(mappedBy = "topicmap", dependentElement = "true")
-	private Set<Association> associations = new HashSet<Association>();
+	private Set<Association> associations = new HashSet<>();
 
 	@Persistent(mappedBy = "topicmap", dependentElement = "true")
-	private Set<Topic> topics = new HashSet<Topic>();
+	private Set<Topic> topics = new HashSet<>();
 	
 	@NotPersistent
 	private JDOTopicMapStore store;
@@ -92,6 +102,11 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	public TopicMap(long id) {
 		this();
 		this.id = id;
+	}
+
+	@Override
+	public boolean isReadOnly() {
+		return (store == null) || store.isReadOnly();
 	}
 
 	public String getTitle() {
@@ -226,6 +241,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		Topic topic = new Topic(this);
 		getPersistenceManager().makePersistent(topic);
 		topics.add(topic);
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -234,6 +250,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 		CrossTopicMapException.check(topic_type, this);
 		TopicIF topic = makeTopic();
 		topic.addType(topic_type);
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -244,6 +261,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 			CrossTopicMapException.check(type, this);
 			topic.addType(type);
 		}
+		logger.trace("{} +topic {}", this, topic);
 		return topic;
 	}
 
@@ -252,15 +270,18 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 				JDOTopicMapBuilder.checkAndCast(assoc_type, "Type", Topic.class));
 		getPersistenceManager().makePersistent(association);
 		associations.add(association);
+		logger.trace("{} +assoc {}", this, association);
 		return association;
 	}
 	
 	// remove methods
 	void removeTopic(Topic topic) {
+		logger.trace("{} -topic {}", this, topic);
 		topics.remove(topic);
 	}
 
 	void removeAssociation(Association association) {
+		logger.trace("{} -assoc {}", this, association);
 		associations.remove(association);
 	}
 }

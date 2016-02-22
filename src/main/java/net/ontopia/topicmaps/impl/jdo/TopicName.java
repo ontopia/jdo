@@ -37,6 +37,8 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @PersistenceCapable(table = "TM_TOPIC_NAME")
 @Inheritance(strategy=InheritanceStrategy.COMPLETE_TABLE)
@@ -46,12 +48,13 @@ import net.ontopia.topicmaps.core.VariantNameIF;
 	@Index(name = "TM_TOPIC_NAME_IX_TOPIC", members = {"topic"})
 })
 public class TopicName extends Scoped implements TopicNameIF {
+	private static final Logger logger = LoggerFactory.getLogger(TopicName.class);
 	
 	@Persistent(name = "topic", column = "topic")
 	private Topic topic;
 	
 	@Persistent(mappedBy = "topicname", dependentElement = "true")
-	private Set<VariantName> variants = new HashSet<VariantName>();
+	private Set<VariantName> variants = new HashSet<>();
 
 	@Persistent(name = "value", column = "value")
 	@Column(jdbcType = "LONGVARCHAR")
@@ -92,6 +95,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (type == null) {
 			type = ((JDOTopicMapBuilder)topicmap.getBuilder()).getDefaultNameType();
 		}
+		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
 	
@@ -104,6 +108,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
 		if (value == null) throw new NullPointerException("Value cannot be null");
+		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
 
@@ -116,6 +121,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		}
 		getPersistenceManager().makePersistent(variant);
 		variants.add(variant);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 	
@@ -123,6 +129,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (value == null) throw new NullPointerException("Value cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -130,6 +137,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (locator == null) throw new NullPointerException("Locator cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setLocator(locator);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -138,6 +146,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value, datatype);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
@@ -146,10 +155,12 @@ public class TopicName extends Scoped implements TopicNameIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setReader(value, length, datatype);
+		logger.trace("{} +var {}", this, variant);
 		return variant;
 	}
 
 	void removeVariant(VariantName variant) {
+		logger.trace("{} -var {}", this, variant);
 		variants.remove(variant);
 	}
 }

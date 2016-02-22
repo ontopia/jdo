@@ -44,4 +44,10 @@ public class TopicLocator extends AbstractJDOLocator {
 	public Topic getTopic() {
 		return topic;
 	}
+
+	@Override
+	void preRemove() {
+		topic = null;
+		super.preRemove();
+	}
 }

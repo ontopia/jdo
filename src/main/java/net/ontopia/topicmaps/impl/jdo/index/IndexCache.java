@@ -23,6 +23,7 @@ package net.ontopia.topicmaps.impl.jdo.index;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import net.ontopia.infoset.fulltext.core.SearcherIF;
 import net.ontopia.topicmaps.core.index.ClassInstanceIndexIF;
 import net.ontopia.topicmaps.core.index.IndexIF;
 import net.ontopia.topicmaps.core.index.NameIndexIF;
@@ -33,6 +34,8 @@ import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.utils.OntopiaRuntimeException;
 
 public class IndexCache {
+	public final static String DEFAULT_SEARCHER = BasicSearcher.class.getName();
+
 	private static final Map<String, Class<? extends IndexIF>> knownIndexes 
 			= new HashMap<String, Class<? extends IndexIF>>(5);
 	
@@ -42,6 +45,7 @@ public class IndexCache {
 		knownIndexes.put(OccurrenceIndexIF.class.getName(), OccurrenceIndex.class);
 		knownIndexes.put(ScopeIndexIF.class.getName(), ScopeIndex.class);
 		knownIndexes.put(StatisticsIndexIF.class.getName(), StatisticsIndex.class);
+		knownIndexes.put(SearcherIF.class.getName(), BasicSearcher.class);
 	}
 	
 	private final TopicMap topicmap;
@@ -55,23 +59,15 @@ public class IndexCache {
 		IndexIF index = indexes.get(name);
 		if (index == null) {
 			
-			Class<? extends IndexIF> indexClass = knownIndexes.get(name);
-			if (indexClass != null) {
-				try {
-					index = indexClass.getConstructor(TopicMap.class).newInstance(topicmap);
-				} catch (NoSuchMethodException ex) {
-					throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
-				} catch (SecurityException ex) {
-					throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
-				} catch (InstantiationException ex) {
-					throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
-				} catch (IllegalAccessException ex) {
-					throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
-				} catch (InvocationTargetException ex) {
-					throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+			if (SearcherIF.class.getName().equals(name)) {
+				index = getSearcher(name);
+			} else {
+
+				Class<? extends IndexIF> indexClass = knownIndexes.get(name);
+				if (indexClass != null) {
+					index = instantiate(indexClass, name);
 				}
 			}
-			
 			indexes.put(name, index);
 		}
 		return index;
@@ -79,5 +75,41 @@ public class IndexCache {
 	
 	public void addIndex(String name, IndexIF index) {
 		indexes.put(name, index);
+	}
+	
+	private IndexIF instantiate(Class<? extends IndexIF> indexClass, String name) throws IllegalArgumentException, OntopiaRuntimeException {
+		try {
+			return indexClass.getConstructor(TopicMap.class).newInstance(topicmap);
+		} catch (NoSuchMethodException ex) {
+			throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+		} catch (SecurityException ex) {
+			throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+		} catch (InstantiationException ex) {
+			throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+		} catch (IllegalAccessException ex) {
+			throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+		} catch (InvocationTargetException ex) {
+			throw new OntopiaRuntimeException("Could not initialize index " + name + ": " + ex.getMessage(), ex);
+		}
+	}	
+
+	@SuppressWarnings("unchecked")
+	private IndexIF getSearcher(String name) {
+		String searcher = topicmap.getStore().getProperty(name);
+		
+		if (searcher == null) {
+			searcher = DEFAULT_SEARCHER;
+		}
+
+		try {
+			Class<?> indexClass = Class.forName(searcher);
+			if (SearcherIF.class.isAssignableFrom(indexClass)) {
+				return instantiate((Class<? extends SearcherIF>) indexClass, name);
+			} else {
+				throw new OntopiaRuntimeException("Could not initialize specified SearcherIF index '" + searcher + "': not a subclass of SearcherIF");
+			}
+		} catch (ClassNotFoundException cnfe) {
+			throw new OntopiaRuntimeException("Could not initialize specified SearcherIF index '" + searcher + "': " + cnfe.getClass().getName() + ": " + cnfe.getMessage(), cnfe);
+		}
 	}
 }

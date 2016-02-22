@@ -110,6 +110,8 @@ public class Queries {
 	public static final String STATISTICSINDEX_SUBJECT_IDENTIFIERS = "StatisticsIndex.getSubjectIdentifierCount";
 	public static final String STATISTICSINDEX_SUBJECT_LOCATORS = "StatisticsIndex.getSubjectLocatorCount";
 	public static final String STATISTICSINDEX_ITEM_IDENTIFIERS = "StatisticsIndex.getItemIdentifierCount";
+	
+	public static final String BASICSEARCHER_SEARCH = "BasicSearcher.search";
 
 	private final Map<String, PersistedQuery> loadedQueries;
 	private final Map<PersistedQuery, Query> queryCache;
@@ -190,6 +192,9 @@ public class Queries {
 		@XmlElement
 		private String result;
 		
+		@XmlElement
+		private String order;
+		
 		@XmlElement(name = "result-class")
 		private String resultClass;
 		
@@ -223,6 +228,9 @@ public class Queries {
 				}
 				if ((min > -1) && (max > -1)) {
 					q.setRange(min, max);
+				}
+				if (order != null) {
+					q.setOrdering(order);
 				}
 				
 				if (isUnique != null) q.setUnique(isUnique.equalsIgnoreCase("true"));
