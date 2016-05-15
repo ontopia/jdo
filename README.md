@@ -11,13 +11,15 @@ other sources. A source can be instantiated programatically or by using a source
 
 You can add a JDO topicmap source by defining it in a sources xml file like:
 
-    <source class="net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource">
-      <param name="id" value="jdo"/>
-      <param name="title" value="JDO"/>
-      <param name="supportsCreate" value="true"/>
-      <param name="supportsDelete" value="true"/>
-      <param name="propertyFile" value="${CWD}/db.properties"/>
-    </source>
+````xml
+<source class="net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource">
+  <param name="id" value="jdo"/>
+  <param name="title" value="JDO"/>
+  <param name="supportsCreate" value="true"/>
+  <param name="supportsDelete" value="true"/>
+  <param name="propertyFile" value="${CWD}/db.properties"/>
+</source>
+````
 
 Supported properties of the source are: 
 
@@ -34,16 +36,18 @@ The `JDOTopicMapSource` uses `StreamUtils.getInputStream()` to locate the file.
 A `JDOTopicMapSource` may be instantiated programatically. The supported fields are equals to those used in the 
 sources xml.
 
-	JDOTopicMapSource source = new JDOTopicMapSource();
-	source.setId("jdo");
-	source.setTitle("JDO source");
-	source.setSupportsCreate(true);
-	source.setSupportsDelete(true);
-	source.setPropertyFile("classpath:db.properties");
+````java
+JDOTopicMapSource source = new JDOTopicMapSource();
+source.setId("jdo");
+source.setTitle("JDO source");
+source.setSupportsCreate(true);
+source.setSupportsDelete(true);
+source.setPropertyFile("classpath:db.properties");
 	
-	// do something with source
+// do something with source
 	
-	source.close();
+source.close();
+````
 
 Make sure to close the source when it is no longer needed to release all connections to the database.
 
@@ -55,11 +59,13 @@ but only Datanucleus was tested in this project.
 
 To configure datanucleus, a set of properties has to be profived by means of a property file:
 
-	javax.jdo.option.ConnectionDriverName=org.h2.Driver
-	javax.jdo.option.ConnectionURL=jdbc:h2:target/ontopia
-	javax.jdo.option.ConnectionUserName=sa
-	javax.jdo.option.ConnectionPassword=
-	datanucleus.schema.autoCreateAll=true
+````properties
+javax.jdo.option.ConnectionDriverName=org.h2.Driver
+javax.jdo.option.ConnectionURL=jdbc:h2:target/ontopia
+javax.jdo.option.ConnectionUserName=sa
+javax.jdo.option.ConnectionPassword=
+datanucleus.schema.autoCreateAll=true
+````
 	
 The first four here are just like when using Ontopia RDBMS. The last property indicates that JDO is allowed to create 
 any meta object in the database that it requires (tables, indices, etc).
