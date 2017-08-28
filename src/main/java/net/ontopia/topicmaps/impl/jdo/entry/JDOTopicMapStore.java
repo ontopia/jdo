@@ -190,7 +190,7 @@ public class JDOTopicMapStore implements TopicMapStoreIF {
 		return properties.getProperty(propertyName);
 	}
 
-	void setProperties(Properties properties) {
+	protected void setProperties(Properties properties) {
 		this.properties = properties;
 	}
 

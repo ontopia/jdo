@@ -159,7 +159,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 		return variant;
 	}
 
-	void removeVariant(VariantName variant) {
+	protected void removeVariant(VariantName variant) {
 		logger.trace("{} -var {}", this, variant);
 		variants.remove(variant);
 	}

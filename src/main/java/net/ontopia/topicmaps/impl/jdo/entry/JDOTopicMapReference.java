@@ -81,7 +81,7 @@ public class JDOTopicMapReference extends AbstractTopicMapReference {
 		}
 	}
 
-	PersistenceManagerFactory getPersistenceManagerFactory() {
+	protected PersistenceManagerFactory getPersistenceManagerFactory() {
 		return ((JDOTopicMapSource) getSource()).getPersistenceManagerFactory();
 	}
 

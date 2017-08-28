@@ -56,8 +56,8 @@ import org.slf4j.LoggerFactory;
 public class TopicMap extends Reifiable implements TopicMapIF {
 	private static final Logger logger = LoggerFactory.getLogger(TopicMap.class);
 	
-	static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<>();
-	static final Map<Class<? extends TMObject>, Character> classmapInverted;
+	private static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<>();
+	private static final Map<Class<? extends TMObject>, Character> classmapInverted;
 	static {
 		classmap.put('M', TopicMap.class);
 		classmap.put('A', Association.class);
@@ -206,7 +206,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	 * @param locator
 	 * @return 
 	 */
-	TMObject getObjectByIdentifier(LocatorIF locator) {
+	protected TMObject getObjectByIdentifier(LocatorIF locator) {
 		TMObject o = (TMObject) getTopicBySubjectIdentifier(locator);
 		if (o == null) {
 			o = (TMObject) getObjectByItemIdentifier(locator);
@@ -275,12 +275,12 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 	
 	// remove methods
-	void removeTopic(Topic topic) {
+	protected void removeTopic(Topic topic) {
 		logger.trace("{} -topic {}", this, topic);
 		topics.remove(topic);
 	}
 
-	void removeAssociation(Association association) {
+	protected void removeAssociation(Association association) {
 		logger.trace("{} -assoc {}", this, association);
 		associations.remove(association);
 	}

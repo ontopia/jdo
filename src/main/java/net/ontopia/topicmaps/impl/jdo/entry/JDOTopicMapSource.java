@@ -191,7 +191,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		}
 	}
 
-	PersistenceManagerFactory getPersistenceManagerFactory() {
+	protected PersistenceManagerFactory getPersistenceManagerFactory() {
 		createPersistenceManagerFactory();
 		return persistenceManagerFactory;
 	}
@@ -200,7 +200,7 @@ public class JDOTopicMapSource implements TopicMapSourceIF {
 		return queries;
 	}
 	
-	void referenceRemoved(JDOTopicMapReference reference) {
+	protected void referenceRemoved(JDOTopicMapReference reference) {
 		references.remove(reference);
 	}
 

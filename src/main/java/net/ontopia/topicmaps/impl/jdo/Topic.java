@@ -314,7 +314,7 @@ public class Topic extends TMObject implements TopicIF {
 	 * INTERNAL: sets the reified field for bidirectional 1-1 persistence
 	 * @param reified The object that this topic is reifying 
 	 */
-	void setReified(Reifiable reified) {
+	protected void setReified(Reifiable reified) {
 		logger.trace("{} +reified {}", this, reified);
 		this.reified = reified;
 	}
@@ -382,7 +382,7 @@ public class Topic extends TMObject implements TopicIF {
 		return occurrence;
 	}
 	
-	void associationRoleCreated(AssociationRole role) {
+	protected void associationRoleCreated(AssociationRole role) {
 		logger.trace("{} +role {}", this, role);
 		roles.add(role);
 	}

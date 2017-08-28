@@ -89,7 +89,7 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 		return address;
 	}
 	
-	void preRemove() {
+	protected void preRemove() {
 		// internal detach copy on delete, allows re-use
 		// see LocatorTest
 		_address = address;

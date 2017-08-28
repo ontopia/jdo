@@ -108,7 +108,7 @@ public class Association extends Scoped implements AssociationIF {
 		return role;
 	}
 
-	void removeRole(AssociationRole role) {
+	protected void removeRole(AssociationRole role) {
 		roles.remove(role);
 		logger.trace("{} -role {}", this, role);
 	}
