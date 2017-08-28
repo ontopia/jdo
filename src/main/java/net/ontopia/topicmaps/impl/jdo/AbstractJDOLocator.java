@@ -73,6 +73,10 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 		this._address = address;
 		this.topicmap = (TopicMap) object.getTopicMap();
 	}
+	
+	protected long getId() {
+		return id;
+	}
 
 	@Override
 	public String getNotation() {
