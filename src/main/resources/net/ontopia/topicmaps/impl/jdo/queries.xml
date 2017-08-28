@@ -275,6 +275,14 @@
 		]]></filter>
 	</query>
 	
+	<query name="NameIndex.getTopicNames_type">
+		<class>TopicName</class>
+		<parameters>TopicMap tm, String v, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && type == t
+		]]></filter>
+	</query>
+
 	<!-- OccurrenceIndex -->
 	
 	<query name="OccurrenceIndex.abstract" abstract="true">

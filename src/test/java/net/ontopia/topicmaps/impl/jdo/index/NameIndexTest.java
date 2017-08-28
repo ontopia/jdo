@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import net.ontopia.infoset.impl.basic.URILocator;
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.impl.jdo.AbstractJDOTest;
@@ -52,6 +53,19 @@ public class NameIndexTest extends AbstractJDOTest {
 		Assert.assertEquals(1, names.size());
 		Assert.assertEquals(n1, names.iterator().next());
 		names = index.getTopicNames("foobar");
+		Assert.assertEquals(1, names.size());
+		Assert.assertEquals(n2, names.iterator().next());
+	}
+	
+	@Test
+	public void testGetTopicNamesType() {
+		TopicIF type = builder.makeTopic();
+		builder.makeTopicName(builder.makeTopic(), "foo");
+		TopicNameIF n2 = builder.makeTopicName(builder.makeTopic(), type, "foobar");
+		
+		Collection<TopicNameIF> names = index.getTopicNames("foo", type);
+		Assert.assertEquals(0, names.size());
+		names = index.getTopicNames("foobar", type);
 		Assert.assertEquals(1, names.size());
 		Assert.assertEquals(n2, names.iterator().next());
 	}

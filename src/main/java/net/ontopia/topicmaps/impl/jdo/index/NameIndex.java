@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.util.Collection;
 import net.ontopia.infoset.core.LocatorIF;
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.core.index.NameIndexIF;
@@ -55,5 +56,13 @@ public class NameIndex extends AbstractIndex implements NameIndexIF {
 		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.NAMEINDEX_VARIANT_NAMES_DATATYPE), topicmap, value, datatype.getAddress());
+	}
+
+	@Override
+	public Collection<TopicNameIF> getTopicNames(String value, TopicIF topicNameType) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (topicNameType == null) throw new NullPointerException("TopicNameType cannot be null");
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.NAMEINDEX_TOPIC_NAMES_TYPE), topicmap, value, topicNameType);
 	}
 }

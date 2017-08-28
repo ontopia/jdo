@@ -89,6 +89,7 @@ public class Queries {
 	public static final String NAMEINDEX_TOPIC_NAMES = "NameIndex.getTopicNames";
 	public static final String NAMEINDEX_VARIANT_NAMES = "NameIndex.getVariants";
 	public static final String NAMEINDEX_VARIANT_NAMES_DATATYPE = "NameIndex.getVariants_datatype";
+	public static final String NAMEINDEX_TOPIC_NAMES_TYPE = "NameIndex.getTopicNames_type";
 
 	public static final String OCCURRENCEINDEX_OCCURRENCES = "OccurrenceIndex.getOccurrences";
 	public static final String OCCURRENCEINDEX_OCCURRENCES_DATATYPE = "OccurrenceIndex.getOccurrences(datatype)";
