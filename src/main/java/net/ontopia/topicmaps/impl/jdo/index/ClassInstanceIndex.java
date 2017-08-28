@@ -26,6 +26,7 @@ import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.core.index.ClassInstanceIndexIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
@@ -79,6 +80,13 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 		if (association_role_type == null) throw new NullPointerException("Association role type cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_ROLES_BY_TYPE), topicmap, association_role_type);
+	}
+
+	@Override
+	public Collection<AssociationRoleIF> getAssociationRoles(TopicIF association_role_type, TopicIF association_type) {
+		if (association_role_type == null) throw new NullPointerException("Association role type cannot be null");
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.CLASSINSTANCEINDEX_ROLES_BY_TYPE_AND_ROLE_TYPE), topicmap, association_role_type, association_type);
 	}
 
 	@Override
@@ -158,5 +166,23 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 				usedAsOccurrenceType(topic) ||
 				usedAsAssociationRoleType(topic) ||
 				usedAsTopicNameType(topic);
+	}
+
+	@Override
+	public Collection<TopicNameIF> getAllTopicNames() {
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.CLASSINSTANCEINDEX_All_NAMES), topicmap);
+	}
+
+	@Override
+	public Collection<VariantNameIF> getAllVariantNames() {
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.CLASSINSTANCEINDEX_All_VARIANTS), topicmap);
+	}
+
+	@Override
+	public Collection<OccurrenceIF> getAllOccurrences() {
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.CLASSINSTANCEINDEX_All_OCCURRENCES), topicmap);
 	}
 }

@@ -57,6 +57,7 @@ public class Queries {
 	public static final String CLASSINSTANCEINDEX_OCCURRENCES_BY_TYPE = "ClassInstanceIndex.getOccurrences";
 	public static final String CLASSINSTANCEINDEX_ASSOCIATIONS_BY_TYPE = "ClassInstanceIndex.getAssociations";
 	public static final String CLASSINSTANCEINDEX_ROLES_BY_TYPE = "ClassInstanceIndex.getAssociationRoles";
+	public static final String CLASSINSTANCEINDEX_ROLES_BY_TYPE_AND_ROLE_TYPE = "ClassInstanceIndex.getAssociationRolesByATRT";
 	public static final String CLASSINSTANCEINDEX_TOPIC_TYPES = "ClassInstanceIndex.getTopicTypes";
 	public static final String CLASSINSTANCEINDEX_TOPIC_NAME_TYPES = "ClassInstanceIndex.getTopicNameTypes";
 	public static final String CLASSINSTANCEINDEX_OCCURRENCE_TYPES = "ClassInstanceIndex.getOccurrenceTypes";
@@ -67,6 +68,9 @@ public class Queries {
 	public static final String CLASSINSTANCEINDEX_USED_AS_OCCURRENCE_TYPE = "ClassInstanceIndex.usedAsOccurrenceType";
 	public static final String CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_TYPE = "ClassInstanceIndex.usedAsAssociationType";
 	public static final String CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_ROLE_TYPE = "ClassInstanceIndex.usedAsAssociationRoleType";
+	public static final String CLASSINSTANCEINDEX_All_NAMES = "ClassInstanceIndex.AllNames";
+	public static final String CLASSINSTANCEINDEX_All_OCCURRENCES = "ClassInstanceIndex.AllOccurrences";
+	public static final String CLASSINSTANCEINDEX_All_VARIANTS = "ClassInstanceIndex.AllVariants";
 	
 	public static final String SCOPEINDEX_SCOPED_TOPIC_NAMES = "ScopeIndex.getTopicNames";
 	public static final String SCOPEINDEX_SCOPED_VARIANT_NAMES = "ScopeIndex.getVariants";

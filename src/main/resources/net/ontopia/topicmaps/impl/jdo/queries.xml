@@ -87,6 +87,14 @@
 		<class>AssociationRole</class>
 	</query>
 	
+	<query name="ClassInstanceIndex.getAssociationRolesByATRT">
+		<class>AssociationRole</class>
+		<parameters>TopicMap tm, Topic t, Topic at</parameters>
+		<filter><![CDATA[
+			topicmap == tm && type == t && association.type == at
+		]]></filter>
+	</query>
+	
 	<query name="ClassInstanceIndex.getTopicTypes">
 		<class>Topic</class>
 		<parameters>TopicMap tm</parameters>
@@ -148,6 +156,25 @@
 	
 	<query name="ClassInstanceIndex.usedAsAssociationRoleType" inherit="ClassInstanceIndex.abstract.UsedAsType">
 		<class>AssociationRole</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.abstract.AllOfClass" abstract="true">
+		<parameters>TopicMap tm</parameters>
+		<filter><![CDATA[
+			topicmap == tm
+		]]></filter>
+	</query>
+
+	<query name="ClassInstanceIndex.AllNames" inherite="ClassInstanceIndex.abstract.AllOfClass">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ClassInstanceIndex.AllOccurrences" inherite="ClassInstanceIndex.abstract.AllOfClass">
+		<class>Occurrence</class>
+	</query>
+
+	<query name="ClassInstanceIndex.AllVariants" inherite="ClassInstanceIndex.abstract.AllOfClass">
+		<class>VariantName</class>
 	</query>
 	
 	<!-- ScopeIndex -->

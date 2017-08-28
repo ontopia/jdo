@@ -22,12 +22,14 @@ package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import junit.framework.Assert;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
+import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.impl.jdo.AbstractJDOTest;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.topicmaps.utils.PSI;
@@ -118,6 +120,20 @@ public class ClassInstanceIndexTest extends AbstractJDOTest {
 		builder.makeAssociationRole(a, builder.makeTopic(), builder.makeTopic());
 		
 		Collection<AssociationRoleIF> roles = index.getAssociationRoles(topic);
+		
+		Assert.assertEquals(1, roles.size());
+		Assert.assertEquals(ar, roles.iterator().next());
+	}
+	
+	@Test
+	public void testGetAssociationRolesAT() {
+		TopicIF topic = builder.makeTopic();
+		TopicIF at = builder.makeTopic();
+		AssociationIF a = builder.makeAssociation(at);
+		AssociationRoleIF ar = builder.makeAssociationRole(a, topic, builder.makeTopic());
+		builder.makeAssociationRole(a, builder.makeTopic(), builder.makeTopic());
+		
+		Collection<AssociationRoleIF> roles = index.getAssociationRoles(topic, at);
 		
 		Assert.assertEquals(1, roles.size());
 		Assert.assertEquals(ar, roles.iterator().next());
@@ -218,5 +234,51 @@ public class ClassInstanceIndexTest extends AbstractJDOTest {
 		Assert.assertTrue(index.usedAsAssociationRoleType(rt2));
 		Assert.assertTrue(index.usedAsType(rt1));
 		Assert.assertTrue(index.usedAsType(rt2));
+	}
+
+	@Test
+	public void testAllNames() {
+		Collection<TopicNameIF> names = index.getAllTopicNames();
+		
+		Assert.assertNotNull(names);
+		Assert.assertEquals(0, names.size());
+		
+		TopicNameIF name = builder.makeTopicName(builder.makeTopic(), "foo");
+		
+		names = index.getAllTopicNames();
+		Assert.assertNotNull(names);
+		Assert.assertEquals(1, names.size());
+		Assert.assertEquals(name, names.iterator().next());
+	}
+
+	@Test
+	public void testAllVariants() {
+		Collection<VariantNameIF> names = index.getAllVariantNames();
+		
+		Assert.assertNotNull(names);
+		Assert.assertEquals(0, names.size());
+		
+		TopicNameIF name = builder.makeTopicName(builder.makeTopic(), "foo");
+		VariantNameIF variant = builder.makeVariantName(name, "bar", Collections.singleton(builder.makeTopic()));
+		
+		names = index.getAllVariantNames();
+		Assert.assertNotNull(names);
+		Assert.assertEquals(1, names.size());
+		Assert.assertEquals(variant, names.iterator().next());
+	}
+
+	@Test
+	public void testAllOccurrences() {
+		Collection<OccurrenceIF> occurrences = index.getAllOccurrences();
+		
+		Assert.assertNotNull(occurrences);
+		Assert.assertEquals(0, occurrences.size());
+		
+		OccurrenceIF occ = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
+		
+		occurrences = index.getAllOccurrences();
+		Assert.assertNotNull(occurrences);
+		Assert.assertEquals(1, occurrences.size());
+		Assert.assertEquals(occ, occurrences.iterator().next());
 	}
 }
