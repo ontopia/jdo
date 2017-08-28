@@ -23,7 +23,6 @@ package net.ontopia.topicmaps.impl.jdo.index;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import junit.framework.Assert;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.TopicIF;
@@ -31,6 +30,7 @@ import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.topicmaps.impl.jdo.AbstractJDOTest;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

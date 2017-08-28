@@ -22,7 +22,6 @@ package net.ontopia.topicmaps.impl.jdo;
 
 import java.util.Collection;
 import java.util.Collections;
-import junit.framework.Assert;
 import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
@@ -32,6 +31,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.index.StatisticsIndexIF;
 import net.ontopia.topicmaps.utils.PSI;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class JDOTopicMapBuilderTest extends AbstractJDOTest {
