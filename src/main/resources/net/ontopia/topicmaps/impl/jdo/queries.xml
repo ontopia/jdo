@@ -330,6 +330,20 @@
 		<result>distinct value</result>
 	</query>
 	
+	<query name="OccurrenceIndex.getOccurrences(type)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && type == t
+		]]></filter>
+	</query>
+	
+	<query name="OccurrenceIndex.getOccurrences(datatype|type)" inherit="OccurrenceIndex.abstract">
+		<parameters>TopicMap tm, String v, String dt, Topic t</parameters>
+		<filter><![CDATA[
+			topicmap == tm && value == v && datatype == dt && type == t
+		]]></filter>
+	</query>
+
 	<!-- StatisticsIndex -->
 	
 	<query name="StatisticsIndex.abstract.ObjectCount" abstract="true">

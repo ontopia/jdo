@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.index.OccurrenceIndexIF;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
@@ -79,5 +80,23 @@ public class OccurrenceIndex extends AbstractIndex implements OccurrenceIndexIF 
 		return JDOQueryUtils.<String>queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_VALUES_GREATER_EQUAL), topicmap, value)
 				.iterator();
+	}
+
+	@Override
+	public Collection<OccurrenceIF> getOccurrences(String value, TopicIF occurrenceType) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (occurrenceType == null) throw new NullPointerException("OccurrenceType cannot be null");
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_TYPE), topicmap, value, occurrenceType);
+	}
+
+	@Override
+	public Collection<OccurrenceIF> getOccurrences(String value, LocatorIF datatype, TopicIF occurrenceType) {
+		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (occurrenceType == null) throw new NullPointerException("OccurrenceType cannot be null");
+		return JDOQueryUtils.queryToWrappedSet(
+				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_DATATYPE_TYPE), topicmap, value, datatype.getAddress(), occurrenceType);
+		
 	}
 }

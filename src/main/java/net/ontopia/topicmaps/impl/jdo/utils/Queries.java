@@ -97,6 +97,8 @@ public class Queries {
 	public static final String OCCURRENCEINDEX_OCCURRENCES_PREFIX_DATATYPE = "OccurrenceIndex.getOccurrencesByPrefix(datatype)";
 	public static final String OCCURRENCEINDEX_VALUES_SMALLER_EQUAL = "OccurrenceIndex.getValuesGreaterThanOrEqual";
 	public static final String OCCURRENCEINDEX_VALUES_GREATER_EQUAL = "OccurrenceIndex.getValuesSmallerThanOrEqual";
+	public static final String OCCURRENCEINDEX_OCCURRENCES_TYPE = "OccurrenceIndex.getOccurrences(type)";
+	public static final String OCCURRENCEINDEX_OCCURRENCES_DATATYPE_TYPE = "OccurrenceIndex.getOccurrences(datatype|type)";
 	
 	public static final String STATISTICSINDEX_TOPICS = "StatisticsIndex.getTopicCount";
 	public static final String STATISTICSINDEX_TYPED_TOPICS = "StatisticsIndex.getTypedTopicCount";

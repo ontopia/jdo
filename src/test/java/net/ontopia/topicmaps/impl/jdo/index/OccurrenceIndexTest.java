@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import net.ontopia.infoset.impl.basic.URILocator;
 import net.ontopia.topicmaps.core.OccurrenceIF;
+import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.AbstractJDOTest;
 import net.ontopia.topicmaps.impl.jdo.TopicMap;
 import org.junit.Assert;
@@ -105,5 +106,34 @@ public class OccurrenceIndexTest extends AbstractJDOTest {
 		Iterator<String> values = index.getValuesSmallerThanOrEqual("b");
 		Assert.assertEquals("a", values.next());
 		Assert.assertFalse(values.hasNext());
+	}
+	
+	@Test
+	public void testGetOccurrences_type() {
+		TopicIF type = builder.makeTopic();
+		OccurrenceIF o1 = builder.makeOccurrence(builder.makeTopic(), type, "foo");
+		OccurrenceIF o2 = builder.makeOccurrence(builder.makeTopic(), type, "bar");
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "bar");
+		
+		Collection<OccurrenceIF> occurrences = index.getOccurrences("foo", type);
+		Assert.assertEquals(1, occurrences.size());
+		Assert.assertEquals(o1, occurrences.iterator().next());
+		occurrences = index.getOccurrences("bar", type);
+		Assert.assertEquals(1, occurrences.size());
+		Assert.assertEquals(o2, occurrences.iterator().next());
+	}
+
+	@Test
+	public void testGetOccurrences_datatype_type() {
+		TopicIF type = builder.makeTopic();
+		OccurrenceIF o1 = builder.makeOccurrence(builder.makeTopic(), type, "foo");
+		builder.makeOccurrence(builder.makeTopic(), type, "foo");
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "bar");
+		
+		o1.setValue("foo", URILocator.create("foo:bar"));
+		
+		Collection<OccurrenceIF> occurrences = index.getOccurrences("foo", URILocator.create("foo:bar"), type);
+		Assert.assertEquals(1, occurrences.size());
+		Assert.assertEquals(o1, occurrences.iterator().next());
 	}
 }
