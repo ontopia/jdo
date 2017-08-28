@@ -21,6 +21,7 @@
 package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.util.Collection;
+import java.util.Collections;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
@@ -38,30 +39,25 @@ public class NameIndex extends AbstractIndex implements NameIndexIF {
 
 	@Override
 	public Collection<TopicNameIF> getTopicNames(String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.NAMEINDEX_TOPIC_NAMES), topicmap, value);
 	}
 
 	@Override
 	public Collection<VariantNameIF> getVariants(String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.NAMEINDEX_VARIANT_NAMES), topicmap, value);
 	}
 
 	@Override
 	public Collection<VariantNameIF> getVariants(String value, LocatorIF datatype) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (datatype == null) return Collections.emptySet();
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.NAMEINDEX_VARIANT_NAMES_DATATYPE), topicmap, value, datatype.getAddress());
 	}
 
 	@Override
 	public Collection<TopicNameIF> getTopicNames(String value, TopicIF topicNameType) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (topicNameType == null) throw new NullPointerException("TopicNameType cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.NAMEINDEX_TOPIC_NAMES_TYPE), topicmap, value, topicNameType);
 	}
