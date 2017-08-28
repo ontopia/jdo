@@ -48,8 +48,8 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	public void testCreateName() {
 		TopicIF topic = builder.makeTopic();
 		TopicNameIF name = builder.makeTopicName(topic, "Foo");
-		TopicNameIF name2 = builder.makeTopicName(topic, "Foo");
-		TopicNameIF name3 = builder.makeTopicName(topic, "Foo");
+		builder.makeTopicName(topic, "Foo");
+		builder.makeTopicName(topic, "Foo");
 		Assert.assertNotNull(name);
 		Assert.assertEquals(topicmap, name.getTopicMap());
 		Assert.assertEquals(3, topic.getTopicNames().size());

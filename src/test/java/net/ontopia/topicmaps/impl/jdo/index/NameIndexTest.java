@@ -86,7 +86,7 @@ public class NameIndexTest extends AbstractJDOTest {
 	@Test
 	public void testGetVariants_datatype() {
 		VariantNameIF n1 = builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", URILocator.create("foo:bar"), Collections.singleton(builder.makeTopic()));
-		VariantNameIF n2 = builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
+		builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
 		
 		Collection<VariantNameIF> names = index.getVariants("bar", URILocator.create("foo:bar"));
 		Assert.assertEquals(1, names.size());

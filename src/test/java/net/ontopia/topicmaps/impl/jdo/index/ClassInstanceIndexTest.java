@@ -92,7 +92,7 @@ public class ClassInstanceIndexTest extends AbstractJDOTest {
 	public void testGetOccurrences() {
 		TopicIF topic = builder.makeTopic();
 		OccurrenceIF o1 = builder.makeOccurrence(builder.makeTopic(), topic, "foo");
-		OccurrenceIF o2 = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
 		
 		Collection<OccurrenceIF> occurrences = index.getOccurrences(topic);
 		

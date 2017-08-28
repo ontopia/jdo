@@ -59,7 +59,7 @@ public class OccurrenceIndexTest extends AbstractJDOTest {
 	@Test
 	public void testGetOccurrences_datatype() {
 		OccurrenceIF o1 = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
-		OccurrenceIF o2 = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
 		
 		o1.setValue("foo", URILocator.create("foo:bar"));
 		
@@ -80,7 +80,7 @@ public class OccurrenceIndexTest extends AbstractJDOTest {
 	@Test
 	public void testGetOccurrencesByPrefix_datatyoe() {
 		OccurrenceIF o1 = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foobar");
-		OccurrenceIF o2 = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foobar");
+		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foobar");
 		o1.setValue("foobar", URILocator.create("foo:bar"));
 		
 		Collection<OccurrenceIF> occurrences = index.getOccurrencesByPrefix("foo", URILocator.create("foo:bar"));
