@@ -58,21 +58,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	
 	private static final Map<Character, Class<? extends TMObject>> classmap = new HashMap<>();
 	private static final Map<Class<? extends TMObject>, Character> classmapInverted;
-	static {
-		classmap.put('M', TopicMap.class);
-		classmap.put('A', Association.class);
-		classmap.put('T', Topic.class);
-		classmap.put('R', AssociationRole.class);
-		classmap.put('O', Occurrence.class);
-		classmap.put('V', VariantName.class);
-		classmap.put('N', TopicName.class);
-		classmapInverted = MapUtils.invertMap(classmap);
-	}
-	
-	public static String className(Class<? extends TMObject> klass) {
-		return classmapInverted.get(klass).toString();
-	}
-	
+
 	@Persistent(name = "title", column = "title", defaultFetchGroup = "true")
 	private String title;
 
@@ -93,6 +79,21 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	private transient JDOTopicMapBuilder builder = null;
 	private transient final IndexCache indexes;
 	
+	static {
+		classmap.put('M', TopicMap.class);
+		classmap.put('A', Association.class);
+		classmap.put('T', Topic.class);
+		classmap.put('R', AssociationRole.class);
+		classmap.put('O', Occurrence.class);
+		classmap.put('V', VariantName.class);
+		classmap.put('N', TopicName.class);
+		classmapInverted = MapUtils.invertMap(classmap);
+	}
+
+	public static String className(Class<? extends TMObject> klass) {
+		return classmapInverted.get(klass).toString();
+	}
+
 	public TopicMap() {
 		super(null);
 		topicmap = this;
