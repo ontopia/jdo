@@ -138,7 +138,9 @@ public class Topic extends TMObject implements TopicIF {
 			}
 		}
 		
-		protected void extend(Query q) { }
+		protected void extend(Query q) {
+			// no-op
+		}
 	}
 	
 	Topic(TopicMap topicmap) {

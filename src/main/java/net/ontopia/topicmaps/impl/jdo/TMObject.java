@@ -152,6 +152,7 @@ public abstract class TMObject implements TMObjectIF {
 	}
 
 	protected void beforeRemove() {
+		// no-op
 	}
 
 	@Override
