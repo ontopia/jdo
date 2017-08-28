@@ -29,6 +29,7 @@ import net.ontopia.topicmaps.core.TopicMapStoreIF;
 import net.ontopia.topicmaps.entry.TopicMapReferenceIF;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSource;
 import net.ontopia.topicmaps.impl.jdo.entry.JDOTopicMapSourceTest;
+import net.ontopia.utils.OntopiaRuntimeException;
 
 public class JDOTestFactory implements TestFactoryIF {
 
@@ -55,7 +56,7 @@ public class JDOTestFactory implements TestFactoryIF {
 		try {
 			return ref.createStore(false);
 		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+			throw new OntopiaRuntimeException(ioe);
 		}
 	}
 
