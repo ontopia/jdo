@@ -38,7 +38,7 @@ import net.ontopia.topicmaps.core.OccurrenceIF;
 import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.utils.OntopiaRuntimeException;
-import net.ontopia.utils.StreamUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,7 +151,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	public void setReader(Reader value, long length, LocatorIF datatype) {
 		if (value == null) throw new NullPointerException("Reader cannot be null");
 		try {
-			setValue(StreamUtils.readString(value, length), datatype);
+			setValue(IOUtils.toString(value), datatype);
 		} catch (IOException ioe) {
 			throw new OntopiaRuntimeException(ioe);
 		}

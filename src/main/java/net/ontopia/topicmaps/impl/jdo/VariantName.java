@@ -38,7 +38,7 @@ import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.core.TopicNameIF;
 import net.ontopia.topicmaps.core.VariantNameIF;
 import net.ontopia.utils.OntopiaRuntimeException;
-import net.ontopia.utils.StreamUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +127,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 	public void setReader(Reader value, long length, LocatorIF datatype) {
 		if (value == null) throw new NullPointerException("Reader cannot be null");
 		try {
-			setValue(StreamUtils.readString(value, length), datatype);
+			setValue(IOUtils.toString(value), datatype);
 		} catch (IOException ioe) {
 			throw new OntopiaRuntimeException(ioe);
 		}

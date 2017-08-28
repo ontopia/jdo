@@ -20,6 +20,7 @@
 
 package net.ontopia.topicmaps.impl.jdo;
 
+import java.util.Objects;
 import javax.jdo.Query;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
@@ -29,7 +30,6 @@ import net.ontopia.topicmaps.core.ReadOnlyException;
 import net.ontopia.topicmaps.core.ReifiableIF;
 import net.ontopia.topicmaps.core.TopicIF;
 import net.ontopia.topicmaps.impl.jdo.utils.JDOQueryUtils;
-import net.ontopia.utils.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +62,7 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 		Topic current = (Topic) getReifier();
 
 		// check for no-op case
-		if (!ObjectUtils.different(current, reifier)) return;
+		if (Objects.equals(current, reifier)) return;
 		
 		// unset
 		if (current != null) {
