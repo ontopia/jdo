@@ -70,10 +70,8 @@ public abstract class Reifiable extends TMObject implements ReifiableIF {
 		}
 		
 		// set
-		if (!DuplicateReificationException.check(this, reifier)) {
-			if (reifier != null) {
-				((Topic) reifier).setReified(this);
-			}
+		if (!DuplicateReificationException.check(this, reifier) && (reifier != null)) {
+			((Topic) reifier).setReified(this);
 		}
 	}
 	
