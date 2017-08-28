@@ -21,6 +21,7 @@
 package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.util.Collection;
+import java.util.Collections;
 import net.ontopia.topicmaps.core.AssociationIF;
 import net.ontopia.topicmaps.core.AssociationRoleIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
@@ -55,7 +56,9 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 		if (name_type == null) {
 			name_type = topicmap.getTopicBySubjectIdentifier(PSI.getSAMNameType());
 		}
-		if (name_type == null) throw new NullPointerException("Name type was null and could not find default name type topic");
+		if (name_type == null) {
+			return Collections.emptySet();
+		}
 		
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_NAMES_BY_TYPE), topicmap, name_type);
@@ -63,28 +66,36 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrences(TopicIF occurrence_type) {
-		if (occurrence_type == null) throw new NullPointerException("Occurrence type cannot be null");
+		if (occurrence_type == null) {
+			return Collections.emptySet();
+		}
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_OCCURRENCES_BY_TYPE), topicmap, occurrence_type);
 	}
 
 	@Override
 	public Collection<AssociationIF> getAssociations(TopicIF association_type) {
-		if (association_type == null) throw new NullPointerException("Association type cannot be null");
+		if (association_type == null) {
+			return Collections.emptySet();
+		}
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_ASSOCIATIONS_BY_TYPE), topicmap, association_type);
 	}
 
 	@Override
 	public Collection<AssociationRoleIF> getAssociationRoles(TopicIF association_role_type) {
-		if (association_role_type == null) throw new NullPointerException("Association role type cannot be null");
+		if (association_role_type == null) {
+			return Collections.emptySet();
+		}
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_ROLES_BY_TYPE), topicmap, association_role_type);
 	}
 
 	@Override
 	public Collection<AssociationRoleIF> getAssociationRoles(TopicIF association_role_type, TopicIF association_type) {
-		if (association_role_type == null) throw new NullPointerException("Association role type cannot be null");
+		if ((association_role_type == null) || (association_type == null)) {
+			return Collections.emptySet();
+		}
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.CLASSINSTANCEINDEX_ROLES_BY_TYPE_AND_ROLE_TYPE), topicmap, association_role_type, association_type);
 	}
@@ -121,7 +132,7 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsTopicType(TopicIF topic) {
-		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		if (topic == null) return false;
 		return JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_TOPIC_TYPE), topicmap, topic)
 				 != null;
@@ -129,7 +140,7 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsTopicNameType(TopicIF topic) {
-		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		if (topic == null) return false;
 		return JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_TOPIC_NAME_TYPE), topicmap, topic)
 				 != null;
@@ -137,7 +148,7 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsOccurrenceType(TopicIF topic) {
-		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		if (topic == null) return false;
 		return JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_OCCURRENCE_TYPE), topicmap, topic)
 				 != null;
@@ -145,7 +156,7 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsAssociationType(TopicIF topic) {
-		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		if (topic == null) return false;
 		return JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_TYPE), topicmap, topic)
 				 != null;
@@ -153,7 +164,7 @@ public class ClassInstanceIndex extends AbstractIndex implements ClassInstanceIn
 
 	@Override
 	public boolean usedAsAssociationRoleType(TopicIF topic) {
-		if (topic == null) throw new NullPointerException("Topic cannot be null");
+		if (topic == null) return false;
 		return JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.CLASSINSTANCEINDEX_USED_AS_ASSOCIATION_ROLE_TYPE), topicmap, topic)
 				 != null;
