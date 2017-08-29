@@ -320,6 +320,7 @@
 		<filter><![CDATA[
 			topicmap == tm && value >= v
 		]]></filter>
+		<order>value</order>
 		<result>distinct value</result>
 	</query>
 
@@ -327,6 +328,7 @@
 		<filter><![CDATA[
 			topicmap == tm && value <= v
 		]]></filter>
+		<order>value</order>
 		<result>distinct value</result>
 	</query>
 	
