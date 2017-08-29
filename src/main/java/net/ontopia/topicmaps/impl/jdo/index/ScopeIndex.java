@@ -39,30 +39,38 @@ public class ScopeIndex extends AbstractIndex implements ScopeIndexIF {
 
 	@Override
 	public Collection<TopicNameIF> getTopicNames(TopicIF scope) {
-		if (scope == null) throw new NullPointerException("Scope cannot be null");
-		return JDOQueryUtils.queryToWrappedSet(
-				getQuery(Queries.SCOPEINDEX_SCOPED_TOPIC_NAMES), topicmap, scope);
+		return JDOQueryUtils.queryToWrappedSet(getQuery(
+				scope == null 
+						? Queries.SCOPEINDEX_SCOPED_TOPIC_NAMES_NULL
+						: Queries.SCOPEINDEX_SCOPED_TOPIC_NAMES
+		), topicmap, scope);
 	}
 
 	@Override
 	public Collection<VariantNameIF> getVariants(TopicIF scope) {
-		if (scope == null) throw new NullPointerException("Scope cannot be null");
-		return JDOQueryUtils.queryToWrappedSet(
-				getQuery(Queries.SCOPEINDEX_SCOPED_VARIANT_NAMES), topicmap, scope);
+		return JDOQueryUtils.queryToWrappedSet(getQuery(
+				scope == null 
+						? Queries.SCOPEINDEX_SCOPED_VARIANT_NAMES_NULL
+						: Queries.SCOPEINDEX_SCOPED_VARIANT_NAMES
+		), topicmap, scope);
 	}
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrences(TopicIF scope) {
-		if (scope == null) throw new NullPointerException("Scope cannot be null");
-		return JDOQueryUtils.queryToWrappedSet(
-				getQuery(Queries.SCOPEINDEX_SCOPED_OCCURRENCES), topicmap, scope);
+		return JDOQueryUtils.queryToWrappedSet(getQuery(
+				scope == null
+						? Queries.SCOPEINDEX_SCOPED_OCCURRENCES_NULL
+						: Queries.SCOPEINDEX_SCOPED_OCCURRENCES
+		), topicmap, scope);
 	}
 
 	@Override
 	public Collection<AssociationIF> getAssociations(TopicIF scope) {
-		if (scope == null) throw new NullPointerException("Scope cannot be null");
-		return JDOQueryUtils.queryToWrappedSet(
-				getQuery(Queries.SCOPEINDEX_SCOPED_ASSOCIATIONS), topicmap, scope);
+		return JDOQueryUtils.queryToWrappedSet(getQuery(
+				scope == null
+						? Queries.SCOPEINDEX_SCOPED_ASSOCIATIONS_NULL
+						: Queries.SCOPEINDEX_SCOPED_ASSOCIATIONS
+		), topicmap, scope);
 	}
 
 	@Override

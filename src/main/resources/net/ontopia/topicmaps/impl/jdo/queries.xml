@@ -186,7 +186,18 @@
 		]]></filter>
 	</query>
 	
+	<query name="ScopeIndex.abstract.getScopedObject_null" abstract="true">
+		<parameters>TopicMap tm, Object unused</parameters>
+		<filter><![CDATA[
+			topicmap == tm && scope.isEmpty()
+		]]></filter>
+	</query>
+	
 	<query name="ScopeIndex.getTopicNames" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>TopicName</class>
+	</query>
+	
+	<query name="ScopeIndex.getTopicNames_null" inherit="ScopeIndex.abstract.getScopedObject_null">
 		<class>TopicName</class>
 	</query>
 	
@@ -194,11 +205,23 @@
 		<class>VariantName</class>
 	</query>
 	
+	<query name="ScopeIndex.getVariants_null" inherit="ScopeIndex.abstract.getScopedObject_null">
+		<class>VariantName</class>
+	</query>
+	
 	<query name="ScopeIndex.getOccurrences" inherit="ScopeIndex.abstract.getScopedObject">
 		<class>Occurrence</class>
 	</query>
 	
+	<query name="ScopeIndex.getOccurrences_null" inherit="ScopeIndex.abstract.getScopedObject_null">
+		<class>Occurrence</class>
+	</query>
+	
 	<query name="ScopeIndex.getAssociations" inherit="ScopeIndex.abstract.getScopedObject">
+		<class>Association</class>
+	</query>
+	
+	<query name="ScopeIndex.getAssociations_null" inherit="ScopeIndex.abstract.getScopedObject_null">
 		<class>Association</class>
 	</query>
 	

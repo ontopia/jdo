@@ -20,95 +20,17 @@
 
 package net.ontopia.topicmaps.impl.jdo.index;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import net.ontopia.topicmaps.core.AssociationIF;
-import net.ontopia.topicmaps.core.OccurrenceIF;
-import net.ontopia.topicmaps.core.TopicIF;
-import net.ontopia.topicmaps.core.TopicNameIF;
-import net.ontopia.topicmaps.core.VariantNameIF;
-import net.ontopia.topicmaps.impl.jdo.AbstractJDOTest;
-import net.ontopia.topicmaps.impl.jdo.TopicMap;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import net.ontopia.topicmaps.core.TestFactoryIF;
+import net.ontopia.topicmaps.impl.jdo.JDOTestFactory;
 
-public class ScopeIndexTest extends AbstractJDOTest {
+public class ScopeIndexTest extends net.ontopia.topicmaps.core.index.ScopeIndexTest {
 
-	private ScopeIndex index;
-	
-	@Before
+	public ScopeIndexTest(String name) {
+		super(name);
+	}
+
 	@Override
-	public void setUp() throws IOException {
-		super.setUp();
-		index = new ScopeIndex((TopicMap) topicmap);
-	}
-	
-	@Test
-	public void testGetTopicNames() {
-		TopicIF s = builder.makeTopic();
-		TopicNameIF n = builder.makeTopicName(builder.makeTopic(), "foo");
-		n.addTheme(s);
-		builder.makeTopicName(builder.makeTopic(), "foo").addTheme(builder.makeTopic());
-
-		Collection<TopicNameIF> names = index.getTopicNames(s);
-		Collection<TopicIF> scopes = index.getTopicNameThemes();
-		
-		Assert.assertEquals(1, names.size());
-		Assert.assertEquals(n, names.iterator().next());
-		Assert.assertEquals(2, scopes.size());
-		Assert.assertTrue(scopes.contains(s));
-		Assert.assertTrue(index.usedAsTheme(s));
-	}
-
-	@Test
-	public void testGetVariants() {
-		TopicIF s = builder.makeTopic();
-		VariantNameIF v = builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(s));
-		builder.makeVariantName(builder.makeTopicName(builder.makeTopic(), "foo"), "bar", Collections.singleton(builder.makeTopic()));
-		
-		Collection<VariantNameIF> variants = index.getVariants(s);
-		Collection<TopicIF> scopes = index.getVariantThemes();
-		
-		Assert.assertEquals(1, variants.size());
-		Assert.assertEquals(v, variants.iterator().next());
-		Assert.assertEquals(2, scopes.size());
-		Assert.assertTrue(scopes.contains(s));
-		Assert.assertTrue(index.usedAsTheme(s));
-	}
-
-	@Test
-	public void testGetOccurrences() {
-		TopicIF s = builder.makeTopic();
-		OccurrenceIF o = builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo");
-		o.addTheme(s);
-		builder.makeOccurrence(builder.makeTopic(), builder.makeTopic(), "foo").addTheme(builder.makeTopic());
-		
-		Collection<OccurrenceIF> occurrences = index.getOccurrences(s);
-		Collection<TopicIF> scopes = index.getOccurrenceThemes();
-		
-		Assert.assertEquals(1, occurrences.size());
-		Assert.assertEquals(o, occurrences.iterator().next());
-		Assert.assertEquals(2, scopes.size());
-		Assert.assertTrue(scopes.contains(s));
-		Assert.assertTrue(index.usedAsTheme(s));
-	}
-
-	@Test
-	public void testGetAssociations() {
-		TopicIF s = builder.makeTopic();
-		AssociationIF a = builder.makeAssociation(builder.makeTopic());
-		a.addTheme(s);
-		builder.makeAssociation(builder.makeTopic()).addTheme(builder.makeTopic());
-		
-		Collection<AssociationIF> assocs = index.getAssociations(s);
-		Collection<TopicIF> scopes = index.getAssociationThemes();
-		
-		Assert.assertEquals(1, assocs.size());
-		Assert.assertEquals(a, assocs.iterator().next());
-		Assert.assertEquals(2, scopes.size());
-		Assert.assertTrue(scopes.contains(s));
-		Assert.assertTrue(index.usedAsTheme(s));
+	protected TestFactoryIF getFactory() throws Exception {
+		return new JDOTestFactory();
 	}
 }

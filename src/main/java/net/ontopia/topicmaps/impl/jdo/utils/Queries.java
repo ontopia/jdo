@@ -73,9 +73,13 @@ public class Queries {
 	public static final String CLASSINSTANCEINDEX_All_VARIANTS = "ClassInstanceIndex.AllVariants";
 	
 	public static final String SCOPEINDEX_SCOPED_TOPIC_NAMES = "ScopeIndex.getTopicNames";
+	public static final String SCOPEINDEX_SCOPED_TOPIC_NAMES_NULL = "ScopeIndex.getTopicNames_null";
 	public static final String SCOPEINDEX_SCOPED_VARIANT_NAMES = "ScopeIndex.getVariants";
+	public static final String SCOPEINDEX_SCOPED_VARIANT_NAMES_NULL = "ScopeIndex.getVariants_null";
 	public static final String SCOPEINDEX_SCOPED_OCCURRENCES = "ScopeIndex.getOccurrences";
+	public static final String SCOPEINDEX_SCOPED_OCCURRENCES_NULL = "ScopeIndex.getOccurrences_null";
 	public static final String SCOPEINDEX_SCOPED_ASSOCIATIONS = "ScopeIndex.getAssociations";
+	public static final String SCOPEINDEX_SCOPED_ASSOCIATIONS_NULL = "ScopeIndex.getAssociations_null";
 	public static final String SCOPEINDEX_TOPIC_NAME_SCOPES = "ScopeIndex.getTopicNameThemes";
 	public static final String SCOPEINDEX_VARIANT_NAME_SCOPES = "ScopeIndex.getVariantThemes";
 	public static final String SCOPEINDEX_OCCURRENCE_SCOPES = "ScopeIndex.getOccurrenceThemes";
