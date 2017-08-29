@@ -20,8 +20,10 @@
 
 package net.ontopia.topicmaps.impl.jdo.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import javax.jdo.Query;
 
 public class JDOQueryUtils {
@@ -35,6 +37,14 @@ public class JDOQueryUtils {
 	public static <T> Collection<T> queryToWrappedSet(Query query, Object... parameters) {
 		try {
 			return new HashSet<T>(JDOQueryUtils.<T>queryToCollection(query, parameters));
+		} finally {
+			query.closeAll();
+		}
+	}
+
+	public static <T> List<T> queryToWrappedList(Query query, Object... parameters) {
+		try {
+			return new ArrayList<T>(JDOQueryUtils.<T>queryToCollection(query, parameters));
 		} finally {
 			query.closeAll();
 		}
