@@ -21,6 +21,7 @@
 package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import net.ontopia.infoset.core.LocatorIF;
 import net.ontopia.topicmaps.core.OccurrenceIF;
@@ -38,63 +39,56 @@ public class OccurrenceIndex extends AbstractIndex implements OccurrenceIndexIF 
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrences(String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES), topicmap, value);
 	}
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrences(String value, LocatorIF datatype) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (datatype == null) return Collections.emptySet();
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_DATATYPE), topicmap, value, datatype.getAddress());
 	}
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrencesByPrefix(String prefix) {
-		if (prefix == null) throw new NullPointerException("Prefix cannot be null");
+		if (prefix == null) return Collections.emptySet();
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_PREFIX), topicmap, prefix);
 	}
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrencesByPrefix(String prefix, LocatorIF datatype) {
-		if (prefix == null) throw new NullPointerException("Prefix cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (datatype == null) return Collections.emptySet();
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_PREFIX_DATATYPE), topicmap, prefix, datatype.getAddress());
 	}
 
 	@Override
 	public Iterator<String> getValuesGreaterThanOrEqual(String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		return JDOQueryUtils.<String>queryToWrappedSet(
-				getQuery(Queries.OCCURRENCEINDEX_VALUES_SMALLER_EQUAL), topicmap, value)
-				.iterator();
-	}
-
-	@Override
-	public Iterator<String> getValuesSmallerThanOrEqual(String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		return JDOQueryUtils.<String>queryToWrappedSet(
+		if (value == null) return Collections.<String>emptySet().iterator();
+		return JDOQueryUtils.<String>queryToWrappedList(
 				getQuery(Queries.OCCURRENCEINDEX_VALUES_GREATER_EQUAL), topicmap, value)
 				.iterator();
 	}
 
 	@Override
+	public Iterator<String> getValuesSmallerThanOrEqual(String value) {
+		if (value == null) return Collections.<String>emptySet().iterator();
+		return JDOQueryUtils.<String>queryToWrappedList(
+				getQuery(Queries.OCCURRENCEINDEX_VALUES_SMALLER_EQUAL), topicmap, value)
+				.iterator();
+	}
+
+	@Override
 	public Collection<OccurrenceIF> getOccurrences(String value, TopicIF occurrenceType) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (occurrenceType == null) throw new NullPointerException("OccurrenceType cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_TYPE), topicmap, value, occurrenceType);
 	}
 
 	@Override
 	public Collection<OccurrenceIF> getOccurrences(String value, LocatorIF datatype, TopicIF occurrenceType) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
-		if (occurrenceType == null) throw new NullPointerException("OccurrenceType cannot be null");
+		if (datatype == null) return Collections.emptySet();
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.OCCURRENCEINDEX_OCCURRENCES_DATATYPE_TYPE), topicmap, value, datatype.getAddress(), occurrenceType);
 		
