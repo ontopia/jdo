@@ -38,6 +38,7 @@ import org.junit.Test;
 public class JDOTopicMapSourceTest {
 	
 	public static final String PROPERTIES = "classpath:net/ontopia/topicmaps/impl/jdo/h2.props";
+	public static final String PROPERTIES2 = "classpath:net/ontopia/topicmaps/impl/jdo/h2-source.props";
 	public static final String INCORRECT_PROPERTIES1 = "classpath:net/ontopia/topicmaps/impl/jdo/h2.broken1.props";
 	
 	private JDOTopicMapSource source;
@@ -54,20 +55,21 @@ public class JDOTopicMapSourceTest {
 	}
 	
 	@Test
-	public void testOpenFromClasspath() throws IOException {
-		source = new JDOTopicMapSource(PROPERTIES);
-		source.refresh();
-		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
-	}
-	
-	@Test
 	public void testOpenFromProperties() throws IOException {
 		Properties properties = new Properties();
-		properties.load(StreamUtils.getInputStream(PROPERTIES));
+		properties.load(StreamUtils.getInputStream(PROPERTIES2));
 		source = new JDOTopicMapSource(properties);
 		source.refresh();
-		Assert.assertTrue("Reference set not empty", source.getReferences().isEmpty());
+		Assert.assertTrue("Reference set not empty: " + source.getReferences(), source.getReferences().isEmpty());
 	}
+
+	@Test
+	public void testOpenFromClasspath() throws IOException {
+		source = new JDOTopicMapSource(PROPERTIES2);
+		source.refresh();
+		Assert.assertTrue("Reference set not empty: " + source.getReferences(), source.getReferences().isEmpty());
+	}
+	
 	
 	@Test(expected = OntopiaRuntimeException.class)
 	public void testOpenIncorrectProperties1() throws IOException {
@@ -78,7 +80,7 @@ public class JDOTopicMapSourceTest {
 	
 	@Test
 	public void testCreateTopicMap() throws IOException {
-		source = new JDOTopicMapSource(PROPERTIES);
+		source = new JDOTopicMapSource(PROPERTIES2);
 		source.setId("ontopia-test-jdo");
 		source.setSupportsCreate(true);
 		source.setSupportsDelete(true);
@@ -130,7 +132,7 @@ public class JDOTopicMapSourceTest {
 	
 	@Test
 	public void testAbstractSourceTests() {
-		source = new JDOTopicMapSource(PROPERTIES);
+		source = new JDOTopicMapSource(PROPERTIES2);
 		source.setId("jdo");
 		source.setTitle("JDO source");
 		AbstractTopicMapSourceTest.doAbstractTopicMapSourceTests(source);
@@ -146,6 +148,6 @@ public class JDOTopicMapSourceTest {
 		
 		source.refresh();
 		
-		Assert.assertEquals(0, source.getReferences().size());
+		Assert.assertEquals(": " + source.getReferences(), 0, source.getReferences().size());
 	}
 }

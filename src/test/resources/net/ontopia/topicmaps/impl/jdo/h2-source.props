@@ -1,0 +1,4 @@
+javax.jdo.option.ConnectionDriverName=org.h2.Driver
+javax.jdo.option.ConnectionURL=jdbc:h2:target/ontopia2
+javax.jdo.option.ConnectionUserName=sa
+datanucleus.schema.autoCreateAll=true

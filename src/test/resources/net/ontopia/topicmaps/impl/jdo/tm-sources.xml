@@ -5,6 +5,6 @@
     <param name="title" value="My JDO topicmaps"/>
     <param name="supportsCreate" value="true"/>
     <param name="supportsDelete" value="true"/>
-    <param name="propertyFile" value="classpath:net/ontopia/topicmaps/impl/jdo/h2.props"/>
+    <param name="propertyFile" value="classpath:net/ontopia/topicmaps/impl/jdo/h2-source.props"/>
   </source>
 </repository>
