@@ -86,11 +86,11 @@
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-maven-plugin</artifactId>
-				<version>4.0.1</version>
+				<version>4.0.5</version>
 				<configuration>
 					<api>JDO</api>
 					<log4jConfiguration>${basedir}/src/build/log4j.properties</log4jConfiguration>
-					<verbose>true</verbose>
+					<verbose>false</verbose>
 				</configuration>
 				<executions>
 					<execution>
