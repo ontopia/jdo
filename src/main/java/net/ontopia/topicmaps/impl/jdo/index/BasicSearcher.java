@@ -22,6 +22,7 @@ package net.ontopia.topicmaps.impl.jdo.index;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
 import net.ontopia.infoset.fulltext.core.DocumentIF;
 import net.ontopia.infoset.fulltext.core.FieldIF;
@@ -42,6 +43,7 @@ public class BasicSearcher extends AbstractIndex implements SearcherIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public SearchResultIF search(String query) throws IOException {
+		if (query == null) return new JDOSearchResult(Collections.<TMObject>emptyList());
 		List<TMObject> results = (List<TMObject>) getQuery(Queries.BASICSEARCHER_SEARCH).executeWithArray(topicmap, query);
 		return new JDOSearchResult(results);
 	}
@@ -61,6 +63,7 @@ public class BasicSearcher extends AbstractIndex implements SearcherIF {
 
 		@Override
 		public DocumentIF getDocument(int hit) throws IOException {
+			if ((hit < 0) || (hit >= results.size())) return null;
 			TMObject object = results.get(hit);
 			GenericDocument d = new GenericDocument();
 			if (object instanceof TopicName) {
