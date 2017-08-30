@@ -85,13 +85,9 @@ public class IndexCacheTest extends AbstractJDOTest {
 		}
 	}
 	public static class InvalidSearcher implements IndexIF {
-		public InvalidSearcher() {
-			// invalid
-		}
+		// invalid constructor
 	}
 	public static class InvalidSearcher2 {
-		public InvalidSearcher2() {
-			// invalid
-		}
+		// invalid class
 	}
 }
