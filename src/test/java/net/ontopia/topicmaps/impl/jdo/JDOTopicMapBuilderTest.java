@@ -73,7 +73,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test(expected = ConstraintViolationException.class)
-	public void testDuplicateSI_II() {
+	public void testDuplicateSIAndII() {
 		builder.makeTopic().addSubjectIdentifier(URILocator.create("foo:bar"));
 		Assert.assertNotNull(topicmap.getTopicBySubjectIdentifier(URILocator.create("foo:bar")));
 		builder.makeTopic().addItemIdentifier(URILocator.create("foo:bar"));
@@ -141,7 +141,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testAssociationQuery_getRoleTypes() {
+	public void testAssociationQueryGetRoleTypes() {
 		TopicIF at = builder.makeTopic();
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
@@ -154,7 +154,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testAssociationQuery_getRolesByType() {
+	public void testAssociationQueryGetRolesByType() {
 		TopicIF at = builder.makeTopic();
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
@@ -169,7 +169,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_NamesByType() {
+	public void testTopicQueryNamesByType() {
 		TopicIF nt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		TopicNameIF tn = builder.makeTopicName(t, nt, "foo");
@@ -183,7 +183,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_OccurrencesByType() {
+	public void testTopicQueryOccurrencesByType() {
 		TopicIF ot = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		OccurrenceIF o = builder.makeOccurrence(t, ot, "foo");
@@ -197,7 +197,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_RolesByType() {
+	public void testTopicQueryRolesByType() {
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		AssociationRoleIF r = builder.makeAssociationRole(builder.makeAssociation(builder.makeTopic()), rt, t);
@@ -211,7 +211,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_RolesByType2() {
+	public void testTopicQueryRolesByType2() {
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		TopicIF at = builder.makeTopic();
@@ -226,7 +226,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_Associations() {
+	public void testTopicQueryAssociations() {
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		TopicIF at = builder.makeTopic();
@@ -241,7 +241,7 @@ public class JDOTopicMapBuilderTest extends AbstractJDOTest {
 	}
 	
 	@Test
-	public void testTopicQuery_AssociationsByType() {
+	public void testTopicQueryAssociationsByType() {
 		TopicIF rt = builder.makeTopic();
 		TopicIF t = builder.makeTopic();
 		TopicIF at = builder.makeTopic();
