@@ -79,9 +79,9 @@ public class IndexCacheTest extends AbstractJDOTest {
 		cache.getSearcher(InvalidSearcher2.class.getName());
 	}
 
-	public static class OtherSearcher implements IndexIF {
+	public static class OtherSearcher extends BasicSearcher {
 		public OtherSearcher(TopicMap tm) {
-			// valid, but no-op
+			super(tm);
 		}
 	}
 	public static class InvalidSearcher implements IndexIF {
