@@ -161,7 +161,7 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectLocator(LocatorIF lif) throws ConstraintViolationException {
 		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject locator when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (lif == null) throw new NullPointerException("Subject locator cannot be null");
+		if (lif == null) throw new OntopiaNullPointerException("Subject locator cannot be null");
 		
 		if (getSubjectLocators().contains(lif)) {
 			return;
@@ -193,7 +193,7 @@ public class Topic extends TMObject implements TopicIF {
 	public void addSubjectIdentifier(LocatorIF lif) throws ConstraintViolationException {
 		if (isDeleted()) throw new ConstraintViolationException("Cannot modify subject identifier when topic isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (lif == null) throw new NullPointerException("Subject identifier cannot be null");
+		if (lif == null) throw new OntopiaNullPointerException("Subject identifier cannot be null");
 
 		// TMDM constraint: SI cannot be II of another object
 		TMObjectIF existing = topicmap.getObjectByItemIdentifier(lif);
@@ -251,7 +251,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<TopicNameIF> getTopicNamesByType(TopicIF nt) {
-		if (nt == null) throw new NullPointerException("Topic name type cannot be null");
+		if (nt == null) throw new OntopiaNullPointerException("Topic name type cannot be null");
 		return (Collection) TopicQuery.NAMES_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, nt, getTopicMap());
 	}
 
@@ -263,7 +263,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<OccurrenceIF> getOccurrencesByType(TopicIF ot) {
-		if (ot == null) throw new NullPointerException("Occurrence type cannot be null");
+		if (ot == null) throw new OntopiaNullPointerException("Occurrence type cannot be null");
 		return (Collection) TopicQuery.OCCURRENCES_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, ot, getTopicMap());
 	}
 
@@ -275,15 +275,15 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF rt) {
-		if (rt == null) throw new NullPointerException("Association role type cannot be null");
+		if (rt == null) throw new OntopiaNullPointerException("Association role type cannot be null");
 		return (Collection) TopicQuery.ROLES_BY_TYPE1.get(getPersistenceManager()).executeWithArray(this, rt, getTopicMap());
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF rt, TopicIF at) {
-		if (rt == null) throw new NullPointerException("Association role type cannot be null");
-		if (at == null) throw new NullPointerException("Association type cannot be null");
+		if (rt == null) throw new OntopiaNullPointerException("Association role type cannot be null");
+		if (at == null) throw new OntopiaNullPointerException("Association type cannot be null");
 		return (Collection) TopicQuery.ROLES_BY_TYPE2.get(getPersistenceManager()).executeWithArray(this, rt, at, getTopicMap());
 	}
 
@@ -296,7 +296,7 @@ public class Topic extends TMObject implements TopicIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<AssociationIF> getAssociationsByType(TopicIF at) {
-		if (at == null) throw new NullPointerException("Association type cannot be null");
+		if (at == null) throw new OntopiaNullPointerException("Association type cannot be null");
 		return (Collection) TopicQuery.ASSOCIATIONS_BY_TYPE.get(getPersistenceManager()).executeWithArray(this, at, getTopicMap());
 	}
 
@@ -332,8 +332,8 @@ public class Topic extends TMObject implements TopicIF {
 
 	// builder methods
 	public TopicNameIF makeTopicName(TopicIF bntype, String value) {
-		if (bntype == null) throw new NullPointerException("Name type cannot be null");
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (bntype == null) throw new OntopiaNullPointerException("Name type cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		TopicName name = new TopicName(this, (Topic) bntype, value);
 		getPersistenceManager().makePersistent(name);
 		topicNames.add(name);
@@ -360,7 +360,7 @@ public class Topic extends TMObject implements TopicIF {
 	}
 	
 	public OccurrenceIF makeOccurrence(TopicIF occurs_type, LocatorIF locator) {
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setLocator(locator);
 		logger.trace("{} +occ {}", this, occurrence);
@@ -368,7 +368,7 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	public OccurrenceIF makeOccurrence(TopicIF occurs_type, String value) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setValue(value);
 		logger.trace("{} +occ {}", this, occurrence);
@@ -376,8 +376,8 @@ public class Topic extends TMObject implements TopicIF {
 	}
 
 	public OccurrenceIF makeOccurrence(TopicIF occurs_type, String value, LocatorIF datatype) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
+		if (datatype == null) throw new OntopiaNullPointerException("Datatype cannot be null");
 		OccurrenceIF occurrence = makeOccurrence(occurs_type);
 		occurrence.setValue(value, datatype);
 		logger.trace("{} +occ {}", this, occurrence);

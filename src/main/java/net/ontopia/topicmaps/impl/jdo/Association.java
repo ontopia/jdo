@@ -67,7 +67,7 @@ public class Association extends Scoped implements AssociationIF {
 	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (type == null) throw new NullPointerException("Type cannot be null");
+		if (type == null) throw new OntopiaNullPointerException("Type cannot be null");
 		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
@@ -81,7 +81,7 @@ public class Association extends Scoped implements AssociationIF {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<AssociationRoleIF> getRolesByType(TopicIF roletype) {
-		if (roletype == null) throw new NullPointerException("Role type cannot be null");
+		if (roletype == null) throw new OntopiaNullPointerException("Role type cannot be null");
 		return JDOQueryUtils.queryToWrappedSet(
 				getQuery(Queries.ASSOCIATION_ROLES_BY_TYPE), getTopicMap(), this, roletype);
 	}

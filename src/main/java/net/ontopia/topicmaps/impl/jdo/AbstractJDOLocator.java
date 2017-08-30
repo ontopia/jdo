@@ -67,7 +67,7 @@ public abstract class AbstractJDOLocator extends AbstractLocator implements Exte
 
 	private AbstractJDOLocator(String address, TMObject object) {
 		if (address == null) {
-			throw new NullPointerException("The locator address cannot be null.");
+			throw new OntopiaNullPointerException("The locator address cannot be null.");
 		}
 		this.address = address;
 		this._address = address;

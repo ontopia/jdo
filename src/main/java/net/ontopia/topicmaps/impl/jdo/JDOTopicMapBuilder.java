@@ -163,7 +163,7 @@ public class JDOTopicMapBuilder implements TopicMapBuilderIF {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends TMObject> T checkAndCast(TMObjectIF object, String name, Class<T> klass) {
-		if (object == null) throw new NullPointerException(name + " cannot be null");
+		if (object == null) throw new OntopiaNullPointerException(name + " cannot be null");
 		if (klass.isAssignableFrom(object.getClass())) {
 			return (T) object;
 		} else{

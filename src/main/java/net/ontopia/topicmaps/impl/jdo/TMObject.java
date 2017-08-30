@@ -109,7 +109,7 @@ public abstract class TMObject implements TMObjectIF {
 	public void addItemIdentifier(LocatorIF item_identifier) throws ConstraintViolationException {
 		if (isDeleted()) throw new ConstraintViolationException("Cannot modify item identifiers when object isn't attached to a topic map.");
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (item_identifier == null) throw new NullPointerException("Item identifier cannot be null");
+		if (item_identifier == null) throw new OntopiaNullPointerException("Item identifier cannot be null");
 		
 		// TMDM constraint: II cannot be SI of a topic
 		TMObjectIF existing = topicmap.getTopicBySubjectIdentifier(item_identifier);
@@ -187,7 +187,7 @@ public abstract class TMObject implements TMObjectIF {
 	 */
 	protected void removeLocator(Set<? extends LocatorIF> set, LocatorIF remove) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (remove == null) throw new NullPointerException("Locator cannot be null");
+		if (remove == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		LocatorIF toRemove = null;
 		for (LocatorIF locator : set) {
 			if (locator.equals(remove)) {

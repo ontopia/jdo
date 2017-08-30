@@ -107,13 +107,13 @@ public class TopicName extends Scoped implements TopicNameIF {
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
 
 	public VariantName makeVariantName(Collection<TopicIF> scope) {
-		if (scope == null) throw new NullPointerException("Scope cannot be null");
+		if (scope == null) throw new OntopiaNullPointerException("Scope cannot be null");
 		VariantName variant = new VariantName(this);
 		for (TopicIF scopeTopic : scope) {
 			CrossTopicMapException.check(scopeTopic, getTopicMap());
@@ -126,7 +126,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	}
 	
 	public VariantNameIF makeVariantName(String value, Collection<TopicIF> scope) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value);
 		logger.trace("{} +var {}", this, variant);
@@ -134,7 +134,7 @@ public class TopicName extends Scoped implements TopicNameIF {
 	}
 
 	public VariantNameIF makeVariantName(LocatorIF locator, Collection<TopicIF> scope) {
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setLocator(locator);
 		logger.trace("{} +var {}", this, variant);
@@ -142,8 +142,8 @@ public class TopicName extends Scoped implements TopicNameIF {
 	}
 
 	public VariantNameIF makeVariantName(String value, LocatorIF datatype, Collection<TopicIF> scope) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
+		if (datatype == null) throw new OntopiaNullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setValue(value, datatype);
 		logger.trace("{} +var {}", this, variant);
@@ -151,8 +151,8 @@ public class TopicName extends Scoped implements TopicNameIF {
 	}
 
 	public VariantNameIF makeVariantName(Reader value, long length, LocatorIF datatype, Collection<TopicIF> scope) {
-		if (value == null) throw new NullPointerException("Value cannot be null");
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
+		if (datatype == null) throw new OntopiaNullPointerException("Datatype cannot be null");
 		VariantName variant = makeVariantName(scope);
 		variant.setReader(value, length, datatype);
 		logger.trace("{} +var {}", this, variant);

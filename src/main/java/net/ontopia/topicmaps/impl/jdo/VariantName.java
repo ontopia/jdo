@@ -90,7 +90,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		this.value = value;
 	}
 
@@ -106,7 +106,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		if (!"URI".equals(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
 		setValue(locator.getAddress(), DataTypes.TYPE_URI);
 	}
@@ -114,7 +114,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (datatype == null) throw new OntopiaNullPointerException("Datatype cannot be null");
 		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
 		setValue(value);
 		this.datatype = datatype.getAddress();
@@ -122,7 +122,7 @@ public class VariantName extends Scoped implements VariantNameIF {
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		if (value == null) throw new NullPointerException("Reader cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Reader cannot be null");
 		try {
 			setValue(IOUtils.toString(value), datatype);
 		} catch (IOException ioe) {

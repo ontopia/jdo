@@ -162,7 +162,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public TMObjectIF getObjectById(String object_id) {
-		if (object_id == null) throw new NullPointerException("Object id cannot be null");
+		if (object_id == null) throw new OntopiaNullPointerException("Object id cannot be null");
 		if (object_id.trim().isEmpty()) return null;
 		Class<? extends TMObject> cls = classmap.get(object_id.charAt(0));
 		if (cls == null) return null; // unknown indicator
@@ -173,7 +173,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public TMObjectIF getObjectByItemIdentifier(LocatorIF locator) {
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		ItemIdentifier itemIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_ITEM_IDENTIFIER),
 				this, locator.getAddress());
@@ -183,7 +183,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public TopicIF getTopicBySubjectLocator(LocatorIF locator) {
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		SubjectLocator subjectLocator = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_LOCATOR),
 				this, locator.getAddress());
@@ -193,7 +193,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 
 	@Override
 	public TopicIF getTopicBySubjectIdentifier(LocatorIF locator) {
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		SubjectIdentifier subjectIdentifier = JDOQueryUtils.singularResultQuery(
 				getQuery(Queries.TOPICMAP_TOPIC_BY_SUBJECT_IDENTIFIER),
 				this, locator.getAddress());
@@ -247,7 +247,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public TopicIF makeTopic(TopicIF topic_type) {
-		if (topic_type == null) throw new NullPointerException("Topic type cannot be null");
+		if (topic_type == null) throw new OntopiaNullPointerException("Topic type cannot be null");
 		CrossTopicMapException.check(topic_type, this);
 		TopicIF topic = makeTopic();
 		topic.addType(topic_type);
@@ -256,7 +256,7 @@ public class TopicMap extends Reifiable implements TopicMapIF {
 	}
 
 	public TopicIF makeTopic(Collection<TopicIF> topic_types) {
-		if (topic_types == null) throw new NullPointerException("Topic types cannot be null");
+		if (topic_types == null) throw new OntopiaNullPointerException("Topic types cannot be null");
 		TopicIF topic = makeTopic();
 		for (TopicIF type : topic_types) {
 			CrossTopicMapException.check(type, this);

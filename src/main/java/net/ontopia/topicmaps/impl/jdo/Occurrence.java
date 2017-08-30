@@ -90,7 +90,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setType(TopicIF type) {
 		if (isReadOnly())throw new ReadOnlyException();
-		if (type == null) throw new NullPointerException("Type cannot be null");
+		if (type == null) throw new OntopiaNullPointerException("Type cannot be null");
 		logger.trace("{} +type {}", this, type);
 		this.type = (Topic) type;
 	}
@@ -108,7 +108,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setValue(String value) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (value == null) throw new NullPointerException("Value cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Value cannot be null");
 		logger.trace("{} +value {}", this, value);
 		this.value = value;
 	}
@@ -125,7 +125,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setLocator(LocatorIF locator) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (locator == null) throw new NullPointerException("Locator cannot be null");
+		if (locator == null) throw new OntopiaNullPointerException("Locator cannot be null");
 		if (!"URI".equalsIgnoreCase(locator.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed");
 		logger.trace("{} +locator {}", this, locator);
 		setValue(locator.getAddress(), DataTypes.TYPE_URI);
@@ -134,7 +134,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 	@Override
 	public void setValue(String value, LocatorIF datatype) {
 		if (isReadOnly()) throw new ReadOnlyException();
-		if (datatype == null) throw new NullPointerException("Datatype cannot be null");
+		if (datatype == null) throw new OntopiaNullPointerException("Datatype cannot be null");
 		if (!"URI".equalsIgnoreCase(datatype.getNotation())) throw new ConstraintViolationException("Only URI Locators are allowed for datatype");
 		setValue(value);
 		logger.trace("{} +value {} {}", this, value, datatype);
@@ -149,7 +149,7 @@ public class Occurrence extends Scoped implements OccurrenceIF {
 
 	@Override
 	public void setReader(Reader value, long length, LocatorIF datatype) {
-		if (value == null) throw new NullPointerException("Reader cannot be null");
+		if (value == null) throw new OntopiaNullPointerException("Reader cannot be null");
 		try {
 			setValue(IOUtils.toString(value), datatype);
 		} catch (IOException ioe) {
